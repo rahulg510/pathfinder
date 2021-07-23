@@ -1,11 +1,9 @@
 import {useReducer} from "react";
 
-const initialState = ()=>{
+const OptionsBar = ({resetMatrix})=>{
     return <>
-        <button onClick={}></button>
+        <button onClick={resetMatrix}>Reset</button>
     </>
 }
-
-const OptionsBar = () => {};
 
 export default OptionsBar;

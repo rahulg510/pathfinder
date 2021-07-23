@@ -1,80 +1,93 @@
 import Box from "./Box";
 import styled from "styled-components";
+import OptionsBar from "./OptionsBar";
 import { useEffect, useState } from "react";
 
 const Matrix = () => {
-  let initialMatrix = [];
-  let savedMatrix = JSON.parse(localStorage.getItem("matrix"));
-  if (savedMatrix instanceof Array) {
-    initialMatrix = savedMatrix;
-  } else {
-    const rows = 30;
-    const cols = 30;
-    for (let i = 0; i < rows; i++) {
-      initialMatrix.push(new Array(cols).fill(0));
-    }
-    initialMatrix[0][0] = -100;
-    initialMatrix[rows - 1][cols - 1] = 100;
-  }
-  const [matrix, setMatrix] = useState(initialMatrix);
-  
-  const resetMatrix = () =>{
-      
-  }
+	const ROWS = 30;
+	const COLS = 30;
+	const START = [0, 0];
+	const END = [ROWS - 1, COLS - 1];
+	let initialMatrix = localStorage.getItem("matrix");
+	if (initialMatrix) {
+		initialMatrix = JSON.parse(initialMatrix);
+	} else {
+		initialMatrix = createNewMatrix();
+	}
+	const [matrix, setMatrix] = useState(initialMatrix);
+	const [clicked, setClicked] = useState(false);
 
-  const changeValue = (r, c, val) => {
-    console.log(r, c, val);
-    matrix[r][c] = val;
-    setMatrix([...matrix]);
-  };
+	function createNewMatrix(rows = ROWS, cols = COLS) {
+		let newMatrix = [];
+		for (let i = 0; i < rows; i++) {
+			newMatrix.push(new Array(cols).fill(0));
+		}
+		newMatrix[START[0]][START[1]] = -100;
+		newMatrix[END[0]][END[1]] = 100;
+		return newMatrix;
+	}
 
-  useEffect(()=>{
-      localStorage.setItem("matrix", JSON.stringify(matrix));
-  })
-  return (
-    <Wrapper>
+	const changeValue = (r, c, val) => {
+		if (START[0] === c && START[1] === r) return;
+		if (END[0] === c && END[1] === r) return;
+		matrix[r][c] = val;
+		setMatrix([...matrix]);
+	};
 
-      <div className="flex">
-        {matrix.map((arr, row) => {
-          return (
-            <div key={row}>
-              {arr.map((i, col) => {
-                return (
-                  <Box
-                    key={`${row}${col}`}
-                    row={row}
-                    col={col}
-                    changeValue={changeValue}
-                    val={i}
-                  ></Box>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
-    </Wrapper>
-  );
+	const resetMatrix = () => {
+		let newMatrix = createNewMatrix();
+		setMatrix(newMatrix);
+	};
+
+	useEffect(() => {
+		localStorage.setItem("matrix", JSON.stringify(matrix));
+	});
+	return (
+		<Wrapper>
+			<OptionsBar resetMatrix={resetMatrix} />
+			<div className="flex">
+				{matrix.map((arr, row) => {
+					return (
+						<div key={row}>
+							{arr.map((i, col) => {
+								return (
+									<Box
+										key={`r${row}c${col}`}
+										row={row}
+										col={col}
+										changeValue={changeValue}
+										val={i}
+										clicked={clicked}
+										setClicked={setClicked}
+									></Box>
+								);
+							})}
+						</div>
+					);
+				})}
+			</div>
+		</Wrapper>
+	);
 };
 
 const Wrapper = styled.div`
-  .box {
-    height: 2vh;
-    width: 2vh;
-    background-color: lightgray;
-    border: solid 1px black;
-  }
-  .flex {
-    width: 80vw;
-    height: 80vw;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
+	.box {
+		height: 2vh;
+		width: 2vh;
+		background-color: lightgray;
+		border: solid 1px black;
+	}
+	.flex {
+		width: 80vw;
+		height: 80vw;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
 
-  .visited {
-    background-color: blueviolet;
-  }
+	.visited {
+		background-color: blueviolet;
+	}
 `;
 
 export default Matrix;
