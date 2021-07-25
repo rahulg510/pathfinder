@@ -1,44 +1,60 @@
-import React, { useState } from "react";
+const Box = ({
+	row,
+	col,
+	changeValue,
+	val,
+	cellClicked,
+	handleCellClick,
+	erase,
+}) => {
+	const handleMouseOver = (r, c) => {
+		let val = erase ? 0 : -1;
+		if (cellClicked) changeValue(r, c, val);
+	};
 
-const Box = ({ row, col, changeValue, val, clicked, setClicked }) => {
-    const [visited, setVisited] = useState(false);
-    
-    const clickHandler = () => {
-        setClicked((clicked) => {
-            if(clicked){
-                return !clicked;
-            }
-            changeValue(row,col,-1);
-            return !clicked;
-        })
-    }
 
-	const getColor = (value) => {
+	const getColor = (val) => {
 		let color = "";
 		switch (val) {
-			case -100:
-				color = "green";
-				break;
 			case -1:
-				color = "orange";
+				color = "deepskyblue";
+				break;
+			case 0:
+				color = "#DDDDDD";
 				break;
 			case 1:
-				color = "yellow";
+				color = "seagreen";
 				break;
-			case 100:
-				color = "red";
+			case 2:
+				color = "#FFDC00";
+				break;
+			case 3:
+				color = "lightsalmon";
+				break;
+			case 1000:
+				color = "#FF4136";
+				break;
+			case 2000:
+				color = "#01FF70";
 				break;
 			default:
-				color = "lightgrey";
+				color = "#FF851B";
 		}
 		return color;
 	};
 	return (
 		<div
-			className="box"
-			style={{ backgroundColor: getColor(val) }}
-			onMouseOver={clicked ? () => changeValue(row, col, -1) : null}
-			onClick={clickHandler}
+			onMouseDown={()=>console.log("dragged")}
+			onMouseUp={()=>console.log("picked up")}
+			className="box cell"
+			style={{
+				backgroundColor: getColor(val),
+				transition: "all .7s linear",
+			}}
+			onMouseOver={() => handleMouseOver(row, col)}
+			onClick={() => {
+				handleCellClick(row, col);
+			}}
 		></div>
 	);
 };
