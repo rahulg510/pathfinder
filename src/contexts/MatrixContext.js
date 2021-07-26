@@ -142,6 +142,7 @@ export const MatrixProvider = ({ children }) => {
 	};
 
 	const changeAlgorithm = (newAlgo) => {
+		console.log(newAlgo);
 		dispatch({ type: CHANGE_ALGORITHM, payload: newAlgo });
 	};
 

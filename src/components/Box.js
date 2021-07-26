@@ -77,6 +77,9 @@ const Box = ({ row, col, val }) => {
 			case 3:
 				color = "lightsalmon";
 				break;
+			case 4: 
+				color = "#FFDC00"
+				break;
 			case 1000:
 				color = "#FF4136";
 				break;

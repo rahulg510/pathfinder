@@ -1,6 +1,6 @@
 import Box from "./Box";
 import styled from "styled-components";
-import OptionsBar from "./OptionsBar";
+import OptionsBar from "./OptionsBar.jsx";
 import { useMatrixContext } from "../contexts/MatrixContext";
 
 const Matrix = () => {
