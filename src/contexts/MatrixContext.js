@@ -108,9 +108,7 @@ export const MatrixProvider = ({ children }) => {
 	};
 	
 	const stopRunningAlogrithm = () => {
-		console.log("STOP CLICKED");
-		state.status = STOPPED;
-		// dispatch({ type: STOP_RUNNING_ALGORITHM });
+		dispatch({ type: STOP_RUNNING_ALGORITHM });
 	};
 
 	const handleMouseUpDown = (bool) => {

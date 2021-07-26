@@ -1,4 +1,3 @@
-import { act } from "react-dom/test-utils";
 import {
 	CHANGE_ALGORITHM,
 	CHANGE_VALUE,
