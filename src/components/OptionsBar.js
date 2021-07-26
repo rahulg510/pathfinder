@@ -7,12 +7,14 @@ const OptionsBar = ({
 	clearMatrix,
 	handleEraseClick,
 	erase,
+	stopRunningAlogrithm
 }) => {
 	return (
 		<Wrapper>
 			<button onClick={resetMatrix}>Reset</button>
 			<button onClick={runAlgorithm}>Start</button>
-			<button onClick={clearMatrix}>End</button>
+			<button onClick={stopRunningAlogrithm}>Stop</button>
+			<button onClick={clearMatrix}>Clear Grid</button>
 			<button
 				className={`${erase ? "selected" : null}`}
 				onClick={handleEraseClick}

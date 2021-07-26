@@ -1,11 +1,10 @@
+import {isEquals} from "../helpers"
+import { RUNNING } from "../status";
 export const BFS = "BFS";
-export const bfs = async (matrix, start, end, changeValue) => {
+export const Bfs = async (matrix, start, end, changeValue, state) => {
 	let queue = [];
 	let count = 0;
-	const isEquals = (point1, point2) => {
-		return point1.row === point2.row && point1.col === point2.col;
-	};
-
+	
 	const checkIndexes = (r, c) => {
 		if (r >= 0 && r < matrix.length && c >= 0 && c < matrix[0].length) {
 			if (matrix[r][c] === 0 || matrix[r][c] === 1000) {

@@ -1,19 +1,22 @@
 import React, { useContext, useReducer, useEffect } from "react";
+import { isEquals } from "../utils/helpers";
 import MatrixReducer from "../reducers/MatrixReducer";
-import { STOPPED, RUNNING } from "../utils/status";
+import { RUNNING, STOPPED } from "../utils/status";
 import {
 	RESET_MATRIX,
 	CHANGE_VALUE,
 	CHANGE_ALGORITHM,
-	TOGGLE_CLICKED,
-	CHANGE_VALUE_WO_RENDER,
-	TRIGGER_MATRIX_UPDATE,
 	SET_MATRIX,
 	ERASE_TOGGLE,
 	STOP_RUNNING_ALGORITHM,
 	START_RUNNING_ALGORITHM,
+	MOUSE_UP_DOWN,
+	START_MOVE,
+	END_MOVE,
+	CHANGE_END,
+	CHANGE_START,
 } from "../utils/actions";
-import { BFS, bfs } from "../utils/algorithms/BFS";
+import { BFS, Bfs } from "../utils/algorithms/BFS";
 import { DFS, dfs } from "../utils/algorithms/DFS";
 
 const MatrixContext = React.createContext();
@@ -21,7 +24,7 @@ const MatrixContext = React.createContext();
 const initialState = {
 	rows: 25,
 	cols: 40,
-	start: { row: 10, col:15 },
+	start: { row: 10, col: 15 },
 	end: { row: 24, col: 39 },
 	matrix: [],
 	cellClicked: false,
@@ -29,6 +32,9 @@ const initialState = {
 	currentAlgorithm: BFS,
 	erase: false,
 	status: STOPPED,
+	mouseDown: false,
+	startMove: false,
+	endMove: false,
 };
 
 export const MatrixProvider = ({ children }) => {
@@ -49,10 +55,41 @@ export const MatrixProvider = ({ children }) => {
 			initialMatrix = createNewMatrix();
 		}
 		dispatch({ type: SET_MATRIX, payload: initialMatrix });
+
+		let startPoint = localStorage.getItem("startPoint");
+		if (startPoint) {
+			startPoint = JSON.parse(startPoint);
+			if (
+				startPoint.row &&
+				!isNaN(startPoint.row) &&
+				startPoint.row < state.rows &&
+				startPoint.col &&
+				!isNaN(startPoint.col) &&
+				startPoint.col < state.cols
+			) {
+				changeStart(startPoint.row, startPoint.col);
+			}
+		}
+		let endPoint = localStorage.getItem("endPoint");
+		if (endPoint) {
+			endPoint = JSON.parse(endPoint);
+			if (
+				endPoint.row &&
+				!isNaN(endPoint.row) &&
+				endPoint.row < state.rows &&
+				endPoint.col &&
+				!isNaN(endPoint.col) &&
+				endPoint.col < state.cols
+			) {
+				changeEnd(endPoint.row, endPoint.col);
+			}
+		}
 	}, []);
 
 	useEffect(() => {
 		localStorage.setItem("matrix", JSON.stringify(state.matrix));
+		localStorage.setItem("startPoint", JSON.stringify(state.start));
+		localStorage.setItem("endPoint", JSON.stringify(state.end));
 	});
 
 	function createNewMatrix(rows = state.rows, cols = state.cols) {
@@ -65,9 +102,36 @@ export const MatrixProvider = ({ children }) => {
 		return newMatrix;
 	}
 
+	
+	const startRunningAlogrithm = () => {
+		dispatch({ type: START_RUNNING_ALGORITHM });
+	};
+	
+	const stopRunningAlogrithm = () => {
+		console.log("STOP CLICKED");
+		state.status = STOPPED;
+		// dispatch({ type: STOP_RUNNING_ALGORITHM });
+	};
+
+	const handleMouseUpDown = (bool) => {
+		dispatch({ type: MOUSE_UP_DOWN, payload: bool });
+	};
+
+	const changeStartEnd = (row, col, val) => {
+		dispatch({ type: CHANGE_VALUE, payload: { row, col, val } });
+	};
+
+	const changeStart = (row, col, val) => {
+		dispatch({ type: CHANGE_START, payload: { row, col } });
+	};
+
+	const changeEnd = (row, col, val) => {
+		dispatch({ type: CHANGE_END, payload: { row, col } });
+	};
+
 	const changeValue = (row, col, val) => {
-		if (state.start.row === row && state.start.col === col) return;
-		if (state.end.row === row && state.end.col === col) return;
+		if (isEquals(state.start, { row, col })) return;
+		if (isEquals(state.end, { row, col })) return;
 		dispatch({ type: CHANGE_VALUE, payload: { row, col, val } });
 	};
 
@@ -87,16 +151,17 @@ export const MatrixProvider = ({ children }) => {
 		dispatch({ type: ERASE_TOGGLE });
 	};
 
-	const handleMultipleChanges = (changes) => {
-		changes.forEach((change) => {
-			dispatch({ type: CHANGE_VALUE_WO_RENDER, payload: change });
-		});
-		dispatch({ type: TRIGGER_MATRIX_UPDATE });
+	const handleStartMove = (bool) => {
+		dispatch({ type: START_MOVE, payload: bool });
+	};
+
+	const handleEndMove = (bool) => {
+		dispatch({ type: END_MOVE, payload: bool });
 	};
 
 	const runAlgorithm = async () => {
-		if ((state.status === STOPPED)) {
-			dispatch({type: START_RUNNING_ALGORITHM})
+		if (state.status === STOPPED) {
+			state.status = RUNNING;
 			let path = [];
 			switch (state.currentAlgorithm) {
 				case DFS:
@@ -104,34 +169,34 @@ export const MatrixProvider = ({ children }) => {
 						state.matrix,
 						state.start,
 						state.end,
-						changeValue,
+						changeValue
 					);
 					break;
 
 				default:
-					path = await bfs(
+					path = await Bfs(
 						state.matrix,
 						state.start,
 						state.end,
-						changeValue
+						changeValue,
+						state
 					);
 					break;
 			}
 			drawPath(path);
-			dispatch({type: STOP_RUNNING_ALGORITHM})
+			stopRunningAlogrithm();
 		}
 	};
 
 	const resetMatrix = () => {
-		if ((state.status === STOPPED)) {
+		if (state.status === STOPPED) {
 			let newMatrix = createNewMatrix();
 			dispatch({ type: RESET_MATRIX, payload: newMatrix });
 		}
-		
 	};
 
 	const clearMatrix = () => {
-		if ((state.status === STOPPED)) {
+		if (state.status === STOPPED) {
 			for (let i = 0; i < state.rows; i++) {
 				for (let j = 0; j < state.cols; j++) {
 					let val = state.matrix[i][j];
@@ -144,29 +209,21 @@ export const MatrixProvider = ({ children }) => {
 	};
 
 	const handleMouseLeavingMatrix = () => {
-		if (state.cellClicked) {
-			dispatch({ type: TOGGLE_CLICKED });
-			return;
+		handleMouseUpDown(false);
+		if (state.startMove) {
+			handleStartMove(false);
+			changeStartEnd(state.start.row, state.start.col, 1);
+		}
+		if (state.endMove) {
+			handleEndMove(false);
+			changeStartEnd(state.end.row, state.end.col, 1000);
 		}
 	};
 
-	const stopRunningAlogrithm = () => {
-		dispatch({ type: STOP_RUNNING_ALGORITHM });
-	};
-
-	const startRunningAlogrithm = () => {
-		dispatch({ type: START_RUNNING_ALGORITHM });
-	};
-
 	const handleCellClick = (row, col) => {
-		if (state.status) {
-			if (state.cellClicked) {
-				dispatch({ type: TOGGLE_CLICKED });
-				return;
-			}
+		if (state.status === STOPPED) {
 			let val = state.erase ? 0 : -1;
 			changeValue(row, col, val);
-			dispatch({ type: TOGGLE_CLICKED });
 		}
 	};
 
@@ -184,6 +241,12 @@ export const MatrixProvider = ({ children }) => {
 				handleEraseClick,
 				startRunningAlogrithm,
 				stopRunningAlogrithm,
+				handleMouseUpDown,
+				handleStartMove,
+				handleEndMove,
+				changeStart,
+				changeEnd,
+				changeStartEnd,
 			}}
 		>
 			{children}

@@ -9,12 +9,10 @@ const Matrix = () => {
 		resetMatrix,
 		runAlgorithm,
 		clearMatrix,
-		cellClicked,
-		handleCellClick,
 		handleMouseLeavingMatrix,
-		changeValue,
 		erase,
 		handleEraseClick,
+		stopRunningAlogrithm
 	} = useMatrixContext();
 	return (
 		<Wrapper>
@@ -24,8 +22,9 @@ const Matrix = () => {
 				clearMatrix={clearMatrix}
 				erase={erase}
 				handleEraseClick={handleEraseClick}
+				stopRunningAlogrithm={stopRunningAlogrithm}
 			/>
-			<div className="table" onMouseLeave={handleMouseLeavingMatrix}>
+			<div className="table" onMouseLeave={handleMouseLeavingMatrix} onDragStart={(e)=>e.preventDefault()}>
 				{matrix.map((arr, row) => {
 					return (
 						<div className="row" key={row}>
@@ -35,11 +34,7 @@ const Matrix = () => {
 										key={`r${row}c${col}`}
 										row={row}
 										col={col}
-										changeValue={changeValue}
 										val={i}
-										cellClicked={cellClicked}
-										handleCellClick={handleCellClick}
-										erase={erase}
 									></Box>
 								);
 							})}
@@ -61,7 +56,7 @@ const Wrapper = styled.div`
 
 	.table {
 		display: table;
-		border: ridge 4px #AAAAAA;
+		border: ridge 4px #aaaaaa;
 		margin: auto;
 		margin-top: 7vh;
 	}
@@ -72,6 +67,10 @@ const Wrapper = styled.div`
 
 	.cell {
 		display: table-cell;
+	}
+
+	.movingStart{
+		color: seagreen !important;
 	}
 `;
 

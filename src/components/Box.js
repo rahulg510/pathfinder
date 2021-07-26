@@ -1,17 +1,63 @@
-const Box = ({
-	row,
-	col,
-	changeValue,
-	val,
-	cellClicked,
-	handleCellClick,
-	erase,
-}) => {
-	const handleMouseOver = (r, c) => {
-		let val = erase ? 0 : -1;
-		if (cellClicked) changeValue(r, c, val);
+import { useMatrixContext } from "../contexts/MatrixContext";
+import { isEquals } from "../utils/helpers";
+const Box = ({ row, col, val }) => {
+	const {
+		changeValue,
+		erase,
+		mouseDown,
+		handleMouseUpDown,
+		handleStartMove,
+		handleEndMove,
+		start,
+		end,
+		startMove,
+		endMove,
+		changeStart,
+		changeEnd,
+		changeStartEnd,
+	} = useMatrixContext();
+
+	const handleMouseDown = () => {
+		handleMouseUpDown(true);
+		if (isEquals({ row, col }, start)) {
+			handleStartMove(true);
+			changeStartEnd(row, col, 0);
+		} else if (isEquals({ row, col }, end)) {
+			handleEndMove(true);
+			changeStartEnd(row, col, 0);
+		} else changeValue(row, col, erase ? 0 : -1);
 	};
 
+	const handleMouseUp = () => {
+		handleMouseUpDown(false);
+		if (startMove) {
+			changeStartEnd(row, col, 1);
+			changeStart(row, col);
+			handleStartMove(false);
+		} else if (endMove) {
+			changeStartEnd(row, col, 1000);
+			changeEnd(row, col);
+			handleEndMove(false);
+		}
+	};
+
+	let oldColor;
+	const handleMouseOver = (r, c, e) => {
+		if (startMove) {
+			oldColor = e.target.style["background-color"];
+			e.target.style["background-color"] = "seagreen";
+		} else if (endMove) {
+			oldColor = e.target.style["background-color"];
+			e.target.style["background-color"] = "#FF4136";
+		} else {
+			let val = erase ? 0 : -1;
+			if (mouseDown) changeValue(r, c, val);
+		}
+	};
+
+	const handleMouseLeave = (e) => {
+		e.target.style["background-color"] = oldColor;
+	};
 
 	const getColor = (val) => {
 		let color = "";
@@ -38,23 +84,21 @@ const Box = ({
 				color = "#01FF70";
 				break;
 			default:
-				color = "#FF851B";
+				color = "#DDDDDD";
 		}
 		return color;
 	};
 	return (
 		<div
-			onMouseDown={()=>console.log("dragged")}
-			onMouseUp={()=>console.log("picked up")}
+			onMouseDown={handleMouseDown}
+			onMouseUp={handleMouseUp}
 			className="box cell"
 			style={{
 				backgroundColor: getColor(val),
-				transition: "all .7s linear",
+				transition: "all .5s linear",
 			}}
-			onMouseOver={() => handleMouseOver(row, col)}
-			onClick={() => {
-				handleCellClick(row, col);
-			}}
+			onMouseOver={(e) => handleMouseOver(row, col, e)}
+			onMouseLeave={(e) => handleMouseLeave(e)}
 		></div>
 	);
 };
