@@ -2,9 +2,6 @@ import {
 	CHANGE_ALGORITHM,
 	CHANGE_VALUE,
 	RESET_MATRIX,
-	TOGGLE_CLICKED,
-	CHANGE_VALUE_WO_RENDER,
-	TRIGGER_MATRIX_UPDATE,
 	SET_MATRIX,
 	ERASE_TOGGLE,
 	STOP_RUNNING_ALGORITHM,
@@ -14,7 +11,10 @@ import {
 	END_MOVE,
 	CHANGE_END,
 	CHANGE_START,
-	CHANGE_WEIGHT
+	CHANGE_WEIGHT,
+	CHANGE_WEIGHT_BUTTON,
+	CHANGE_TYPE,
+	CHANGE_COLOR
 } from "../utils/actions";
 import { STOPPED, RUNNING } from "../utils/status";
 
@@ -82,16 +82,43 @@ const MatrixReducer = (state, action) => {
 		};
 	}
 
-	if (action.type === CHANGE_WEIGHT) {
+	if (action.type === CHANGE_WEIGHT_BUTTON) {
 		return {
 			...state,
 			weight: !state.weight
 		};
 	}
 
+	if(action.type === CHANGE_WEIGHT){
+		const { row, col, weight } = action.payload;
+		state.matrix[row][col].weight = weight;
+		return {
+			...state,
+			matrix: [...state.matrix],
+		};
+	}
+
+	if(action.type === CHANGE_TYPE){
+		const { row, col, type } = action.payload;
+		state.matrix[row][col].type = type;
+		return {
+			...state,
+			matrix: [...state.matrix],
+		};
+	}
+
+	if(action.type === CHANGE_COLOR){
+		const { row, col, color } = action.payload;
+		state.matrix[row][col].color = color;
+		return {
+			...state,
+			matrix: [...state.matrix],
+		};
+	}
+
 	if (action.type === CHANGE_VALUE) {
 		const { row, col, val } = action.payload;
-		state.matrix[row][col] = val;
+		state.matrix[row][col].value = val;
 		return {
 			...state,
 			matrix: [...state.matrix],
@@ -103,32 +130,11 @@ const MatrixReducer = (state, action) => {
 			currentAlgorithm: action.payload,
 		};
 	}
-	if (action.type === TOGGLE_CLICKED) {
-		return {
-			...state,
-			cellClicked: !state.cellClicked,
-		};
-	}
 
 	if (action.type === MOUSE_UP_DOWN) {
 		return {
 			...state,
 			mouseDown: action.payload,
-		};
-	}
-
-	if (action.type === CHANGE_VALUE_WO_RENDER) {
-		const { row, col, val } = action.payload;
-		state.matrix[row][col] = val;
-		return {
-			...state,
-		};
-	}
-
-	if (action.type === TRIGGER_MATRIX_UPDATE) {
-		return {
-			...state,
-			matrix: [...state.matrix],
 		};
 	}
 };

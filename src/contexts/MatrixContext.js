@@ -1,7 +1,7 @@
 import React, { useContext, useReducer, useEffect } from "react";
-import { isEquals } from "../utils/helpers";
 import MatrixReducer from "../reducers/MatrixReducer";
 import { STOPPED } from "../utils/status";
+import { END, NORMAL, PATH, START } from "../utils/cellTypes";
 import {
 	RESET_MATRIX,
 	CHANGE_VALUE,
@@ -16,9 +16,12 @@ import {
 	CHANGE_END,
 	CHANGE_START,
 	CHANGE_WEIGHT,
+	CHANGE_WEIGHT_BUTTON,
+	CHANGE_COLOR,
+	CHANGE_TYPE,
 } from "../utils/actions";
-import { BFS, bfs } from "../utils/algorithms/bfs";
-import { DFS, dfs } from "../utils/algorithms/dfs";
+import { BFS, bfs } from "../utils/algorithms/BFS";
+import { DFS, dfs } from "../utils/algorithms/DFS";
 import { DIJ, dijkstra } from "../utils/algorithms/dijkstras";
 
 const MatrixContext = React.createContext();
@@ -29,8 +32,6 @@ const initialState = {
 	start: { row: 10, col: 15 },
 	end: { row: 24, col: 39 },
 	matrix: [],
-	cellClicked: false,
-	algorithms: [BFS, DFS, DIJ],
 	currentAlgorithm: BFS,
 	erase: false,
 	status: STOPPED,
@@ -98,10 +99,21 @@ export const MatrixProvider = ({ children }) => {
 	function createNewMatrix(rows = state.rows, cols = state.cols) {
 		let newMatrix = [];
 		for (let i = 0; i < rows; i++) {
-			newMatrix.push(new Array(cols).fill(0));
+			let arr = [];
+			for (let j = 0; j < cols; j++) {
+				let obj = {
+					value: 0,
+					weight: 1,
+					color: "#DDDDDD",
+					type: NORMAL,
+				};
+				arr.push(obj);
+			}
+			newMatrix.push(arr);
 		}
-		newMatrix[state.start.row][state.start.col] = 1;
-		newMatrix[state.end.row][state.end.col] = 1000;
+		newMatrix[state.start.row][state.start.col].type = START;
+		newMatrix[state.start.row][state.start.col].weight = 0;
+		newMatrix[state.end.row][state.end.col].type = END;
 		return newMatrix;
 	}
 
@@ -130,26 +142,36 @@ export const MatrixProvider = ({ children }) => {
 	};
 
 	const handleWeightClick = () => {
-		dispatch({ type: CHANGE_WEIGHT });
+		dispatch({ type: CHANGE_WEIGHT_BUTTON });
 	};
 
 	const changeValue = (row, col, val) => {
-		if (isEquals(state.start, { row, col })) return;
-		if (isEquals(state.end, { row, col })) return;
 		dispatch({ type: CHANGE_VALUE, payload: { row, col, val } });
+	};
+
+	const changeWeight = (row, col, weight) => {
+		dispatch({ type: CHANGE_WEIGHT, payload: { row, col, weight } });
+	};
+
+	const changeType = (row, col, type) => {
+		dispatch({ type: CHANGE_TYPE, payload: { row, col, type } });
+	};
+
+	const changeColor = (row, col, color) => {
+		dispatch({ type: CHANGE_COLOR, payload: { row, col, color } });
 	};
 
 	const drawPath = async (path) => {
 		while (path.length > 0) {
 			let vertex = path.shift();
-			changeValue(vertex.row, vertex.col, 2000);
+			changeType(vertex.row, vertex.col, PATH);
 			await new Promise((resolve) => setTimeout(resolve, 0));
 		}
 	};
 
 	const changeMatrix = (m) => {
 		state.matrix = [...m];
-	}
+	};
 
 	const changeAlgorithm = (newAlgo) => {
 		dispatch({ type: CHANGE_ALGORITHM, payload: newAlgo });
@@ -171,9 +193,11 @@ export const MatrixProvider = ({ children }) => {
 		if (state.status === STOPPED) {
 			for (let i = 0; i < state.rows; i++) {
 				for (let j = 0; j < state.cols; j++) {
-					let val = state.matrix[i][j];
-					if (val !== -1 && val !== 0) {
-						changeValue(i, j, 0);
+					let type = state.matrix[i][j].type;
+					changeValue(i, j, 0);
+					changeWeight(i, j, 1);
+					if (type === PATH) {
+						changeType(i,j,NORMAL);
 					}
 				}
 			}
@@ -235,9 +259,10 @@ export const MatrixProvider = ({ children }) => {
 		if (state.status === STOPPED) {
 			for (let i = 0; i < state.rows; i++) {
 				for (let j = 0; j < state.cols; j++) {
-					let val = state.matrix[i][j];
-					if (val !== -1 && val !== 0 && val !== 15) {
-						changeValue(i, j, 0);
+					let type = state.matrix[i][j].type;
+					changeValue(i, j, 0);
+					if (type === PATH) {
+						changeType(i,j, NORMAL);
 					}
 				}
 			}
@@ -284,6 +309,9 @@ export const MatrixProvider = ({ children }) => {
 				changeEnd,
 				changeStartEnd,
 				handleWeightClick,
+				changeWeight,
+				changeType,
+				changeColor,
 			}}
 		>
 			{children}
