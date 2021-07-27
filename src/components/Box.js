@@ -1,4 +1,5 @@
 import { useMatrixContext } from "../contexts/MatrixContext";
+import { DIJ } from "../utils/algorithms/dijkstras";
 import { isEquals } from "../utils/helpers";
 const Box = ({ row, col, val }) => {
 	const {
@@ -15,6 +16,8 @@ const Box = ({ row, col, val }) => {
 		changeStart,
 		changeEnd,
 		changeStartEnd,
+		weight,
+		currentAlgorithm
 	} = useMatrixContext();
 
 	const handleMouseDown = () => {
@@ -25,6 +28,8 @@ const Box = ({ row, col, val }) => {
 		} else if (isEquals({ row, col }, end)) {
 			handleEndMove(true);
 			changeStartEnd(row, col, 0);
+		} else if (weight) {
+			changeValue(row, col, 15);
 		} else changeValue(row, col, erase ? 0 : -1);
 	};
 
@@ -51,7 +56,9 @@ const Box = ({ row, col, val }) => {
 			e.target.style["background-color"] = "#FF4136";
 		} else {
 			let val = erase ? 0 : -1;
-			if (mouseDown) changeValue(r, c, val);
+			if (mouseDown) {
+				weight ? changeValue(r, c, 15) : changeValue(r, c, val);
+			}
 		}
 	};
 
@@ -59,11 +66,36 @@ const Box = ({ row, col, val }) => {
 		e.target.style["background-color"] = oldColor;
 	};
 
-	const getColor = (val) => {
+	const getColor = (val, algo) => {
 		let color = "";
+		// if(algo === DIJ){
+		// 	switch (val) {
+		// 		case -1:
+		// 			color = "#001F3F";
+		// 			break;
+		// 		case 0:
+		// 			color = "#DDDDDD";
+		// 			break;
+		// 		case 1:
+		// 			color = "seagreen";
+		// 			break;
+		// 		case 15:
+		// 			color = "deepskyblue";
+		// 			break;
+		// 		case 1000:
+		// 			color = "#FF4136";
+		// 			break;
+		// 		case 2000:
+		// 			color = "#01FF70";
+		// 			break;
+		// 		default:
+		// 			color = "#lightsalmon";
+		// 	}
+		// 	return color;
+		// }
 		switch (val) {
 			case -1:
-				color = "deepskyblue";
+				color = "#001F3F";
 				break;
 			case 0:
 				color = "#DDDDDD";
@@ -77,8 +109,11 @@ const Box = ({ row, col, val }) => {
 			case 3:
 				color = "lightsalmon";
 				break;
-			case 4: 
-				color = "#FFDC00"
+			case 4:
+				color = "black";
+				break;
+			case 15:
+				color = "deepskyblue";
 				break;
 			case 1000:
 				color = "#FF4136";
@@ -87,7 +122,7 @@ const Box = ({ row, col, val }) => {
 				color = "#01FF70";
 				break;
 			default:
-				color = "#DDDDDD";
+				color = "#lightsalmon";
 		}
 		return color;
 	};
@@ -97,7 +132,7 @@ const Box = ({ row, col, val }) => {
 			onMouseUp={handleMouseUp}
 			className="box cell"
 			style={{
-				backgroundColor: getColor(val),
+				backgroundColor: getColor(val,currentAlgorithm),
 				transition: "all .5s linear",
 			}}
 			onMouseOver={(e) => handleMouseOver(row, col, e)}

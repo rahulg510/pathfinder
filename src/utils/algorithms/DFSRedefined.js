@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { isEquals, checkIndexes } from "../helpers";
 
 export const dfs = async (matrix, start, end, changeValue) => {

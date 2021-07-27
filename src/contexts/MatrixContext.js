@@ -1,7 +1,7 @@
 import React, { useContext, useReducer, useEffect } from "react";
 import { isEquals } from "../utils/helpers";
 import MatrixReducer from "../reducers/MatrixReducer";
-import { RUNNING, STOPPED } from "../utils/status";
+import { STOPPED } from "../utils/status";
 import {
 	RESET_MATRIX,
 	CHANGE_VALUE,
@@ -15,9 +15,11 @@ import {
 	END_MOVE,
 	CHANGE_END,
 	CHANGE_START,
+	CHANGE_WEIGHT,
 } from "../utils/actions";
-import { BFS, Bfs } from "../utils/algorithms/BFS";
-import { DFS, dfs } from "../utils/algorithms/DFS";
+import { BFS, bfs } from "../utils/algorithms/bfs";
+import { DFS, dfs } from "../utils/algorithms/dfs";
+import { DIJ, dijkstra } from "../utils/algorithms/dijkstras";
 
 const MatrixContext = React.createContext();
 
@@ -28,13 +30,14 @@ const initialState = {
 	end: { row: 24, col: 39 },
 	matrix: [],
 	cellClicked: false,
-	algorithms: [BFS, DFS],
+	algorithms: [BFS, DFS, DIJ],
 	currentAlgorithm: BFS,
 	erase: false,
 	status: STOPPED,
 	mouseDown: false,
 	startMove: false,
 	endMove: false,
+	weight: false,
 };
 
 export const MatrixProvider = ({ children }) => {
@@ -102,11 +105,10 @@ export const MatrixProvider = ({ children }) => {
 		return newMatrix;
 	}
 
-	
 	const startRunningAlogrithm = () => {
 		dispatch({ type: START_RUNNING_ALGORITHM });
 	};
-	
+
 	const stopRunningAlogrithm = () => {
 		dispatch({ type: STOP_RUNNING_ALGORITHM });
 	};
@@ -127,6 +129,10 @@ export const MatrixProvider = ({ children }) => {
 		dispatch({ type: CHANGE_END, payload: { row, col } });
 	};
 
+	const handleWeightClick = () => {
+		dispatch({ type: CHANGE_WEIGHT });
+	};
+
 	const changeValue = (row, col, val) => {
 		if (isEquals(state.start, { row, col })) return;
 		if (isEquals(state.end, { row, col })) return;
@@ -141,8 +147,11 @@ export const MatrixProvider = ({ children }) => {
 		}
 	};
 
+	const changeMatrix = (m) => {
+		state.matrix = [...m];
+	}
+
 	const changeAlgorithm = (newAlgo) => {
-		console.log(newAlgo);
 		dispatch({ type: CHANGE_ALGORITHM, payload: newAlgo });
 	};
 
@@ -158,12 +167,27 @@ export const MatrixProvider = ({ children }) => {
 		dispatch({ type: END_MOVE, payload: bool });
 	};
 
+	const prepareMatrixForUnweighted = async () => {
+		if (state.status === STOPPED) {
+			for (let i = 0; i < state.rows; i++) {
+				for (let j = 0; j < state.cols; j++) {
+					let val = state.matrix[i][j];
+					if (val !== -1 && val !== 0) {
+						changeValue(i, j, 0);
+					}
+				}
+			}
+		}
+		await new Promise((resolve) => setTimeout(resolve, 800));
+	};
+
 	const runAlgorithm = async () => {
 		if (state.status === STOPPED) {
-			state.status = RUNNING;
+			startRunningAlogrithm();
 			let path = [];
 			switch (state.currentAlgorithm) {
 				case DFS:
+					await prepareMatrixForUnweighted();
 					path = await dfs(
 						state.matrix,
 						state.start,
@@ -172,8 +196,21 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 
+				case DIJ:
+					path = await dijkstra(
+						state.matrix,
+						state.start,
+						state.end,
+						changeValue,
+						state.rows,
+						state.cols,
+						changeMatrix
+					);
+					break;
+
 				default:
-					path = await Bfs(
+					await prepareMatrixForUnweighted();
+					path = await bfs(
 						state.matrix,
 						state.start,
 						state.end,
@@ -182,7 +219,7 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 			}
-			drawPath(path);
+			await drawPath(path);
 			stopRunningAlogrithm();
 		}
 	};
@@ -199,7 +236,7 @@ export const MatrixProvider = ({ children }) => {
 			for (let i = 0; i < state.rows; i++) {
 				for (let j = 0; j < state.cols; j++) {
 					let val = state.matrix[i][j];
-					if (val !== -1 && val !== 0) {
+					if (val !== -1 && val !== 0 && val !== 15) {
 						changeValue(i, j, 0);
 					}
 				}
@@ -246,6 +283,7 @@ export const MatrixProvider = ({ children }) => {
 				changeStart,
 				changeEnd,
 				changeStartEnd,
+				handleWeightClick,
 			}}
 		>
 			{children}

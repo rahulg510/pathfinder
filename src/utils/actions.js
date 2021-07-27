@@ -13,3 +13,4 @@ export const START_MOVE = "START_MOVE";
 export const END_MOVE = "END_MOVE";
 export const CHANGE_START = "CHANGE_START";
 export const CHANGE_END = "CHANGE_END";
+export const CHANGE_WEIGHT = "CHANGE_WEIGHT";

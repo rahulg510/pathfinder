@@ -14,6 +14,7 @@ import {
 	END_MOVE,
 	CHANGE_END,
 	CHANGE_START,
+	CHANGE_WEIGHT
 } from "../utils/actions";
 import { STOPPED, RUNNING } from "../utils/status";
 
@@ -78,6 +79,13 @@ const MatrixReducer = (state, action) => {
 		return {
 			...state,
 			end: action.payload,
+		};
+	}
+
+	if (action.type === CHANGE_WEIGHT) {
+		return {
+			...state,
+			weight: !state.weight
 		};
 	}
 

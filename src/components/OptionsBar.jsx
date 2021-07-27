@@ -10,7 +10,9 @@ const OptionsBar = () => {
 		handleEraseClick,
 		erase,
 		status,
-		changeAlgorithm
+		changeAlgorithm,
+		weight,
+		handleWeightClick,
 	} = useMatrixContext();
 
 	return (
@@ -26,6 +28,13 @@ const OptionsBar = () => {
 			</button>
 			<button
 				disabled={status === RUNNING}
+				className={`${weight ? "selected" : null}`}
+				onClick={handleWeightClick}
+			>
+				Add Weight
+			</button>
+			<button
+				disabled={status === RUNNING}
 				className={`${erase ? "selected" : null}`}
 				onClick={handleEraseClick}
 			>
@@ -34,8 +43,9 @@ const OptionsBar = () => {
 			<select onChange={(e) => changeAlgorithm(e.target.value)}>
 				<option value="BFS">Breadth First Search</option>
 				<option value="DFS">Depth First Search</option>
+				<option value="DIJ">Dijkstra's Algorithm</option>
 			</select>
-			<h2>{status===RUNNING ? "Running" : "Ready"}</h2>
+			<h2>{status === RUNNING ? "Running" : "Ready"}</h2>
 		</Wrapper>
 	);
 };

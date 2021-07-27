@@ -2,7 +2,7 @@ import { isEquals, checkIndexes } from "../helpers";
 
 export const dfs = async (matrix, start, end, changeValue) => {
 	let stack = [];
-
+	let count = 0;
 	const push = (row, col) => {
 		stack.push({ row, col });
 	};
@@ -45,7 +45,10 @@ export const dfs = async (matrix, start, end, changeValue) => {
 		}
 
 		visitNeighbors(cell);
-		await new Promise((resolve) => setTimeout(resolve, 0));
+		if (count % 3 === 0) {
+			await new Promise((resolve) => setTimeout(resolve, 0));
+		}
+		count++;
 	}
 	return Promise.resolve([]);
 };

@@ -1,7 +1,6 @@
-import {isEquals, checkIndexes} from "../helpers"
-import { RUNNING } from "../status";
-export const BFS = "BFS";
-export const Bfs = async (matrix, start, end, changeValue, state) => {
+import { isEquals, checkIndexes } from "../helpers";
+
+export const bfs = async (matrix, start, end, changeValue) => {
 	let queue = [];
 	let count = 0;
 
@@ -11,19 +10,27 @@ export const Bfs = async (matrix, start, end, changeValue, state) => {
 
 	const visitNeighbors = ({ row, col, path }) => {
 		if (checkIndexes(matrix, row - 1, col)) {
-			matrix[row - 1][col] = 2;
+			if (!isEquals({ row: row - 1, col }, end)) {
+				matrix[row - 1][col] = 2;
+			}
 			push(row - 1, col, [...path, { row: row - 1, col }]);
 		}
 		if (checkIndexes(matrix, row + 1, col)) {
-			matrix[row + 1][col] = 2;
+			if (!isEquals({ row: row + 1, col }, end)) {
+				matrix[row + 1][col] = 2;
+			}
 			push(row + 1, col, [...path, { row: row + 1, col }]);
 		}
 		if (checkIndexes(matrix, row, col + 1)) {
-			matrix[row][col + 1] = 2;
+			if (!isEquals({ row, col: col + 1 }, end)) {
+				matrix[row][col + 1] = 2;
+			}
 			push(row, col + 1, [...path, { row, col: col + 1 }]);
 		}
 		if (checkIndexes(matrix, row, col - 1)) {
-			matrix[row][col - 1] = 2;
+			if (!isEquals({ row, col: col - 1 }, end)) {
+				matrix[row][col - 1] = 2;
+			}
 			push(row, col - 1, [...path, { row, col: col - 1 }]);
 		}
 	};
@@ -38,8 +45,7 @@ export const Bfs = async (matrix, start, end, changeValue, state) => {
 	while (queue.length > 0) {
 		let cell = queue.shift();
 		if (isEquals(cell, end)) {
-			let c = cell.path.pop();
-			matrix[c.row][c.col] = 1000;
+			cell.path.pop();
 			return Promise.resolve(cell.path);
 		}
 		visitNeighbors(cell);
@@ -54,4 +60,4 @@ export const Bfs = async (matrix, start, end, changeValue, state) => {
 	return Promise.resolve([]);
 };
 
-export default BFS;
+export const BFS = "BFS";
