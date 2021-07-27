@@ -2,8 +2,7 @@ import { isEquals, validIndex } from "../helpers";
 import Heap from "heap";
 
 export const dijkstra = async (matrix, start, end, changeValue, rows, cols, changeMatrix) => {
-	let heap = new Heap();
-
+	// let heap = new Heap((a));
 	let weightMatrix = [];
 	for (let i = 0; i < rows; i++) {
 		let arr = new Array(cols).fill(Infinity);

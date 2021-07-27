@@ -1,6 +1,7 @@
 import { useMatrixContext } from "../contexts/MatrixContext";
 import { END, NORMAL, PATH, START, WALL } from "../utils/cellTypes";
 import { STOPPED } from "../utils/status";
+import { useState } from "react";
 const Box = ({ row, col, val }) => {
 	const {
 		mouseDown,

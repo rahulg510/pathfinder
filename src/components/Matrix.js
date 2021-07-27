@@ -72,6 +72,13 @@ const Wrapper = styled.div`
 	.movingStart{
 		color: seagreen !important;
 	}
+	
+	.circle {
+    background: #f00;
+    width: 1vh;
+    height: 1vh;
+    border-radius: 50%;
+}
 `;
 
 export default Matrix;

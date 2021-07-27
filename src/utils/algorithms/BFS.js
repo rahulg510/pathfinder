@@ -48,7 +48,6 @@ export const bfs = async (matrix, start, end, changeValue) => {
 
 	while (queue.length > 0) {
 		let cell = queue.shift();
-		console.log(cell);
 		if (isEquals(cell, end)) {
 			cell.path.pop();
 			return Promise.resolve(cell.path);

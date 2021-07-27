@@ -9,16 +9,20 @@ export const dfs = async (matrix, start, end, changeValue) => {
 
 	const visitNeighbors = ({ row, col }) => {
 		if (checkIndexes(matrix, row, col - 1)) {
-			push(row, col - 1);
+			let cell = matrix[row][col - 1];
+			if (cell.value === 0) push(row, col - 1);
 		}
 		if (checkIndexes(matrix, row, col + 1)) {
-			push(row, col + 1);
+			let cell = matrix[row][col + 1];
+			if (cell.value === 0) push(row, col + 1);
 		}
 		if (checkIndexes(matrix, row - 1, col)) {
-			push(row - 1, col);
+			let cell = matrix[row - 1][col];
+			if (cell.value === 0) push(row - 1, col);
 		}
 		if (checkIndexes(matrix, row + 1, col)) {
-			push(row + 1, col);
+			let cell = matrix[row + 1][col];
+			if (cell.value === 0) push(row + 1, col);
 		}
 	};
 
