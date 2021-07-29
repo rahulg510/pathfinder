@@ -23,6 +23,8 @@ import {
 import { BFS, bfs } from "../utils/algorithms/BFS";
 import { DFS, dfs } from "../utils/algorithms/DFS";
 import { DIJ, dijkstra } from "../utils/algorithms/dijkstras";
+import { GFS, gfs } from "../utils/algorithms/GreedyFirstSearch";
+import { aStar, ASTAR } from "../utils/algorithms/aStar";
 
 const MatrixContext = React.createContext();
 
@@ -103,7 +105,7 @@ export const MatrixProvider = ({ children }) => {
 			for (let j = 0; j < cols; j++) {
 				let obj = {
 					value: 0,
-					weight: 1,
+					weight: 0,
 					color: "#DDDDDD",
 					type: NORMAL,
 				};
@@ -227,8 +229,25 @@ export const MatrixProvider = ({ children }) => {
 						state.end,
 						changeValue,
 						state.rows,
-						state.cols,
-						changeMatrix
+						state.cols
+					);
+					break;
+
+					case GFS:
+					path = await gfs(
+						state.matrix,
+						state.start,
+						state.end,
+						changeValue
+					);
+					break;
+
+					case ASTAR:
+					path = await aStar(
+						state.matrix,
+						state.start,
+						state.end,
+						changeValue
 					);
 					break;
 

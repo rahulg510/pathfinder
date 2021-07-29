@@ -31,7 +31,7 @@ const Box = ({ row, col, val }) => {
 				changeType(row, col, NORMAL);
 			} else if (weight) {
 				if (cell.type === NORMAL || cell.type === PATH)
-					changeWeight(row, col, cell.weight === 1 ? 15 : 1);
+					changeWeight(row, col, cell.weight === 0 ? 15 : 0);
 			} else {
 				if (cell.type === NORMAL || cell.type === PATH) {
 					changeType(row, col, WALL);
@@ -69,7 +69,7 @@ const Box = ({ row, col, val }) => {
 				if (mouseDown) {
 					if (weight) {
 						if (cell.type === NORMAL || cell.type === PATH)
-							changeWeight(row, col, cell.weight === 1 ? 15 : 1);
+							changeWeight(row, col, cell.weight === 0 ? 15 : 0);
 					} else {
 						if (cell.type === NORMAL || cell.type === PATH) {
 							changeType(row, col, WALL);
@@ -128,10 +128,11 @@ const Box = ({ row, col, val }) => {
 		<div
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
-			className="box cell"
+			className={`${matrix[row][col].value > 0 && matrix[row][col].type !== END && matrix[row][col].type !== PATH  ? "box cell blink-bg" : "box cell"}`}
 			style={{
 				backgroundColor: getColor(matrix[row][col]),
 				transition: "all .5s linear",
+
 			}}
 			onMouseOver={(e) => handleMouseOver(row, col, e)}
 			onMouseLeave={(e) => handleMouseLeave(e)}

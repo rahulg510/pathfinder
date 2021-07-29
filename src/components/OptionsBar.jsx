@@ -44,6 +44,8 @@ const OptionsBar = () => {
 				<option value="BFS">Breadth First Search</option>
 				<option value="DFS">Depth First Search</option>
 				<option value="DIJ">Dijkstra's Algorithm</option>
+				<option value="GFS">Greedy First Search</option>
+				<option value="ASTAR">A*</option>
 			</select>
 			<h2>{status === RUNNING ? "Running" : "Ready"}</h2>
 		</Wrapper>

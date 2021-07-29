@@ -48,10 +48,25 @@ const Matrix = () => {
 
 const Wrapper = styled.div`
 	.box {
-		height: 2vh;
-		width: 2vh;
+		height: 3vh;
+		width: 3vh;
 		background-color: lightgray;
 		border: solid 1px white;
+	}
+
+	.blink-bg{
+		animation-name: blinkingBackground;
+		animation-duration: 2s;
+		animation-timing-function: ease;
+		animation-iteration-count: 2;
+		animation-direction: alternate;
+		animation-fill-mode: both;
+		animation-play-state: running;
+	}
+	@keyframes blinkingBackground{
+		0%		{ background-color: #FF9B85;}
+		0%		{ background-color: #FFA990;}
+		100%		{ background-color: #FFD97D;}
 	}
 
 	.table {
@@ -73,12 +88,6 @@ const Wrapper = styled.div`
 		color: seagreen !important;
 	}
 	
-	.circle {
-    background: #f00;
-    width: 1vh;
-    height: 1vh;
-    border-radius: 50%;
-}
 `;
 
 export default Matrix;
