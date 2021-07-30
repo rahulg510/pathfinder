@@ -1,8 +1,8 @@
 import { useMatrixContext } from "../contexts/MatrixContext";
 import { END, NORMAL, PATH, START, WALL } from "../utils/cellTypes";
-import { STOPPED } from "../utils/status";
-import { useState } from "react";
-const Box = ({ row, col, val }) => {
+import { RUNNING, STOPPED } from "../utils/status";
+import { useState, useEffect } from "react";
+const Box = ({ row, col }) => {
 	const {
 		mouseDown,
 		handleMouseUpDown,
@@ -19,8 +19,13 @@ const Box = ({ row, col, val }) => {
 		matrix,
 	} = useMatrixContext();
 
+	const [cell, setCell] = useState(matrix[row][col]);
+
+	useEffect(() => {
+		setCell(matrix[row][col]);
+	}, [row, col, matrix]);
+
 	const handleMouseDown = () => {
-		let cell = matrix[row][col];
 		if (status === STOPPED) {
 			handleMouseUpDown(true);
 			if (cell.type === START) {
@@ -57,7 +62,6 @@ const Box = ({ row, col, val }) => {
 
 	let oldColor;
 	const handleMouseOver = (r, c, e) => {
-		let cell = matrix[r][c];
 		if (status === STOPPED) {
 			if (startMove) {
 				oldColor = e.target.style["background-color"];
@@ -87,40 +91,24 @@ const Box = ({ row, col, val }) => {
 		}
 	};
 
-	const getColor = (cell) => {
+	const getColor = () => {
 		let color = "";
-		if (cell.weight > 1) {
-			color = "deepskyblue";
-		} else if (cell.type === NORMAL) {
-			switch (cell.value) {
-				case 2:
-					color = "#FFDC00";
-					break;
-				case 3:
-					color = "lightsalmon";
-					break;
-				default:
-					color = "#DDDDDD";
-					break;
-			}
-		} else {
-			switch (cell.type) {
-				case WALL:
-					color = "#001F3F";
-					break;
-				case START:
-					color = "seagreen";
-					break;
-				case END:
-					color = "#FF4136";
-					break;
-				case PATH:
-					color = "#01FF70";
-					break;
-				default:
-					color = "#DDDDDD";
-					break;
-			}
+		switch (cell.type) {
+			case WALL:
+				color = "#001F3F";
+				break;
+			case START:
+				color = "seagreen";
+				break;
+			case END:
+				color = "#FF4136";
+				break;
+			case PATH:
+				color = "#01FF70";
+				break;
+			default:
+				color = "#DDDDDD";
+				break;
 		}
 		return color;
 	};
@@ -128,15 +116,25 @@ const Box = ({ row, col, val }) => {
 		<div
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
-			className={`${matrix[row][col].value > 0 && matrix[row][col].type !== END && matrix[row][col].type !== PATH  ? "box cell blink-bg" : "box cell"}`}
+			className={`${
+				cell.value > 0 &&
+				cell.type !== END &&
+				cell.type !== START &&
+				cell.type !== PATH
+					? status === RUNNING
+						? "box cell blink-bg"
+						: "box cell blink-bg-stopped"
+					: "box cell"
+			}`}
 			style={{
-				backgroundColor: getColor(matrix[row][col]),
+				backgroundColor: getColor(),
 				transition: "all .5s linear",
-
 			}}
 			onMouseOver={(e) => handleMouseOver(row, col, e)}
 			onMouseLeave={(e) => handleMouseLeave(e)}
-		></div>
+		>
+			{cell.weight > 0 && "*"}
+		</div>
 	);
 };
 

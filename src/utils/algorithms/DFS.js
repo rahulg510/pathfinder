@@ -2,27 +2,39 @@ import { isEquals, checkIndexes } from "../helpers";
 
 export const dfs = async (matrix, start, end, changeValue) => {
 	let stack = [];
-	let count = 0;
 	const push = (row, col) => {
 		stack.push({ row, col });
 	};
 
-	const visitNeighbors = ({ row, col }) => {
+	const visitNeighbors = (node) => {
+		let { row, col } = node;
 		if (checkIndexes(matrix, row, col - 1)) {
 			let cell = matrix[row][col - 1];
-			if (cell.value === 0) push(row, col - 1);
+			if (cell.value === 0) {
+				push(row, col - 1);
+				matrix[row][col - 1].parent = node;
+			}
 		}
 		if (checkIndexes(matrix, row, col + 1)) {
 			let cell = matrix[row][col + 1];
-			if (cell.value === 0) push(row, col + 1);
+			if (cell.value === 0) {
+				push(row, col + 1);
+				matrix[row][col + 1].parent = node;
+			}
 		}
 		if (checkIndexes(matrix, row - 1, col)) {
 			let cell = matrix[row - 1][col];
-			if (cell.value === 0) push(row - 1, col);
+			if (cell.value === 0) {
+				push(row - 1, col);
+				matrix[row - 1][col].parent = node;
+			}
 		}
 		if (checkIndexes(matrix, row + 1, col)) {
 			let cell = matrix[row + 1][col];
-			if (cell.value === 0) push(row + 1, col);
+			if (cell.value === 0) {
+				push(row + 1, col);
+				matrix[row + 1][col].parent = node;
+			}
 		}
 	};
 
@@ -32,27 +44,23 @@ export const dfs = async (matrix, start, end, changeValue) => {
 	};
 	stack.push(begin);
 
-	let path = [];
 	while (stack.length > 0) {
 		let cell = stack.pop();
 		if (isEquals(cell, end)) {
-			path = path.filter((c) => matrix[c.row][c.col].value === 2);
+			let path = [];
+			let parent = matrix[cell.row][cell.col].parent;
+			while (!isEquals(parent, start)) {
+				path.unshift(parent);
+				parent = matrix[parent.row][parent.col].parent;
+			}
 			return Promise.resolve(path);
 		}
-		if (!isEquals(start, cell)) {
-			let val = matrix[cell.row][cell.col].value;
-			if (val === 0) {
-				changeValue(cell.row, cell.col, 2);
-				push(cell.row, cell.col);
-				path.push(cell);
-			} else if (val === 2) changeValue(cell.row, cell.col, 3);
-		}
-
-		visitNeighbors(cell);
-		if (count % 3 === 0) {
+		let val = matrix[cell.row][cell.col].value;
+		if (val === 0) {
+			changeValue(cell.row, cell.col, 2);
 			await new Promise((resolve) => setTimeout(resolve, 0));
 		}
-		count++;
+		visitNeighbors(cell);
 	}
 	return Promise.resolve([]);
 };

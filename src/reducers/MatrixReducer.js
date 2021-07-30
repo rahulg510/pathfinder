@@ -2,8 +2,8 @@ import {
 	CHANGE_ALGORITHM,
 	CHANGE_VALUE,
 	RESET_MATRIX,
-	SET_MATRIX,
 	ERASE_TOGGLE,
+	SET_MATRIX,
 	STOP_RUNNING_ALGORITHM,
 	START_RUNNING_ALGORITHM,
 	MOUSE_UP_DOWN,
@@ -14,7 +14,6 @@ import {
 	CHANGE_WEIGHT,
 	CHANGE_WEIGHT_BUTTON,
 	CHANGE_TYPE,
-	CHANGE_COLOR
 } from "../utils/actions";
 import { STOPPED, RUNNING } from "../utils/status";
 
@@ -101,15 +100,6 @@ const MatrixReducer = (state, action) => {
 	if(action.type === CHANGE_TYPE){
 		const { row, col, type } = action.payload;
 		state.matrix[row][col].type = type;
-		return {
-			...state,
-			matrix: [...state.matrix],
-		};
-	}
-
-	if(action.type === CHANGE_COLOR){
-		const { row, col, color } = action.payload;
-		state.matrix[row][col].color = color;
 		return {
 			...state,
 			matrix: [...state.matrix],

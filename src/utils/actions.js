@@ -13,4 +13,3 @@ export const CHANGE_END = "CHANGE_END";
 export const CHANGE_WEIGHT = "CHANGE_WEIGHT";
 export const CHANGE_WEIGHT_BUTTON = "CHANGE_WEIGHT_BUTTON";
 export const CHANGE_TYPE = "CHANGE_TYPE";
-export const CHANGE_COLOR = "CHANGE_COLOR";

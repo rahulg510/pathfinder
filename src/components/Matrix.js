@@ -12,7 +12,7 @@ const Matrix = () => {
 		handleMouseLeavingMatrix,
 		erase,
 		handleEraseClick,
-		stopRunningAlogrithm
+		stopRunningAlogrithm,
 	} = useMatrixContext();
 	return (
 		<Wrapper>
@@ -24,7 +24,11 @@ const Matrix = () => {
 				handleEraseClick={handleEraseClick}
 				stopRunningAlogrithm={stopRunningAlogrithm}
 			/>
-			<div className="table" onMouseLeave={handleMouseLeavingMatrix} onDragStart={(e)=>e.preventDefault()}>
+			<div
+				className="table"
+				onMouseLeave={handleMouseLeavingMatrix}
+				onDragStart={(e) => e.preventDefault()}
+			>
 				{matrix.map((arr, row) => {
 					return (
 						<div className="row" key={row}>
@@ -48,32 +52,46 @@ const Matrix = () => {
 
 const Wrapper = styled.div`
 	.box {
-		height: 3vh;
-		width: 3vh;
+		height: 2vh;
+		width: 2vh;
 		background-color: lightgray;
 		border: solid 1px white;
 	}
 
-	.blink-bg{
+	.blink-bg {
 		animation-name: blinkingBackground;
-		animation-duration: 2s;
+		animation-duration: 5s;
 		animation-timing-function: ease;
-		animation-iteration-count: 2;
+		animation-iteration-count: infinite;
 		animation-direction: alternate;
 		animation-fill-mode: both;
 		animation-play-state: running;
 	}
-	@keyframes blinkingBackground{
-		0%		{ background-color: #FF9B85;}
-		0%		{ background-color: #FFA990;}
-		100%		{ background-color: #FFD97D;}
+	.blink-bg-stopped {
+		animation-name: blinkingBackground;
+		animation-duration: 5s;
+		animation-timing-function: ease;
+		animation-iteration-count: infinite;
+		animation-direction: alternate;
+		animation-fill-mode: both;
+		animation-play-state: paused;
+	}
+	@keyframes blinkingBackground {
+		0% {
+			background-color: #ff9b85;
+		}
+		50% {
+			background-color: #ffa990;
+		}
+		100% {
+			background-color: #ffd97d;
+		}
 	}
 
 	.table {
 		display: table;
-		border: ridge 4px #aaaaaa;
+		border: ridge 2px #aaaaaa;
 		margin: auto;
-		margin-top: 7vh;
 	}
 
 	.row {
@@ -83,11 +101,6 @@ const Wrapper = styled.div`
 	.cell {
 		display: table-cell;
 	}
-
-	.movingStart{
-		color: seagreen !important;
-	}
-	
 `;
 
 export default Matrix;

@@ -6,8 +6,8 @@ import {
 	RESET_MATRIX,
 	CHANGE_VALUE,
 	CHANGE_ALGORITHM,
-	SET_MATRIX,
 	ERASE_TOGGLE,
+	SET_MATRIX,
 	STOP_RUNNING_ALGORITHM,
 	START_RUNNING_ALGORITHM,
 	MOUSE_UP_DOWN,
@@ -17,7 +17,6 @@ import {
 	CHANGE_START,
 	CHANGE_WEIGHT,
 	CHANGE_WEIGHT_BUTTON,
-	CHANGE_COLOR,
 	CHANGE_TYPE,
 } from "../utils/actions";
 import { BFS, bfs } from "../utils/algorithms/BFS";
@@ -106,7 +105,7 @@ export const MatrixProvider = ({ children }) => {
 				let obj = {
 					value: 0,
 					weight: 0,
-					color: "#DDDDDD",
+					parent: null,
 					type: NORMAL,
 				};
 				arr.push(obj);
@@ -131,15 +130,11 @@ export const MatrixProvider = ({ children }) => {
 		dispatch({ type: MOUSE_UP_DOWN, payload: bool });
 	};
 
-	const changeStartEnd = (row, col, val) => {
-		dispatch({ type: CHANGE_VALUE, payload: { row, col, val } });
-	};
-
-	const changeStart = (row, col, val) => {
+	const changeStart = (row, col) => {
 		dispatch({ type: CHANGE_START, payload: { row, col } });
 	};
 
-	const changeEnd = (row, col, val) => {
+	const changeEnd = (row, col) => {
 		dispatch({ type: CHANGE_END, payload: { row, col } });
 	};
 
@@ -159,20 +154,12 @@ export const MatrixProvider = ({ children }) => {
 		dispatch({ type: CHANGE_TYPE, payload: { row, col, type } });
 	};
 
-	const changeColor = (row, col, color) => {
-		dispatch({ type: CHANGE_COLOR, payload: { row, col, color } });
-	};
-
 	const drawPath = async (path) => {
 		while (path.length > 0) {
 			let vertex = path.shift();
 			changeType(vertex.row, vertex.col, PATH);
 			await new Promise((resolve) => setTimeout(resolve, 0));
 		}
-	};
-
-	const changeMatrix = (m) => {
-		state.matrix = [...m];
 	};
 
 	const changeAlgorithm = (newAlgo) => {
@@ -197,9 +184,24 @@ export const MatrixProvider = ({ children }) => {
 				for (let j = 0; j < state.cols; j++) {
 					let type = state.matrix[i][j].type;
 					changeValue(i, j, 0);
-					changeWeight(i, j, 1);
+					changeWeight(i, j, 0);
 					if (type === PATH) {
-						changeType(i,j,NORMAL);
+						changeType(i, j, NORMAL);
+					}
+				}
+			}
+		}
+		await new Promise((resolve) => setTimeout(resolve, 800));
+	};
+
+	const prepareMatrixForWeighted = async () => {
+		if (state.status === STOPPED) {
+			for (let i = 0; i < state.rows; i++) {
+				for (let j = 0; j < state.cols; j++) {
+					let type = state.matrix[i][j].type;
+					changeValue(i, j, 0);
+					if (type === PATH) {
+						changeType(i, j, NORMAL);
 					}
 				}
 			}
@@ -223,6 +225,7 @@ export const MatrixProvider = ({ children }) => {
 					break;
 
 				case DIJ:
+					await prepareMatrixForWeighted();
 					path = await dijkstra(
 						state.matrix,
 						state.start,
@@ -233,7 +236,8 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 
-					case GFS:
+				case GFS:
+					await prepareMatrixForWeighted();
 					path = await gfs(
 						state.matrix,
 						state.start,
@@ -242,7 +246,8 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 
-					case ASTAR:
+				case ASTAR:
+					await prepareMatrixForWeighted();
 					path = await aStar(
 						state.matrix,
 						state.start,
@@ -280,8 +285,9 @@ export const MatrixProvider = ({ children }) => {
 				for (let j = 0; j < state.cols; j++) {
 					let type = state.matrix[i][j].type;
 					changeValue(i, j, 0);
+					changeWeight(i, j, 0);
 					if (type === PATH) {
-						changeType(i,j, NORMAL);
+						changeType(i, j, NORMAL);
 					}
 				}
 			}
@@ -292,18 +298,11 @@ export const MatrixProvider = ({ children }) => {
 		handleMouseUpDown(false);
 		if (state.startMove) {
 			handleStartMove(false);
-			changeStartEnd(state.start.row, state.start.col, 1);
+			changeType(state.start.row, state.start.col, START);
 		}
 		if (state.endMove) {
 			handleEndMove(false);
-			changeStartEnd(state.end.row, state.end.col, 1000);
-		}
-	};
-
-	const handleCellClick = (row, col) => {
-		if (state.status === STOPPED) {
-			let val = state.erase ? 0 : -1;
-			changeValue(row, col, val);
+			changeType(state.end.row, state.end.col, END);
 		}
 	};
 
@@ -315,7 +314,6 @@ export const MatrixProvider = ({ children }) => {
 				clearMatrix,
 				runAlgorithm,
 				changeAlgorithm,
-				handleCellClick,
 				changeValue,
 				handleMouseLeavingMatrix,
 				handleEraseClick,
@@ -326,11 +324,9 @@ export const MatrixProvider = ({ children }) => {
 				handleEndMove,
 				changeStart,
 				changeEnd,
-				changeStartEnd,
 				handleWeightClick,
 				changeWeight,
 				changeType,
-				changeColor,
 			}}
 		>
 			{children}
