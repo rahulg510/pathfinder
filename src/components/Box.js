@@ -41,11 +41,17 @@ const Box = ({ row, col }) => {
 				handleEndMove(true);
 				changeType(row, col, NORMAL);
 			} else if (weight) {
-				if (cell.type === NORMAL || cell.type === PATH)
-					changeWeight(row, col, cell.weight === 0 ? 15 : 0);
+				if (
+					cell.type === NORMAL ||
+					cell.type === WALL ||
+					cell.type === PATH
+				)
+					changeType(row, col, NORMAL);
+				changeWeight(row, col, cell.weight === 0 ? 15 : 0);
 			} else {
 				if (cell.type === NORMAL || cell.type === PATH) {
 					changeType(row, col, WALL);
+					changeWeight(row, col, 0);
 				} else if (cell.type === WALL) changeType(row, col, NORMAL);
 			}
 		}
@@ -88,11 +94,18 @@ const Box = ({ row, col }) => {
 			} else {
 				if (mouseDown) {
 					if (weight) {
-						if (cell.type === NORMAL || cell.type === PATH)
+						if (
+							cell.type === NORMAL ||
+							cell.type === WALL ||
+							cell.type === PATH
+						) {
+							changeType(row, col, NORMAL);
 							changeWeight(row, col, cell.weight === 0 ? 15 : 0);
+						}
 					} else {
 						if (cell.type === NORMAL || cell.type === PATH) {
 							changeType(row, col, WALL);
+							changeWeight(row, col, 0);
 						} else if (cell.type === WALL)
 							changeType(row, col, NORMAL);
 					}
@@ -112,7 +125,7 @@ const Box = ({ row, col }) => {
 			return (
 				<FontAwesomeIcon
 					style={{ textAlign: "center", color: "seagreen" }}
-					size="2x"
+					size="lg"
 					icon={faCar}
 				/>
 			);
@@ -120,7 +133,7 @@ const Box = ({ row, col }) => {
 			return (
 				<FontAwesomeIcon
 					style={{ textAlign: "center", color: "deepskyblue" }}
-					size="2x"
+					size="lg"
 					icon={faBuilding}
 				/>
 			);

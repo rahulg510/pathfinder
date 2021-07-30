@@ -90,7 +90,7 @@ const Wrapper = styled.div`
 
 	.table {
 		display: table;
-		border: ridge 2px #aaaaaa;
+		/* border: ridge 2px #aaaaaa */
 		margin: auto;
 	}
 

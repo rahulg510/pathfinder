@@ -29,7 +29,7 @@ const MatrixContext = React.createContext();
 
 const initialState = {
 	rows: 25,
-	cols: 60,
+	cols: 40,
 	start: { row: 5, col: 5 },
 	end: { row: 20, col: 30 },
 	matrix: [],
@@ -156,9 +156,12 @@ export const MatrixProvider = ({ children }) => {
 	};
 
 	const drawPath = async (path) => {
+		let last = state.start;
 		while (path.length > 0) {
+			changeType(last.row, last.col, PATH);
 			let vertex = path.shift();
-			changeType(vertex.row, vertex.col, PATH);
+			changeType(vertex.row, vertex.col, START);
+			last = vertex;
 			await new Promise((resolve) => setTimeout(resolve, 0));
 		}
 	};
