@@ -53,7 +53,7 @@ const Matrix = () => {
 const Wrapper = styled.div`
 	.box {
 		height: 3vh;
-		width: 3vh;
+		width: 3.2vh;
 		background-color: lightgray;
 		border: solid 1px white;
 	}
@@ -81,10 +81,7 @@ const Wrapper = styled.div`
 			background-color: #ff9b85;
 		}
 		50% {
-			width: 0;
-			height: 0;
-			border-top: 2vh solid #ffa990;
-			border-left: 2vh solid transparent;
+			background-color: #ffa990;
 		}
 		100% {
 			background-color: #ffd97d;

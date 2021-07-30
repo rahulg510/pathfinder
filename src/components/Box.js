@@ -3,6 +3,9 @@ import { END, NORMAL, PATH, START, WALL } from "../utils/cellTypes";
 import { RUNNING, STOPPED } from "../utils/status";
 import { useState, useEffect } from "react";
 import { isEquals } from "../utils/helpers";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCar, faBuilding } from "@fortawesome/free-solid-svg-icons";
+
 const Box = ({ row, col }) => {
 	const {
 		mouseDown,
@@ -104,15 +107,32 @@ const Box = ({ row, col }) => {
 		}
 	};
 
+	const getComponent = () => {
+		if (cell.type === START)
+			return (
+				<FontAwesomeIcon
+					style={{ textAlign: "center", color: "seagreen" }}
+					size="2x"
+					icon={faCar}
+				/>
+			);
+		if (cell.type === WALL)
+			return (
+				<FontAwesomeIcon
+					style={{ textAlign: "center", color: "deepskyblue" }}
+					size="2x"
+					icon={faBuilding}
+				/>
+			);
+		else return null;
+	};
+
 	const getColor = () => {
 		let color = "";
 		switch (cell.type) {
-			case WALL:
-				color = "#001F3F";
-				break;
-			case START:
-				color = "seagreen";
-				break;
+			// case WALL:
+			// 	color = "#001F3F";
+			// 	break;
 			case END:
 				color = "#FF4136";
 				break;
@@ -146,7 +166,7 @@ const Box = ({ row, col }) => {
 			onMouseOver={(e) => handleMouseOver(row, col, e)}
 			onMouseLeave={(e) => handleMouseLeave(e)}
 		>
-			{cell.weight > 0 && "*"}
+			{getComponent()}
 		</div>
 	);
 };
