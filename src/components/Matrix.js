@@ -52,8 +52,8 @@ const Matrix = () => {
 
 const Wrapper = styled.div`
 	.box {
-		height: 2vh;
-		width: 2vh;
+		height: 3vh;
+		width: 3vh;
 		background-color: lightgray;
 		border: solid 1px white;
 	}

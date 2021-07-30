@@ -28,10 +28,10 @@ import { aStar, ASTAR } from "../utils/algorithms/aStar";
 const MatrixContext = React.createContext();
 
 const initialState = {
-	rows: 35,
-	cols: 80,
-	start: { row: 15, col: 15 },
-	end: { row: 30, col: 70 },
+	rows: 25,
+	cols: 60,
+	start: { row: 5, col: 5 },
+	end: { row: 20, col: 30 },
 	matrix: [],
 	currentAlgorithm: BFS,
 	erase: false,
