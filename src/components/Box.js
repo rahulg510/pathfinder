@@ -2,6 +2,7 @@ import { useMatrixContext } from "../contexts/MatrixContext";
 import { END, NORMAL, PATH, START, WALL } from "../utils/cellTypes";
 import { RUNNING, STOPPED } from "../utils/status";
 import { useState, useEffect } from "react";
+import { isEquals } from "../utils/helpers";
 const Box = ({ row, col }) => {
 	const {
 		mouseDown,
@@ -17,6 +18,8 @@ const Box = ({ row, col }) => {
 		changeWeight,
 		changeType,
 		matrix,
+		start,
+		end,
 	} = useMatrixContext();
 
 	const [cell, setCell] = useState(matrix[row][col]);
@@ -49,26 +52,36 @@ const Box = ({ row, col }) => {
 		if (status === STOPPED) {
 			handleMouseUpDown(false);
 			if (startMove) {
-				changeType(row, col, START);
-				changeStart(row, col);
+				if (isEquals({ row, col }, end)) {
+					changeType(start.row, start.col, START);
+				} else {
+					changeType(row, col, START);
+					changeStart(row, col);
+				}
 				handleStartMove(false);
 			} else if (endMove) {
-				changeType(row, col, END);
-				changeEnd(row, col);
+				if (isEquals({ row, col }, start)) {
+					changeType(end.row, end.col, END);
+				} else {
+					changeType(row, col, END);
+					changeEnd(row, col);
+				}
 				handleEndMove(false);
 			}
 		}
 	};
 
 	let oldColor;
-	const handleMouseOver = (r, c, e) => {
+	const handleMouseOver = (row, col, e) => {
 		if (status === STOPPED) {
 			if (startMove) {
 				oldColor = e.target.style["background-color"];
-				e.target.style["background-color"] = "seagreen";
+				if (!isEquals({ row, col }, end))
+					e.target.style["background-color"] = "seagreen";
 			} else if (endMove) {
 				oldColor = e.target.style["background-color"];
-				e.target.style["background-color"] = "#FF4136";
+				if (!isEquals({ row, col }, start))
+					e.target.style["background-color"] = "#FF4136";
 			} else {
 				if (mouseDown) {
 					if (weight) {

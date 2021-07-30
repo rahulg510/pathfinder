@@ -28,10 +28,10 @@ import { aStar, ASTAR } from "../utils/algorithms/aStar";
 const MatrixContext = React.createContext();
 
 const initialState = {
-	rows: 25,
-	cols: 40,
-	start: { row: 10, col: 15 },
-	end: { row: 24, col: 39 },
+	rows: 35,
+	cols: 80,
+	start: { row: 15, col: 15 },
+	end: { row: 30, col: 70 },
 	matrix: [],
 	currentAlgorithm: BFS,
 	erase: false,
@@ -89,6 +89,7 @@ export const MatrixProvider = ({ children }) => {
 				changeEnd(endPoint.row, endPoint.col);
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {

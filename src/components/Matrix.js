@@ -62,7 +62,7 @@ const Wrapper = styled.div`
 		animation-name: blinkingBackground;
 		animation-duration: 5s;
 		animation-timing-function: ease;
-		animation-iteration-count: infinite;
+		animation-iteration-count: 1;
 		animation-direction: alternate;
 		animation-fill-mode: both;
 		animation-play-state: running;
@@ -71,17 +71,20 @@ const Wrapper = styled.div`
 		animation-name: blinkingBackground;
 		animation-duration: 5s;
 		animation-timing-function: ease;
-		animation-iteration-count: infinite;
+		animation-iteration-count: 1;
 		animation-direction: alternate;
 		animation-fill-mode: both;
 		animation-play-state: paused;
 	}
 	@keyframes blinkingBackground {
-		0% {
+		20% {
 			background-color: #ff9b85;
 		}
 		50% {
-			background-color: #ffa990;
+			width: 0;
+			height: 0;
+			border-top: 2vh solid #ffa990;
+			border-left: 2vh solid transparent;
 		}
 		100% {
 			background-color: #ffd97d;
