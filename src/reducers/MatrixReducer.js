@@ -14,6 +14,7 @@ import {
 	CHANGE_WEIGHT,
 	CHANGE_WEIGHT_BUTTON,
 	CHANGE_TYPE,
+	CHANGE_DONE
 } from "../utils/actions";
 import { STOPPED, RUNNING } from "../utils/status";
 
@@ -100,6 +101,15 @@ const MatrixReducer = (state, action) => {
 	if(action.type === CHANGE_TYPE){
 		const { row, col, type } = action.payload;
 		state.matrix[row][col].type = type;
+		return {
+			...state,
+			matrix: [...state.matrix],
+		};
+	}
+
+	if(action.type === CHANGE_DONE){
+		const { row, col, done } = action.payload;
+		state.matrix[row][col].done = done;
 		return {
 			...state,
 			matrix: [...state.matrix],

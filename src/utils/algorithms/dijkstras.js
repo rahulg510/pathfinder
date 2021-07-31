@@ -1,7 +1,7 @@
 import { checkIndexes, isEquals } from "../helpers";
 import Heap from "heap";
 
-export const dijkstra = async (matrix, start, end, changeValue, rows, cols) => {
+export const dijkstra = async (matrix, start, end, changeValue, changeDone) => {
 	let heap = new Heap((a, b) => {
 		return a.val - b.val;
 	});
@@ -60,9 +60,13 @@ export const dijkstra = async (matrix, start, end, changeValue, rows, cols) => {
 
 	while (heap.size() > 0) {
 		let cell = heap.pop();
+		let element = matrix[cell.row][cell.col];
+		if(element.weight > 0){
+			changeDone(cell.row,cell.col, true);
+		}
 		if (isEquals(cell, end)) {
 			let path = [];
-			let parent = matrix[cell.row][cell.col].parent;
+			let parent = element.parent;
 			while (!isEquals(parent, start)) {
 				path.unshift(parent);
 				parent = matrix[parent.row][parent.col].parent;

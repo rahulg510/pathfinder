@@ -18,6 +18,7 @@ import {
 	CHANGE_WEIGHT,
 	CHANGE_WEIGHT_BUTTON,
 	CHANGE_TYPE,
+	CHANGE_DONE
 } from "../utils/actions";
 import { BFS, bfs } from "../utils/algorithms/BFS";
 import { DFS, dfs } from "../utils/algorithms/DFS";
@@ -28,10 +29,10 @@ import { aStar, ASTAR } from "../utils/algorithms/aStar";
 const MatrixContext = React.createContext();
 
 const initialState = {
-	rows: 25,
-	cols: 40,
+	rows: 20,
+	cols: 35,
 	start: { row: 5, col: 5 },
-	end: { row: 20, col: 30 },
+	end: { row: 17, col: 25 },
 	matrix: [],
 	currentAlgorithm: BFS,
 	erase: false,
@@ -108,6 +109,7 @@ export const MatrixProvider = ({ children }) => {
 					weight: 0,
 					parent: null,
 					type: NORMAL,
+					done: false
 				};
 				arr.push(obj);
 			}
@@ -151,17 +153,21 @@ export const MatrixProvider = ({ children }) => {
 		dispatch({ type: CHANGE_WEIGHT, payload: { row, col, weight } });
 	};
 
+	const changeDone = (row, col, done) => {
+		dispatch({ type: CHANGE_DONE, payload: {row,col,done} });
+	};
+
 	const changeType = (row, col, type) => {
 		dispatch({ type: CHANGE_TYPE, payload: { row, col, type } });
 	};
 
 	const drawPath = async (path) => {
-		let last = state.start;
+		// let last = state.start;
 		while (path.length > 0) {
-			changeType(last.row, last.col, PATH);
+			// changeType(last.row, last.col, PATH);
 			let vertex = path.shift();
-			changeType(vertex.row, vertex.col, START);
-			last = vertex;
+			changeType(vertex.row, vertex.col, PATH);
+			// last = vertex;
 			await new Promise((resolve) => setTimeout(resolve, 0));
 		}
 	};
@@ -189,6 +195,7 @@ export const MatrixProvider = ({ children }) => {
 					let type = state.matrix[i][j].type;
 					changeValue(i, j, 0);
 					changeWeight(i, j, 0);
+					changeDone(i,j,false);
 					if (type === PATH) {
 						changeType(i, j, NORMAL);
 					}
@@ -204,6 +211,7 @@ export const MatrixProvider = ({ children }) => {
 				for (let j = 0; j < state.cols; j++) {
 					let type = state.matrix[i][j].type;
 					changeValue(i, j, 0);
+					changeDone(i,j,false);
 					if (type === PATH) {
 						changeType(i, j, NORMAL);
 					}
@@ -235,8 +243,7 @@ export const MatrixProvider = ({ children }) => {
 						state.start,
 						state.end,
 						changeValue,
-						state.rows,
-						state.cols
+						changeDone
 					);
 					break;
 
@@ -246,7 +253,8 @@ export const MatrixProvider = ({ children }) => {
 						state.matrix,
 						state.start,
 						state.end,
-						changeValue
+						changeValue,
+						changeDone
 					);
 					break;
 
@@ -256,7 +264,8 @@ export const MatrixProvider = ({ children }) => {
 						state.matrix,
 						state.start,
 						state.end,
-						changeValue
+						changeValue,
+						changeDone
 					);
 					break;
 
@@ -331,6 +340,7 @@ export const MatrixProvider = ({ children }) => {
 				handleWeightClick,
 				changeWeight,
 				changeType,
+				changeDone
 			}}
 		>
 			{children}

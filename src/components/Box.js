@@ -3,8 +3,8 @@ import { END, NORMAL, PATH, START, WALL } from "../utils/cellTypes";
 import { RUNNING, STOPPED } from "../utils/status";
 import { useState, useEffect } from "react";
 import { isEquals } from "../utils/helpers";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCar, faBuilding } from "@fortawesome/free-solid-svg-icons";
+import { BsDashCircle } from "react-icons/bs";
+import { auto } from "@popperjs/core";
 
 const Box = ({ row, col }) => {
 	const {
@@ -99,8 +99,8 @@ const Box = ({ row, col }) => {
 							cell.type === WALL ||
 							cell.type === PATH
 						) {
-							changeType(row, col, NORMAL);
 							changeWeight(row, col, cell.weight === 0 ? 15 : 0);
+							changeType(row, col, NORMAL);
 						}
 					} else {
 						if (cell.type === NORMAL || cell.type === PATH) {
@@ -122,9 +122,19 @@ const Box = ({ row, col }) => {
 
 	const getColor = () => {
 		let color = "";
+		// if(cell.weight > 0){
+		// 	color = "deepskyblue";
+		// }
+		// else
 		switch (cell.type) {
+			case START:
+				color = "seagreen";
+				break;
 			case END:
 				color = "#FF4136";
+				break;
+			case WALL:
+				color = "#001F3F";
 				break;
 			case PATH:
 				color = "#01FF70";
@@ -156,10 +166,22 @@ const Box = ({ row, col }) => {
 			onMouseLeave={(e) => handleMouseLeave(e)}
 		>
 			{cell.weight > 0 && (
-				<FontAwesomeIcon
-					style={{ textAlign: "center", color: "deepskyblue" }}
-					size="lg"
-					icon={faBuilding}
+				<BsDashCircle
+					style={
+						cell.done
+							? {
+									textAlign: "center",
+									color: "purple",
+									margin: "auto",
+									padding: "none",
+							  }
+							: {
+									textAlign: "center",
+									color: "deepskyblue",
+									margin: "auto",
+									padding: "none",
+							  }
+					}
 				/>
 			)}
 		</div>

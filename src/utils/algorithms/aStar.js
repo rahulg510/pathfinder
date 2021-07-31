@@ -1,7 +1,7 @@
 import heap from "heap";
 import { isEquals, checkIndexes } from "../helpers";
 
-export const aStar = async (matrix, start, end, changeValue) => {
+export const aStar = async (matrix, start, end, changeValue,changeDone) => {
 	const pQueue = new heap((a, b) => {
 		return a.cost - b.cost;
 	});
@@ -69,6 +69,10 @@ export const aStar = async (matrix, start, end, changeValue) => {
 
 	while (pQueue.size() > 0) {
 		let cell = pQueue.pop();
+		let element = matrix[cell.row][cell.col];
+		if(element.weight > 0){
+			changeDone(cell.row,cell.col, true);
+		}
 		if (isEquals(cell, end)) {
 			let path = [];
 			let parent = matrix[cell.row][cell.col].parent;
