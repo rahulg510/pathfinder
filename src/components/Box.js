@@ -3,8 +3,7 @@ import { END, NORMAL, PATH, START, WALL } from "../utils/cellTypes";
 import { RUNNING, STOPPED } from "../utils/status";
 import { useState, useEffect } from "react";
 import { isEquals } from "../utils/helpers";
-import { BsDashCircle } from "react-icons/bs";
-import { auto } from "@popperjs/core";
+import { GiWeight } from "react-icons/gi";
 
 const Box = ({ row, col }) => {
 	const {
@@ -166,7 +165,7 @@ const Box = ({ row, col }) => {
 			onMouseLeave={(e) => handleMouseLeave(e)}
 		>
 			{cell.weight > 0 && (
-				<BsDashCircle
+				<GiWeight
 					style={
 						cell.done
 							? {
