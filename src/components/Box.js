@@ -121,10 +121,6 @@ const Box = ({ row, col }) => {
 
 	const getColor = () => {
 		let color = "";
-		// if(cell.weight > 0){
-		// 	color = "deepskyblue";
-		// }
-		// else
 		switch (cell.type) {
 			case START:
 				color = "seagreen";
@@ -169,16 +165,18 @@ const Box = ({ row, col }) => {
 					style={
 						cell.done
 							? {
-									textAlign: "center",
 									color: "purple",
-									margin: "auto",
-									padding: "none",
+									width: "100%",
+									height: "80%",
+									top: "50%",
+									left: "50%",
 							  }
 							: {
-									textAlign: "center",
 									color: "deepskyblue",
-									margin: "auto",
-									padding: "none",
+									width: "100%",
+									height: "80%",
+									top: "50%",
+									left: "50%",
 							  }
 					}
 				/>
