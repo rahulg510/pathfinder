@@ -120,32 +120,9 @@ const Box = ({ row, col }) => {
 		}
 	};
 
-	const getComponent = () => {
-		if (cell.type === START)
-			return (
-				<FontAwesomeIcon
-					style={{ textAlign: "center", color: "seagreen" }}
-					size="lg"
-					icon={faCar}
-				/>
-			);
-		if (cell.type === WALL)
-			return (
-				<FontAwesomeIcon
-					style={{ textAlign: "center", color: "deepskyblue" }}
-					size="lg"
-					icon={faBuilding}
-				/>
-			);
-		else return null;
-	};
-
 	const getColor = () => {
 		let color = "";
 		switch (cell.type) {
-			// case WALL:
-			// 	color = "#001F3F";
-			// 	break;
 			case END:
 				color = "#FF4136";
 				break;
@@ -174,12 +151,17 @@ const Box = ({ row, col }) => {
 			}`}
 			style={{
 				backgroundColor: getColor(),
-				transition: "all .5s linear",
 			}}
 			onMouseOver={(e) => handleMouseOver(row, col, e)}
 			onMouseLeave={(e) => handleMouseLeave(e)}
 		>
-			{getComponent()}
+			{cell.weight > 0 && (
+				<FontAwesomeIcon
+					style={{ textAlign: "center", color: "deepskyblue" }}
+					size="lg"
+					icon={faBuilding}
+				/>
+			)}
 		</div>
 	);
 };
