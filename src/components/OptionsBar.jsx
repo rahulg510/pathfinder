@@ -4,6 +4,7 @@ import { useMatrixContext } from "../contexts/MatrixContext";
 import { RUNNING } from "../utils/status";
 import "../utils/algorithms/algorithms";
 import { ASTAR, BFS, DFS, DIJ, GFS } from "../utils/algorithms/algorithms";
+import StatusBar from "./StatusBar";
 
 const OptionsBar = () => {
 	const {
@@ -122,6 +123,7 @@ const OptionsBar = () => {
 							</li>
 						</ul>
 					</div>
+					<StatusBar/>
 				</div>
 			</nav>
 		</Wrapper>

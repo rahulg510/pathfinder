@@ -38,6 +38,7 @@ const Wrapper = styled.div`
 	.table {
 		display: table;
 		table-layout: fixed;
+		border-collapse: collapse;
 	}
 
 	.row {
