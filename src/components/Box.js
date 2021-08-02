@@ -131,6 +131,8 @@ const Box = ({ row, col }) => {
 		let cellClass = "cell";
 		if (cell.weight === 15) {
 			cellClass += " weight";
+		} else if (cell.type === WALL) {
+			cellClass += " wall";
 		} else
 			cellClass +=
 				cell.value > 0 &&
@@ -140,7 +142,7 @@ const Box = ({ row, col }) => {
 					? status === RUNNING
 						? " blink-bg"
 						: " blink-bg-stopped"
-					: " end-points";
+					: "";
 		return cellClass;
 	};
 
@@ -184,6 +186,5 @@ const Box = ({ row, col }) => {
 	);
 };
 
-const Wrapper = styled.div`
-`;
+const Wrapper = styled.div``;
 export default Box;

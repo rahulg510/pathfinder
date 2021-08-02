@@ -18,6 +18,7 @@ import {
 	CHANGE_WEIGHT_BUTTON,
 	CHANGE_TYPE,
 	CHANGE_DONE,
+	FIRST_USE
 } from "../utils/actions";
 import {
 	GFS,
@@ -36,7 +37,7 @@ const MatrixContext = React.createContext();
 
 const initialState = {
 	rows: 30,
-	cols: 60,
+	cols: 70,
 	start: { row: 5, col: 5 },
 	end: { row: 17, col: 25 },
 	matrix: [],
@@ -47,6 +48,7 @@ const initialState = {
 	startMove: false,
 	endMove: false,
 	weight: false,
+	firstUse: true
 };
 
 export const MatrixProvider = ({ children }) => {
@@ -129,6 +131,7 @@ export const MatrixProvider = ({ children }) => {
 
 	const startRunningAlogrithm = () => {
 		dispatch({ type: START_RUNNING_ALGORITHM });
+		setFirstUse();
 	};
 
 	const stopRunningAlogrithm = () => {
@@ -180,6 +183,7 @@ export const MatrixProvider = ({ children }) => {
 
 	const changeAlgorithm = (newAlgo) => {
 		dispatch({ type: CHANGE_ALGORITHM, payload: newAlgo });
+		setFirstUse();
 	};
 
 	const handleStartMove = (bool) => {
@@ -222,6 +226,10 @@ export const MatrixProvider = ({ children }) => {
 		}
 		await new Promise((resolve) => setTimeout(resolve, 800));
 	};
+
+	const setFirstUse = () => {
+		dispatch({type: FIRST_USE});
+	}
 
 	const runAlgorithm = async () => {
 		if (state.status === STOPPED) {

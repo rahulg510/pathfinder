@@ -15,6 +15,7 @@ const OptionsBar = () => {
 		handleWeightClick,
 		currentAlgorithm,
 		runAlgorithm,
+		firstUse
 	} = useMatrixContext();
 
 	return (
@@ -66,7 +67,7 @@ const OptionsBar = () => {
 									aria-expanded="false"
 									id="navbarDarkDropdownMenuLink"
 								>
-									Algorithms
+									{firstUse ? "Algorithms" : currentAlgorithm}
 								</button>
 								<ul
 									className="dropdown-menu bg-light"
@@ -136,9 +137,6 @@ const OptionsBar = () => {
 								<button>
 									{status === RUNNING ? "Running" : "Ready"}
 								</button>
-							</li>
-							<li className="nav-item">
-								<button>{currentAlgorithm}</button>
 							</li>
 							<li className="nav-item">
 								<button

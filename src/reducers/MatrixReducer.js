@@ -13,7 +13,8 @@ import {
 	CHANGE_WEIGHT,
 	CHANGE_WEIGHT_BUTTON,
 	CHANGE_TYPE,
-	CHANGE_DONE
+	CHANGE_DONE,
+	FIRST_USE
 } from "../utils/actions";
 import { STOPPED, RUNNING } from "../utils/status";
 
@@ -119,7 +120,7 @@ const MatrixReducer = (state, action) => {
 	if (action.type === CHANGE_ALGORITHM) {
 		return {
 			...state,
-			currentAlgorithm: action.payload,
+			currentAlgorithm: action.payload
 		};
 	}
 
@@ -127,6 +128,12 @@ const MatrixReducer = (state, action) => {
 		return {
 			...state,
 			mouseDown: action.payload,
+		};
+	}
+	if (action.type === FIRST_USE) {
+		return {
+			...state,
+			firstUse: false,
 		};
 	}
 };
