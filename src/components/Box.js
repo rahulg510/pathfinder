@@ -3,7 +3,7 @@ import { END, NORMAL, PATH, START, WALL } from "../utils/cellTypes";
 import { RUNNING, STOPPED } from "../utils/status";
 import { useState, useEffect } from "react";
 import { isEquals } from "../utils/helpers";
-import { GiWeight } from "react-icons/gi";
+import styled from "styled-components";
 
 const Box = ({ row, col }) => {
 	const {
@@ -22,6 +22,8 @@ const Box = ({ row, col }) => {
 		matrix,
 		start,
 		end,
+		changeDone,
+		changeValue,
 	} = useMatrixContext();
 
 	const [cell, setCell] = useState(matrix[row][col]);
@@ -56,14 +58,17 @@ const Box = ({ row, col }) => {
 		}
 	};
 
-	const handleMouseUp = () => {
+	const handleMouseUp = (e) => {
+		handleMouseUpDown(false);
 		if (status === STOPPED) {
-			handleMouseUpDown(false);
 			if (startMove) {
 				if (isEquals({ row, col }, end)) {
 					changeType(start.row, start.col, START);
 				} else {
 					changeType(row, col, START);
+					changeWeight(row, col, 0);
+					changeValue(row, col, 0);
+					changeDone(row, col, 0);
 					changeStart(row, col);
 				}
 				handleStartMove(false);
@@ -72,6 +77,9 @@ const Box = ({ row, col }) => {
 					changeType(end.row, end.col, END);
 				} else {
 					changeType(row, col, END);
+					changeWeight(row, col, 0);
+					changeValue(row, col, 0);
+					changeDone(row, col, 0);
 					changeEnd(row, col);
 				}
 				handleEndMove(false);
@@ -119,70 +127,63 @@ const Box = ({ row, col }) => {
 		}
 	};
 
-	const getColor = () => {
-		let color = "";
-		switch (cell.type) {
-			case START:
-				color = "seagreen";
-				break;
-			case END:
-				color = "#FF4136";
-				break;
-			case WALL:
-				color = "#001F3F";
-				break;
-			case PATH:
-				color = "#01FF70";
-				break;
-			default:
-				color = "#DDDDDD";
-				break;
-		}
-		return color;
-	};
-	return (
-		<div
-			onMouseDown={handleMouseDown}
-			onMouseUp={handleMouseUp}
-			className={`${
+	const getClass = () => {
+		let cellClass = "cell";
+		if (cell.weight === 15) {
+			cellClass += " weight";
+		} else
+			cellClass +=
 				cell.value > 0 &&
 				cell.type !== END &&
 				cell.type !== START &&
 				cell.type !== PATH
 					? status === RUNNING
-						? "box cell blink-bg"
-						: "box cell blink-bg-stopped"
-					: "box cell"
-			}`}
+						? " blink-bg"
+						: " blink-bg-stopped"
+					: " end-points";
+		return cellClass;
+	};
+
+	const getColor = () => {
+		let color = "";
+		if (cell.weight > 0) {
+			if (cell.type === PATH) {
+				color = "#74B652";
+			} else color = cell.done ? "purple" : "deepskyblue";
+		} else
+			switch (cell.type) {
+				case START:
+					color = "seagreen";
+					break;
+				case END:
+					color = "#FF4136";
+					break;
+				case WALL:
+					color = "#001F3F";
+					break;
+				case PATH:
+					color = "#01FF70";
+					break;
+				default:
+					color = "#DDDDDD";
+					break;
+			}
+		return color;
+	};
+	return (
+		<Wrapper
+			onMouseDown={handleMouseDown}
+			onMouseUp={handleMouseUp}
+			className={getClass()}
 			style={{
 				backgroundColor: getColor(),
 			}}
 			onMouseOver={(e) => handleMouseOver(row, col, e)}
 			onMouseLeave={(e) => handleMouseLeave(e)}
-		>
-			{cell.weight > 0 && (
-				<GiWeight
-					style={
-						cell.done
-							? {
-									color: "purple",
-									width: "100%",
-									height: "80%",
-									top: "50%",
-									left: "50%",
-							  }
-							: {
-									color: "deepskyblue",
-									width: "100%",
-									height: "80%",
-									top: "50%",
-									left: "50%",
-							  }
-					}
-				/>
-			)}
-		</div>
+		></Wrapper>
 	);
 };
 
+const Wrapper = styled.div`
+`;
 export default Box;

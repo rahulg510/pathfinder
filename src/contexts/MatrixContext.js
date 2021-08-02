@@ -6,7 +6,6 @@ import {
 	RESET_MATRIX,
 	CHANGE_VALUE,
 	CHANGE_ALGORITHM,
-	ERASE_TOGGLE,
 	SET_MATRIX,
 	STOP_RUNNING_ALGORITHM,
 	START_RUNNING_ALGORITHM,
@@ -18,19 +17,26 @@ import {
 	CHANGE_WEIGHT,
 	CHANGE_WEIGHT_BUTTON,
 	CHANGE_TYPE,
-	CHANGE_DONE
+	CHANGE_DONE,
 } from "../utils/actions";
-import { BFS, bfs } from "../utils/algorithms/BFS";
-import { DFS, dfs } from "../utils/algorithms/DFS";
-import { DIJ, dijkstra } from "../utils/algorithms/dijkstras";
-import { GFS, gfs } from "../utils/algorithms/GreedyFirstSearch";
-import { aStar, ASTAR } from "../utils/algorithms/aStar";
+import {
+	GFS,
+	gfs,
+	ASTAR,
+	aStar,
+	DFS,
+	dfs,
+	bfs,
+	BFS,
+	DIJ,
+	dijkstra,
+} from "../utils/algorithms/algorithms";
 
 const MatrixContext = React.createContext();
 
 const initialState = {
-	rows: 20,
-	cols: 35,
+	rows: 31,
+	cols: 50,
 	start: { row: 5, col: 5 },
 	end: { row: 17, col: 25 },
 	matrix: [],
@@ -109,7 +115,7 @@ export const MatrixProvider = ({ children }) => {
 					weight: 0,
 					parent: null,
 					type: NORMAL,
-					done: false
+					done: false,
 				};
 				arr.push(obj);
 			}
@@ -154,7 +160,7 @@ export const MatrixProvider = ({ children }) => {
 	};
 
 	const changeDone = (row, col, done) => {
-		dispatch({ type: CHANGE_DONE, payload: {row,col,done} });
+		dispatch({ type: CHANGE_DONE, payload: { row, col, done } });
 	};
 
 	const changeType = (row, col, type) => {
@@ -176,10 +182,6 @@ export const MatrixProvider = ({ children }) => {
 		dispatch({ type: CHANGE_ALGORITHM, payload: newAlgo });
 	};
 
-	const handleEraseClick = () => {
-		dispatch({ type: ERASE_TOGGLE });
-	};
-
 	const handleStartMove = (bool) => {
 		dispatch({ type: START_MOVE, payload: bool });
 	};
@@ -195,7 +197,7 @@ export const MatrixProvider = ({ children }) => {
 					let type = state.matrix[i][j].type;
 					changeValue(i, j, 0);
 					changeWeight(i, j, 0);
-					changeDone(i,j,false);
+					changeDone(i, j, false);
 					if (type === PATH) {
 						changeType(i, j, NORMAL);
 					}
@@ -211,7 +213,7 @@ export const MatrixProvider = ({ children }) => {
 				for (let j = 0; j < state.cols; j++) {
 					let type = state.matrix[i][j].type;
 					changeValue(i, j, 0);
-					changeDone(i,j,false);
+					changeDone(i, j, false);
 					if (type === PATH) {
 						changeType(i, j, NORMAL);
 					}
@@ -298,7 +300,7 @@ export const MatrixProvider = ({ children }) => {
 				for (let j = 0; j < state.cols; j++) {
 					let type = state.matrix[i][j].type;
 					changeValue(i, j, 0);
-					changeWeight(i, j, 0);
+					changeDone(i, j, false);
 					if (type === PATH) {
 						changeType(i, j, NORMAL);
 					}
@@ -329,7 +331,6 @@ export const MatrixProvider = ({ children }) => {
 				changeAlgorithm,
 				changeValue,
 				handleMouseLeavingMatrix,
-				handleEraseClick,
 				startRunningAlogrithm,
 				stopRunningAlogrithm,
 				handleMouseUpDown,
@@ -340,7 +341,7 @@ export const MatrixProvider = ({ children }) => {
 				handleWeightClick,
 				changeWeight,
 				changeType,
-				changeDone
+				changeDone,
 			}}
 		>
 			{children}

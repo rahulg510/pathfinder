@@ -18,7 +18,7 @@ export const bfs = async (matrix, start, end, changeValue) => {
 		if (checkIndexes(matrix, row + 1, col)) {
 			let cell = matrix[row + 1][col];
 			if (cell.value === 0) {
-				changeValue(row+1, col, 3);
+				changeValue(row + 1, col, 3);
 				cell.parent = { row, col };
 				push(row + 1, col);
 			}
@@ -26,7 +26,7 @@ export const bfs = async (matrix, start, end, changeValue) => {
 		if (checkIndexes(matrix, row, col + 1)) {
 			let cell = matrix[row][col + 1];
 			if (cell.value === 0) {
-				changeValue(row, col+1, 3);
+				changeValue(row, col + 1, 3);
 				cell.parent = { row, col };
 				push(row, col + 1);
 			}
@@ -34,7 +34,7 @@ export const bfs = async (matrix, start, end, changeValue) => {
 		if (checkIndexes(matrix, row, col - 1)) {
 			let cell = matrix[row][col - 1];
 			if (cell.value === 0) {
-				changeValue(row, col-1, 3);
+				changeValue(row, col - 1, 3);
 				cell.parent = { row, col };
 				push(row, col - 1);
 			}
@@ -64,5 +64,3 @@ export const bfs = async (matrix, start, end, changeValue) => {
 
 	return Promise.resolve([]);
 };
-
-export const BFS = "BFS";

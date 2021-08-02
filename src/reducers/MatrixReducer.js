@@ -2,7 +2,6 @@ import {
 	CHANGE_ALGORITHM,
 	CHANGE_VALUE,
 	RESET_MATRIX,
-	ERASE_TOGGLE,
 	SET_MATRIX,
 	STOP_RUNNING_ALGORITHM,
 	START_RUNNING_ALGORITHM,
@@ -30,13 +29,6 @@ const MatrixReducer = (state, action) => {
 		return {
 			...state,
 			matrix: [...action.payload],
-		};
-	}
-
-	if (action.type === ERASE_TOGGLE) {
-		return {
-			...state,
-			erase: !state.erase,
 		};
 	}
 

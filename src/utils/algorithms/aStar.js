@@ -87,5 +87,3 @@ export const aStar = async (matrix, start, end, changeValue,changeDone) => {
 	}
 	return Promise.resolve([]);
 };
-
-export const ASTAR = "ASTAR";

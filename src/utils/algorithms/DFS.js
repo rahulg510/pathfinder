@@ -65,4 +65,3 @@ export const dfs = async (matrix, start, end, changeValue) => {
 	return Promise.resolve([]);
 };
 
-export const DFS = "DFS";

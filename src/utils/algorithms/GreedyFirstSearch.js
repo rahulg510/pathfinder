@@ -83,4 +83,3 @@ export const gfs = async (matrix, start, end, changeValue,changeDone) => {
 	return Promise.resolve([]);
 };
 
-export const GFS = "GFS";

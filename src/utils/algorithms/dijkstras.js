@@ -80,4 +80,3 @@ export const dijkstra = async (matrix, start, end, changeValue, changeDone) => {
 	return Promise.resolve([]);
 };
 
-export const DIJ = "DIJ";

@@ -1,63 +1,56 @@
 import Box from "./Box";
 import styled from "styled-components";
-import OptionsBar from "./OptionsBar.jsx";
 import { useMatrixContext } from "../contexts/MatrixContext";
 
 const Matrix = () => {
 	const {
 		matrix,
-		resetMatrix,
-		runAlgorithm,
-		clearMatrix,
 		handleMouseLeavingMatrix,
-		erase,
-		handleEraseClick,
-		stopRunningAlogrithm,
 	} = useMatrixContext();
 	return (
 		<Wrapper>
-			<OptionsBar
-				resetMatrix={resetMatrix}
-				runAlgorithm={runAlgorithm}
-				clearMatrix={clearMatrix}
-				erase={erase}
-				handleEraseClick={handleEraseClick}
-				stopRunningAlogrithm={stopRunningAlogrithm}
-			/>
 			<div
-				className="table"
-				onMouseLeave={handleMouseLeavingMatrix}
-				onDragStart={(e) => e.preventDefault()}
-			>
-				{matrix.map((arr, row) => {
-					return (
-						<div className="row" key={row}>
-							{arr.map((i, col) => {
-								return (
-									<Box
-										key={`r${row}c${col}`}
-										row={row}
-										col={col}
-										val={i}
-									></Box>
-								);
-							})}
-						</div>
-					);
-				})}
+			className="table"
+			onMouseLeave={handleMouseLeavingMatrix}
+			onDragStart={(e) => e.preventDefault()}
+		>
+			{matrix.map((arr, row) => {
+				return (
+					<div className="row" key={row}>
+						{arr.map((i, col) => {
+							return (
+								<Box
+									key={`r${row}c${col}`}
+									row={row}
+									col={col}
+								></Box>
+							);
+						})}
+					</div>
+				);
+			})}
 			</div>
 		</Wrapper>
 	);
 };
 
 const Wrapper = styled.div`
-	.box {
-		height: 3vh;
+	.table {
+		display: table;
+		table-layout: fixed;
+	}
+
+	.row {
+		display: table-row;
+	}
+
+	.cell {
+		display: table-cell;
 		width: 3vh;
-		max-width: 3vh;
-		max-height: 3vh;
+		height: 3vh;
 		background-color: lightgray;
 		border: solid 1px white;
+		white-space: nowrap;
 	}
 
 	.blink-bg {
@@ -90,19 +83,10 @@ const Wrapper = styled.div`
 		}
 	}
 
-	.table {
-		display: table;
-		/* border: ridge 2px #aaaaaa */
-		margin: auto;
+	.weight {
+		background-image: url("weightIcon.svg");
 	}
-
-	.row {
-		display: table-row;
-	}
-
-	.cell {
-		display: table-cell;
-	}
+	
 `;
 
 export default Matrix;

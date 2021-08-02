@@ -1,14 +1,12 @@
 import "./App.css";
-import Matrix from "./components/Matrix";
+import Home from "./components/Home";
 import { MatrixProvider } from "./contexts/MatrixContext";
 
 function App() {
 	return (
-		<>
 			<MatrixProvider>
-				<Matrix />
+				<Home />
 			</MatrixProvider>
-		</>
 	);
 }
 

@@ -1,81 +1,151 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import styled from "styled-components";
 import { useMatrixContext } from "../contexts/MatrixContext";
 import { RUNNING } from "../utils/status";
+import "../utils/algorithms/algorithms";
+import { ASTAR, BFS, DFS, DIJ, GFS } from "../utils/algorithms/algorithms";
 
 const OptionsBar = () => {
 	const {
 		resetMatrix,
-		runAlgorithm,
 		clearMatrix,
-		handleEraseClick,
-		erase,
 		status,
 		changeAlgorithm,
-		weight,
-		handleWeightClick,
 	} = useMatrixContext();
 
 	return (
 		<Wrapper>
-			<nav className="navbar">
-				<button disabled={status === RUNNING} onClick={resetMatrix}>
-					Clear Walls
-				</button>
-				<button disabled={status === RUNNING} onClick={runAlgorithm}>
-					Start
-				</button>
-				<button disabled={status === RUNNING} onClick={clearMatrix}>
-					Clear Path
-				</button>
-				<button
-					disabled={status === RUNNING}
-					className={`${weight ? "selected" : null}`}
-					onClick={handleWeightClick}
-				>
-					Add Weight
-				</button>
-				<button
-					disabled={status === RUNNING}
-					className={`${erase ? "selected" : null}`}
-					onClick={handleEraseClick}
-				>
-					Erase
-				</button>
-				<select
-					disabled={status === RUNNING}
-					onChange={(e) => changeAlgorithm(e.target.value)}
-				>
-					<option value="BFS">Breadth First Search</option>
-					<option value="DFS">Depth First Search</option>
-					<option value="DIJ">Dijkstra's Algorithm</option>
-					<option value="GFS">Greedy First Search</option>
-					<option value="ASTAR">A*</option>
-				</select>
+			<nav className="navbar navbar-expand-lg navbar-light">
+				<div className="container-fluid">
+					<a className="navbar-brand" href="/">
+						<img src="logo.png" width="30" alt="site logo"/>
+						Pathfinder
+					</a>
+					<button
+						className="navbar-toggler"
+						type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#navbarNavDarkDropdown"
+						aria-controls="navbarNavDarkDropdown"
+						aria-expanded="false"
+						aria-label="Toggle navigation"
+					>
+						<span className="navbar-toggler-icon"></span>
+					</button>
+
+					<div
+						className="collapse navbar-collapse"
+						id="navbarNavDarkDropdown"
+					>
+						<ul className="navbar-nav">
+							<li className="nav-item">
+								<button
+									disabled={status === RUNNING}
+									onClick={resetMatrix}
+								>
+									Clear Everything
+								</button>
+							</li>
+							<li className="nav-item">
+								<button
+									disabled={status === RUNNING}
+									onClick={clearMatrix}
+								>
+									Clear Path
+								</button>
+							</li>
+							<li className="nav-item dropdown">
+								<button
+									disabled={status === RUNNING}
+									className="nav-link dropdown-toggle"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"
+									id="navbarDarkDropdownMenuLink"
+								>
+									Select An Algorithm
+								</button>
+								<ul
+									className="dropdown-menu bg-light"
+									aria-labelledby="navbarDarkDropdownMenuLink"
+								>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												changeAlgorithm(BFS)
+											}
+										>
+											Breadth-First Search
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												changeAlgorithm(DFS)
+											}
+										>
+											Depth-First Search
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												changeAlgorithm(DIJ)
+											}
+										>
+											Dijkstra's Algorithm
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												changeAlgorithm(GFS)
+											}
+										>
+											Greedy-First Search
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												changeAlgorithm(ASTAR)
+											}
+										>
+											A* Search
+										</button>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</nav>
-			<h2>{status === RUNNING ? "Running" : "Ready"}</h2>
 		</Wrapper>
 	);
 };
 
 const Wrapper = styled.div`
-	.selected {
-		background-color: lightblue;
-	}
+.navbar{
+	background-color: #DDD;
+	padding-bottom: 1vh;
+}
 
-	.navbar {
-		background-color: #333;
-		overflow: hidden;
+.navbar-nav{
+}
+	.navbar-brand {
+		font-size: 30px;
+		color: white;
 	}
-
-	.navbar select,
-	.navbar button,
-	.navbar option {
+	button {
 		float: left;
-		background: none;
-		color: #f2f2f2;
 		text-align: center;
 		padding: 14px 16px;
 		font-size: 16px;
+		border: 0;
 	}
 
 	.navbar button:hover,
@@ -90,7 +160,7 @@ const Wrapper = styled.div`
 	}
 
 	.navbar button:disabled {
-		background-color: #ddd;
+		background-color: red;
 		color: black;
 	}
 `;
