@@ -49,6 +49,7 @@ const Wrapper = styled.div`
 		display: table-cell;
 		width: 3vh;
 		height: 3vh;
+		max-width: 3vh;
 		background-color: lightgray;
 		border: solid 1px white;
 		white-space: nowrap;

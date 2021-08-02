@@ -4,7 +4,6 @@ import { useMatrixContext } from "../contexts/MatrixContext";
 import { RUNNING } from "../utils/status";
 import "../utils/algorithms/algorithms";
 import { ASTAR, BFS, DFS, DIJ, GFS } from "../utils/algorithms/algorithms";
-import StatusBar from "./StatusBar";
 
 const OptionsBar = () => {
 	const {
@@ -12,6 +11,10 @@ const OptionsBar = () => {
 		clearMatrix,
 		status,
 		changeAlgorithm,
+		weight,
+		handleWeightClick,
+		currentAlgorithm,
+		runAlgorithm,
 	} = useMatrixContext();
 
 	return (
@@ -19,7 +22,7 @@ const OptionsBar = () => {
 			<nav className="navbar navbar-expand-lg navbar-light">
 				<div className="container-fluid">
 					<a className="navbar-brand" href="/">
-						<img src="logo.png" width="30" alt="site logo"/>
+						<img src="weightIcon.svg" width="30" alt="site logo" />
 						Pathfinder
 					</a>
 					<button
@@ -63,7 +66,7 @@ const OptionsBar = () => {
 									aria-expanded="false"
 									id="navbarDarkDropdownMenuLink"
 								>
-									Select An Algorithm
+									Algorithms
 								</button>
 								<ul
 									className="dropdown-menu bg-light"
@@ -121,9 +124,33 @@ const OptionsBar = () => {
 									</li>
 								</ul>
 							</li>
+							<li className="nav-item">
+								<button
+									disabled={status === RUNNING}
+									onClick={runAlgorithm}
+								>
+									Start
+								</button>
+							</li>
+							<li className="nav-item">
+								<button>
+									{status === RUNNING ? "Running" : "Ready"}
+								</button>
+							</li>
+							<li className="nav-item">
+								<button>{currentAlgorithm}</button>
+							</li>
+							<li className="nav-item">
+								<button
+									disabled={status === RUNNING}
+									className={`${weight ? "selected" : null}`}
+									onClick={handleWeightClick}
+								>
+									Add Weight
+								</button>
+							</li>
 						</ul>
 					</div>
-					<StatusBar/>
 				</div>
 			</nav>
 		</Wrapper>
@@ -131,13 +158,13 @@ const OptionsBar = () => {
 };
 
 const Wrapper = styled.div`
-.navbar{
-	background-color: #DDD;
-	padding-bottom: 1vh;
-}
+	.navbar {
+		background-color: #ddd;
+		padding-bottom: 3vh;
+	}
 
-.navbar-nav{
-}
+	.navbar-nav {
+	}
 	.navbar-brand {
 		font-size: 30px;
 		color: white;
