@@ -37,7 +37,7 @@ const MatrixContext = React.createContext();
 
 const initialState = {
 	rows: 30,
-	cols: 70,
+	cols: 60,
 	start: { row: 5, col: 5 },
 	end: { row: 17, col: 25 },
 	matrix: [],

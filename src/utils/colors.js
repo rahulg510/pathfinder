@@ -1,0 +1,1 @@
+export const WALL_COLOR = "#001F3F"

@@ -133,12 +133,13 @@ const Box = ({ row, col }) => {
 			cellClass += " weight";
 		} else if (cell.type === WALL) {
 			cellClass += " wall";
+		} else if (cell.type === START) {
+			cellClass += " start";
+		} else if (cell.type === END) {
+			cellClass += " end";
 		} else
 			cellClass +=
-				cell.value > 0 &&
-				cell.type !== END &&
-				cell.type !== START &&
-				cell.type !== PATH
+				cell.value > 0 && cell.type !== PATH
 					? status === RUNNING
 						? " blink-bg"
 						: " blink-bg-stopped"
@@ -155,13 +156,14 @@ const Box = ({ row, col }) => {
 		} else
 			switch (cell.type) {
 				case START:
-					color = "seagreen";
+					color = "lightgreen";
 					break;
 				case END:
 					color = "#FF4136";
 					break;
 				case WALL:
-					color = "#001F3F";
+					// color = "#001F3F";
+					color = "yellow"
 					break;
 				case PATH:
 					color = "#01FF70";

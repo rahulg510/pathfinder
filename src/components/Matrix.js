@@ -32,6 +32,7 @@ const Matrix = () => {
 };
 
 const Wrapper = styled.div`
+
 	.table {
 		display: table;
 		table-layout: fixed;
@@ -50,10 +51,6 @@ const Wrapper = styled.div`
 		background-color: lightgray;
 		border: solid 1px white;
 		white-space: nowrap;
-	}
-
-	.wall {
-		border-color: #001f3f;
 	}
 
 	.blink-bg {
@@ -90,9 +87,34 @@ const Wrapper = styled.div`
 		}
 	}
 
+	.wall {
+		border-color: yellow;
+		background-image: url("wallIcon.svg");
+		background-size: contain;
+		background-repeat:no-repeat;
+		background-position: center;
+	}
+
 	.weight {
 		border-color: deepskyblue;
-		background-image: url("weightIcon.svg");
+		background-image: url("weightIcon1.svg");
+		background-size: contain;
+		background-repeat:no-repeat;
+		background-position: center;
+	}
+
+	.start {
+		background-image: url("startIcon.svg");
+		background-size: contain;
+		background-repeat:no-repeat;
+		background-position: center;
+	}
+
+	.end {
+		background-image: url("endIcon.svg");
+		background-size: contain;
+		background-repeat:no-repeat;
+		background-position: center;
 	}
 `;
 

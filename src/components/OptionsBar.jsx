@@ -4,6 +4,8 @@ import { useMatrixContext } from "../contexts/MatrixContext";
 import { RUNNING } from "../utils/status";
 import "../utils/algorithms/algorithms";
 import { ASTAR, BFS, DFS, DIJ, GFS } from "../utils/algorithms/algorithms";
+import { BiTrash  } from "react-icons/bi";
+
 
 const OptionsBar = () => {
 	const {
@@ -47,7 +49,9 @@ const OptionsBar = () => {
 								<button
 									disabled={status === RUNNING}
 									onClick={resetMatrix}
+									style={{textAlign: "center"}}
 								>
+								<BiTrash size="1.5em"/>
 									Clear Everything
 								</button>
 							</li>
@@ -158,7 +162,7 @@ const OptionsBar = () => {
 const Wrapper = styled.div`
 	.navbar {
 		background-color: #ddd;
-		padding-bottom: 3vh;
+		padding-bottom: 2vh;
 	}
 
 	.navbar-nav {
@@ -175,8 +179,7 @@ const Wrapper = styled.div`
 		border: 0;
 	}
 
-	.navbar button:hover,
-	select:hover {
+	.navbar button:hover {
 		background-color: #3bbc73;
 		color: black;
 	}
@@ -187,7 +190,7 @@ const Wrapper = styled.div`
 	}
 
 	.navbar button:disabled {
-		background-color: red;
+		background-color: grey;
 		color: black;
 	}
 `;
