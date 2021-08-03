@@ -57,7 +57,7 @@ export const dijkstra = async (matrix, start, end, changeValue, changeDone) => {
 		val: 0,
 	};
 	push(begin.row, begin.col, begin.val);
-
+	let count = 0;
 	while (heap.size() > 0) {
 		let cell = heap.pop();
 		let element = matrix[cell.row][cell.col];
@@ -74,7 +74,8 @@ export const dijkstra = async (matrix, start, end, changeValue, changeDone) => {
 			return Promise.resolve(path);
 		}
 		visitNeighbors(cell);
-		await new Promise((resolve) => setTimeout(resolve, 0));
+		if(count % 3 === 0)
+			await new Promise((resolve) => setTimeout(resolve, 0));
 	}
 
 	return Promise.resolve([]);
