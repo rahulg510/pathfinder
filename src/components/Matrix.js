@@ -73,13 +73,18 @@ const Wrapper = styled.div`
 		0% {
 			background-color: #ff9b85;
 			text-align: center;
-			transform: rotate(15deg)scale(.3);
+			transform: scale(.3);
 
+		}
+		25% {
+			background-color: #e1b382;
+			text-align: center;
+			transform: scale(.5);
 		}
 		50% {
 			background-color: #ffa990;
 			text-align: center;
-			transform: rotate(5deg)scale(.5);
+			transform: scale(1.3);
 		}
 		100% {
 			background-color: #ffd97d;
