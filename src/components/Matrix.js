@@ -74,17 +74,18 @@ const Wrapper = styled.div`
 			background-color: #ff9b85;
 			text-align: center;
 			transform: scale(.3);
-
+			opacity:0.5;
 		}
 		25% {
 			background-color: #e1b382;
 			text-align: center;
 			transform: scale(.5);
+			opacity:0.8;
 		}
 		50% {
 			background-color: #ffa990;
 			text-align: center;
-			transform: scale(1.3);
+			transform: scale(1.2);
 		}
 		100% {
 			background-color: #ffd97d;
@@ -92,7 +93,7 @@ const Wrapper = styled.div`
 	}
 
 	.wall {
-		border-color: yellow;
+		border-color: #DDD;
 		background-image: url("wallIcon.svg");
 		background-size: contain;
 		background-repeat: no-repeat;

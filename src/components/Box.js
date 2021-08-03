@@ -163,7 +163,7 @@ const Box = ({ row, col }) => {
 					break;
 				case WALL:
 					// color = "#001F3F";
-					color = "yellow"
+					color = "#DDD"
 					break;
 				case PATH:
 					color = "#01FF70";
