@@ -17,7 +17,8 @@ const OptionsBar = () => {
 		handleWeightClick,
 		currentAlgorithm,
 		runAlgorithm,
-		firstUse
+		firstUse,
+		createMaze
 	} = useMatrixContext();
 
 	return (
@@ -62,6 +63,32 @@ const OptionsBar = () => {
 								>
 									Clear Path
 								</button>
+							</li>
+							<li className="nav-item dropdown">
+								<button
+									disabled={status === RUNNING}
+									className="nav-link dropdown-toggle"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"
+									id="navbarDarkDropdownMenuLink"
+								>
+									Mazes
+								</button>
+								<ul
+									className="dropdown-menu bg-light"
+									aria-labelledby="navbarDarkDropdownMenuLink"
+								>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												createMaze(BFS)
+											}
+										>
+											Basic Maze
+										</button>
+									</li>
+								</ul>
 							</li>
 							<li className="nav-item dropdown">
 								<button

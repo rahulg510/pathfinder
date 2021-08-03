@@ -18,7 +18,7 @@ import {
 	CHANGE_WEIGHT_BUTTON,
 	CHANGE_TYPE,
 	CHANGE_DONE,
-	FIRST_USE
+	FIRST_USE,
 } from "../utils/actions";
 import {
 	GFS,
@@ -32,6 +32,9 @@ import {
 	DIJ,
 	dijkstra,
 } from "../utils/algorithms/algorithms";
+
+import createRandomMaze from "../utils/mazeAlgorithms/createRandomMaze";
+import { isEquals } from "../utils/helpers";
 
 const MatrixContext = React.createContext();
 
@@ -48,7 +51,7 @@ const initialState = {
 	startMove: false,
 	endMove: false,
 	weight: false,
-	firstUse: true
+	firstUse: true,
 };
 
 export const MatrixProvider = ({ children }) => {
@@ -228,8 +231,21 @@ export const MatrixProvider = ({ children }) => {
 	};
 
 	const setFirstUse = () => {
-		dispatch({type: FIRST_USE});
-	}
+		dispatch({ type: FIRST_USE });
+	};
+
+	const createMaze = async () => {
+		if (state.status === STOPPED) {
+			startRunningAlogrithm();
+			await createRandomMaze(
+				state.matrix,
+				state.start,
+				state.end,
+				changeType
+			);
+			stopRunningAlogrithm();
+		}
+	};
 
 	const runAlgorithm = async () => {
 		if (state.status === STOPPED) {
@@ -350,6 +366,7 @@ export const MatrixProvider = ({ children }) => {
 				changeWeight,
 				changeType,
 				changeDone,
+				createMaze
 			}}
 		>
 			{children}
