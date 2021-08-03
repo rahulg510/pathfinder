@@ -32,7 +32,6 @@ const Matrix = () => {
 };
 
 const Wrapper = styled.div`
-
 	.table {
 		display: table;
 		table-layout: fixed;
@@ -49,7 +48,7 @@ const Wrapper = styled.div`
 		max-height: 3vh;
 		max-width: 3vh;
 		background-color: lightgray;
-		border: solid 1px white;
+		border: solid 1px lightgray;
 		white-space: nowrap;
 	}
 
@@ -63,7 +62,7 @@ const Wrapper = styled.div`
 	}
 	.blink-bg-stopped {
 		animation-name: blinkingBackground;
-		animation-duration: 5s;
+		animation-duration: 3s;
 		animation-timing-function: ease;
 		animation-iteration-count: 1;
 		animation-direction: alternate;
@@ -73,17 +72,17 @@ const Wrapper = styled.div`
 	@keyframes blinkingBackground {
 		0% {
 			background-color: #ff9b85;
-			rotate: 90;
+			text-align: center;
+			transform: rotate(15deg)scale(.3);
+
 		}
 		50% {
 			background-color: #ffa990;
-			border-radius: 25%;
-
+			text-align: center;
+			transform: rotate(5deg)scale(.5);
 		}
 		100% {
 			background-color: #ffd97d;
-			border-radius: 0%;
-
 		}
 	}
 
@@ -91,7 +90,7 @@ const Wrapper = styled.div`
 		border-color: yellow;
 		background-image: url("wallIcon.svg");
 		background-size: contain;
-		background-repeat:no-repeat;
+		background-repeat: no-repeat;
 		background-position: center;
 	}
 
@@ -99,21 +98,21 @@ const Wrapper = styled.div`
 		border-color: deepskyblue;
 		background-image: url("weightIcon1.svg");
 		background-size: contain;
-		background-repeat:no-repeat;
+		background-repeat: no-repeat;
 		background-position: center;
 	}
 
 	.start {
 		background-image: url("startIcon.svg");
 		background-size: contain;
-		background-repeat:no-repeat;
+		background-repeat: no-repeat;
 		background-position: center;
 	}
 
 	.end {
 		background-image: url("endIcon.svg");
 		background-size: contain;
-		background-repeat:no-repeat;
+		background-repeat: no-repeat;
 		background-position: center;
 	}
 `;

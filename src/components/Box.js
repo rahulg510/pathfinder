@@ -169,7 +169,8 @@ const Box = ({ row, col }) => {
 					color = "#01FF70";
 					break;
 				default:
-					color = "#DDDDDD";
+					color = "white";
+					// color = "#DDDDDD";
 					break;
 			}
 		return color;
