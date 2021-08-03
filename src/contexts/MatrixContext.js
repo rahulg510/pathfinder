@@ -34,7 +34,6 @@ import {
 } from "../utils/algorithms/algorithms";
 
 import createRandomMaze from "../utils/mazeAlgorithms/createRandomMaze";
-import { isEquals } from "../utils/helpers";
 
 const MatrixContext = React.createContext();
 
@@ -237,6 +236,7 @@ export const MatrixProvider = ({ children }) => {
 	const createMaze = async () => {
 		if (state.status === STOPPED) {
 			startRunningAlogrithm();
+			resetMatrix();
 			await createRandomMaze(
 				state.matrix,
 				state.start,
