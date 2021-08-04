@@ -1,4 +1,4 @@
-// import { Legend } from "./Legend.jsx";
+import { Legend } from "./Legend.jsx";
 import Matrix from "./Matrix.js";
 import OptionsBar from "./OptionsBar.jsx";
 // import StatusBar from "./StatusBar";
@@ -8,8 +8,10 @@ const Home = () => {
 		<div>
 			<OptionsBar />
 			{/* <StatusBar /> */}
-			{/* <Legend /> */}
-			<Matrix />
+			<div className="container-fluid">
+				<Legend />
+				<Matrix />
+			</div>
 		</div>
 	);
 };

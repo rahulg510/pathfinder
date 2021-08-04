@@ -1,9 +1,10 @@
 import { useMatrixContext } from "../contexts/MatrixContext";
 import { END, NORMAL, PATH, START, WALL } from "../utils/cellTypes";
-import { RUNNING, STOPPED } from "../utils/status";
+import { STOPPED } from "../utils/status";
 import { useState, useEffect } from "react";
-import { isEquals } from "../utils/helpers";
+import { isEquals, getClass } from "../utils/helpers";
 import styled from "styled-components";
+import * as constants from "../utils/cellConstants";
 
 const Box = ({ row, col }) => {
 	const {
@@ -93,11 +94,11 @@ const Box = ({ row, col }) => {
 			if (startMove) {
 				oldColor = e.target.style["background-color"];
 				if (!isEquals({ row, col }, end))
-					e.target.style["background-color"] = "seagreen";
+					e.target.style["background-color"] = constants.START_COLOR;
 			} else if (endMove) {
 				oldColor = e.target.style["background-color"];
 				if (!isEquals({ row, col }, start))
-					e.target.style["background-color"] = "#FF4136";
+					e.target.style["background-color"] = constants.END_COLOR;
 			} else {
 				if (mouseDown) {
 					if (weight) {
@@ -127,48 +128,48 @@ const Box = ({ row, col }) => {
 		}
 	};
 
-	const getClass = () => {
-		let cellClass = "cell";
-		if (cell.weight === 15) {
-			cellClass += " weight";
-		} else if (cell.type === WALL) {
-			cellClass += " wall";
-		} else if (cell.type === START) {
-			cellClass += " start";
-		} else if (cell.type === END) {
-			cellClass += " end";
-		} else
-			cellClass +=
-				cell.value > 0 && cell.type !== PATH
-					? status === RUNNING
-						? " blink-bg"
-						: " blink-bg-stopped"
-					: "";
-		return cellClass;
-	};
+	// const getClass = () => {
+	// 	let cellClass = "cell";
+	// 	if (cell.weight === 15) {
+	// 		cellClass += " weight";
+	// 	} else if (cell.type === WALL) {
+	// 		cellClass += " wall";
+	// 	} else if (cell.type === START) {
+	// 		cellClass += " start";
+	// 	} else if (cell.type === END) {
+	// 		cellClass += " end";
+	// 	} else
+	// 		cellClass +=
+	// 			cell.value > 0 && cell.type !== PATH
+	// 				? status === RUNNING
+	// 					? " blink-bg"
+	// 					: " blink-bg-stopped"
+	// 				: "";
+	// 	return cellClass;
+	// };
 
 	const getColor = () => {
 		let color = "";
 		if (cell.weight > 0) {
 			if (cell.type === PATH) {
-				color = "#74B652";
-			} else color = cell.done ? "purple" : "deepskyblue";
+				color = constants.WEIGHT_PATH;
+			} else color = cell.done ? constants.WEIGHT_DONE : constants.WEIGHT_COLOR;
 		} else
 			switch (cell.type) {
 				case START:
-					color = "lightgreen";
+					color = constants.START_COLOR;
 					break;
 				case END:
-					color = "#FF4136";
+					color = constants.END_COLOR;
 					break;
 				case WALL:
-					color = "#DDD"
+					color = constants.WALL_COLOR
 					break;
 				case PATH:
-					color = "#01FF70";
+					color = constants.PATH_COLOR;
 					break;
 				default:
-					color = "white";
+					color = constants.DEFAULT_COLOR;
 					break;
 			}
 		return color;
@@ -177,7 +178,7 @@ const Box = ({ row, col }) => {
 		<Wrapper
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
-			className={getClass()}
+			className={getClass(cell,status)}
 			style={{
 				backgroundColor: getColor(),
 			}}

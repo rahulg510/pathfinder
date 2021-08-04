@@ -1,4 +1,5 @@
-import { END, NORMAL } from "./cellTypes";
+import { END, NORMAL,WALL,START,PATH } from "./cellTypes";
+import {RUNNING} from "./status";
 
 export const isEquals = (point1, point2) => {
 	return point1.row === point2.row && point1.col === point2.col;
@@ -15,4 +16,24 @@ export const validIndex = (matrix, r, c) => {
 	if (r >= 0 && r < matrix.length && c >= 0 && c < matrix[0].length) {
 		return true;
 	} else return false;
+};
+
+export const getClass = (cell, status) => {
+	let cellClass = "cell";
+	if (cell.weight === 15) {
+		cellClass += " weight";
+	} else if (cell.type === WALL) {
+		cellClass += " wall";
+	} else if (cell.type === START) {
+		cellClass += " start";
+	} else if (cell.type === END) {
+		cellClass += " end";
+	} else
+		cellClass +=
+			cell.value > 0 && cell.type !== PATH
+				? status === RUNNING
+					? " blink-bg"
+					: " blink-bg-stopped"
+				: "";
+	return cellClass;
 };

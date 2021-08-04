@@ -8,7 +8,6 @@ const createRandomMaze = async (matrix, start, end, changeType) => {
 		    let bool = (i === start.row && j === start.col) || (i === end.row && j === end.col);
             if(num < 20 && !bool){
                 changeType(i, j, WALL);
-                // await new Promise(r=>setTimeout(r,0));
             }
         }
     }

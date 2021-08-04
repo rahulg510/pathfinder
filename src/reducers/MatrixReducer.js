@@ -14,7 +14,7 @@ import {
 	CHANGE_WEIGHT_BUTTON,
 	CHANGE_TYPE,
 	CHANGE_DONE,
-	FIRST_USE
+	RESET_WEIGHT_BUTTON,
 } from "../utils/actions";
 import { STOPPED, RUNNING } from "../utils/status";
 
@@ -78,11 +78,18 @@ const MatrixReducer = (state, action) => {
 	if (action.type === CHANGE_WEIGHT_BUTTON) {
 		return {
 			...state,
-			weight: !state.weight
+			weight: !state.weight,
 		};
 	}
 
-	if(action.type === CHANGE_WEIGHT){
+	if (action.type === RESET_WEIGHT_BUTTON) {
+		return {
+			...state,
+			weight: false,
+		};
+	}
+
+	if (action.type === CHANGE_WEIGHT) {
 		const { row, col, weight } = action.payload;
 		state.matrix[row][col].weight = weight;
 		return {
@@ -91,7 +98,7 @@ const MatrixReducer = (state, action) => {
 		};
 	}
 
-	if(action.type === CHANGE_TYPE){
+	if (action.type === CHANGE_TYPE) {
 		const { row, col, type } = action.payload;
 		state.matrix[row][col].type = type;
 		return {
@@ -100,7 +107,7 @@ const MatrixReducer = (state, action) => {
 		};
 	}
 
-	if(action.type === CHANGE_DONE){
+	if (action.type === CHANGE_DONE) {
 		const { row, col, done } = action.payload;
 		state.matrix[row][col].done = done;
 		return {
@@ -120,7 +127,7 @@ const MatrixReducer = (state, action) => {
 	if (action.type === CHANGE_ALGORITHM) {
 		return {
 			...state,
-			currentAlgorithm: action.payload
+			currentAlgorithm: action.payload,
 		};
 	}
 
@@ -128,12 +135,6 @@ const MatrixReducer = (state, action) => {
 		return {
 			...state,
 			mouseDown: action.payload,
-		};
-	}
-	if (action.type === FIRST_USE) {
-		return {
-			...state,
-			firstUse: false,
 		};
 	}
 };

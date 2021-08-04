@@ -4,9 +4,12 @@ import { useMatrixContext } from "../contexts/MatrixContext";
 import { RUNNING } from "../utils/status";
 import "../utils/algorithms/algorithms";
 import { ASTAR, BFS, DFS, DIJ, GFS } from "../utils/algorithms/algorithms";
-import { BiTrash  } from "react-icons/bi";
-
-
+import {
+	RANDOM_MAZE,
+	RANDOM_MAZE_WEIGHTED,
+} from "../utils/mazeAlgorithms/mazeAlgorithms";
+import { WEIGHT_COLOR } from "../utils/cellConstants";
+import { useAlert } from "react-alert";
 const OptionsBar = () => {
 	const {
 		resetMatrix,
@@ -17,13 +20,28 @@ const OptionsBar = () => {
 		handleWeightClick,
 		currentAlgorithm,
 		runAlgorithm,
-		firstUse,
-		createMaze
+		createMaze,
 	} = useMatrixContext();
+	const alert = useAlert();
+
+	// const [alertAlgos, setAlertAlgos] = useState(false);
+
+	const handleStart = async () => {
+		if (currentAlgorithm) runAlgorithm();
+		else {
+			alert.error("Pick an Algorithm");
+		}
+	};
 
 	return (
 		<Wrapper>
-			<nav className="navbar navbar-expand-lg navbar-light">
+			<nav
+				className={`${
+					status === RUNNING
+						? "navbar navbar-expand-lg navbar-light alerting"
+						: "navbar navbar-expand-lg navbar-light"
+				}`}
+			>
 				<div className="container-fluid">
 					<a className="navbar-brand" href="/">
 						<img src="weightIcon.svg" width="30" alt="site logo" />
@@ -50,9 +68,8 @@ const OptionsBar = () => {
 								<button
 									disabled={status === RUNNING}
 									onClick={resetMatrix}
-									style={{textAlign: "center"}}
+									style={{ textAlign: "center" }}
 								>
-								<BiTrash size="1.5em"/>
 									Clear Everything
 								</button>
 							</li>
@@ -70,39 +87,49 @@ const OptionsBar = () => {
 									className="nav-link dropdown-toggle"
 									data-bs-toggle="dropdown"
 									aria-expanded="false"
-									id="navbarDarkDropdownMenuLink"
+									id="mazeDropdown"
 								>
 									Mazes
 								</button>
 								<ul
 									className="dropdown-menu bg-light"
-									aria-labelledby="navbarDarkDropdownMenuLink"
+									aria-labelledby="mazeDropdown"
 								>
 									<li>
 										<button
 											className="dropdown-item"
 											onClick={(e) =>
-												createMaze(BFS)
+												createMaze(RANDOM_MAZE)
 											}
 										>
 											Basic Maze
 										</button>
 									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												createMaze(RANDOM_MAZE_WEIGHTED)
+											}
+										>
+											Basic Maze Weighted
+										</button>
+									</li>
 								</ul>
 							</li>
-							<li className="nav-item dropdown">
+							<li className="nav-item dropdown" id="algoHolder">
 								<button
 									disabled={status === RUNNING}
 									className="nav-link dropdown-toggle"
 									data-bs-toggle="dropdown"
 									aria-expanded="false"
-									id="navbarDarkDropdownMenuLink"
+									id="algoDropdown"
 								>
-									{firstUse ? "Algorithms" : currentAlgorithm}
+									{currentAlgorithm || "Algorithms"}
 								</button>
 								<ul
 									className="dropdown-menu bg-light"
-									aria-labelledby="navbarDarkDropdownMenuLink"
+									aria-labelledby="algoDropdown"
 								>
 									<li>
 										<button
@@ -159,14 +186,9 @@ const OptionsBar = () => {
 							<li className="nav-item">
 								<button
 									disabled={status === RUNNING}
-									onClick={runAlgorithm}
+									onClick={handleStart}
 								>
-									Start
-								</button>
-							</li>
-							<li className="nav-item">
-								<button>
-									{status === RUNNING ? "Running" : "Ready"}
+									Run
 								</button>
 							</li>
 							<li className="nav-item">
@@ -189,7 +211,8 @@ const OptionsBar = () => {
 const Wrapper = styled.div`
 	.navbar {
 		background-color: #ddd;
-		padding-bottom: 2vh;
+		padding-bottom: 1vh;
+		table-layout: fixed;
 	}
 
 	.navbar-nav {
@@ -219,6 +242,44 @@ const Wrapper = styled.div`
 	.navbar button:disabled {
 		background-color: grey;
 		color: black;
+	}
+
+	.selected {
+		animation: glowing 1.5s ease-in-out infinite;
+	}
+
+	.alerting {
+		animation: alertingGlow 2s ease-out infinite;
+	}
+
+	@keyframes glowing {
+		0% {
+			background-color: ${WEIGHT_COLOR};
+			box-shadow: 0 0 5px ${WEIGHT_COLOR};
+		}
+		50% {
+			background-color: #00c8ff;
+			box-shadow: 0 0 20px #00c8ff;
+		}
+		100% {
+			background-color: ${WEIGHT_COLOR};
+			box-shadow: 0 0 5px ${WEIGHT_COLOR};
+		}
+	}
+
+	@keyframes alertingGlow {
+		0% {
+			background-color: #ce0000;
+			box-shadow: 0 0 5px #ce0000;
+		}
+		50% {
+			background-color: #ff0000ef;
+			box-shadow: 0 0 20px #ff0000ef;
+		}
+		100% {
+			background-color: #ce0000;
+			box-shadow: 0 0 5px #ce0000;
+		}
 	}
 `;
 

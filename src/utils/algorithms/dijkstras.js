@@ -1,7 +1,14 @@
 import { checkIndexes, isEquals } from "../helpers";
 import Heap from "heap";
 
-export const dijkstra = async (matrix, start, end, changeValue, changeDone) => {
+export const dijkstra = async (
+	matrix,
+	start,
+	end,
+	changeValue,
+	changeDone,
+	immediate = false
+) => {
 	let heap = new Heap((a, b) => {
 		return a.val - b.val;
 	});
@@ -21,6 +28,15 @@ export const dijkstra = async (matrix, start, end, changeValue, changeDone) => {
 				push(row - 1, col, newCost);
 			}
 		}
+		if (checkIndexes(matrix, row, col + 1)) {
+			let cell = matrix[row][col + 1];
+			let newCost = costSoFar + cell.weight + 1;
+			if (cell.value === 0 || newCost < cell.value) {
+				changeValue(row, col + 1, newCost);
+				cell.parent = { row, col };
+				push(row, col + 1, newCost);
+			}
+		}
 
 		if (checkIndexes(matrix, row + 1, col)) {
 			let cell = matrix[row + 1][col];
@@ -29,15 +45,6 @@ export const dijkstra = async (matrix, start, end, changeValue, changeDone) => {
 				changeValue(row + 1, col, newCost);
 				cell.parent = { row, col };
 				push(row + 1, col, newCost);
-			}
-		}
-		if (checkIndexes(matrix, row, col + 1)) {
-			let cell = matrix[row][col + 1];
-			let newCost = costSoFar + cell.weight + 1;
-			if (cell.value === 0 || newCost < cell.value) {
-				changeValue(row, col + 1, newCost);
-				cell.parent = { row, col };
-				push(row, col + 1, newCost);
 			}
 		}
 		if (checkIndexes(matrix, row, col - 1)) {
@@ -61,8 +68,8 @@ export const dijkstra = async (matrix, start, end, changeValue, changeDone) => {
 	while (heap.size() > 0) {
 		let cell = heap.pop();
 		let element = matrix[cell.row][cell.col];
-		if(element.weight > 0){
-			changeDone(cell.row,cell.col, true);
+		if (element.weight > 0) {
+			changeDone(cell.row, cell.col, true);
 		}
 		if (isEquals(cell, end)) {
 			let path = [];
@@ -74,10 +81,10 @@ export const dijkstra = async (matrix, start, end, changeValue, changeDone) => {
 			return Promise.resolve(path);
 		}
 		visitNeighbors(cell);
-		if(count % 3 === 0)
+		if (count % 3 === 0)
 			await new Promise((resolve) => setTimeout(resolve, 0));
+		count++;
 	}
 
 	return Promise.resolve([]);
 };
-

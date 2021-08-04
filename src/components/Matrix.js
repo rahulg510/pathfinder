@@ -1,7 +1,7 @@
 import Box from "./Box";
 import styled from "styled-components";
 import { useMatrixContext } from "../contexts/MatrixContext";
-
+import * as constants from "../utils/cellConstants";
 const Matrix = () => {
 	const { matrix, handleMouseLeavingMatrix } = useMatrixContext();
 	return (
@@ -35,6 +35,10 @@ const Wrapper = styled.div`
 	.table {
 		display: table;
 		table-layout: fixed;
+		width: fit-content;
+		margin-left: 25%;
+		margin-top: 1vh;
+		margin-right: 1vh;
 		border-collapse: collapse;
 	}
 
@@ -47,14 +51,13 @@ const Wrapper = styled.div`
 		height: 3vh;
 		max-height: 3vh;
 		max-width: 3vh;
-		background-color: lightgray;
-		border: solid 1px lightgray;
+		border: solid 1px ${constants.CELL_BORDER};
 		white-space: nowrap;
 	}
 
 	.blink-bg {
 		animation-name: blinkingBackground;
-		animation-duration: 3s;
+		animation-duration: 2s;
 		animation-iteration-count: 1;
 		animation-direction: normal;
 		animation-fill-mode: forwards;
@@ -62,61 +65,60 @@ const Wrapper = styled.div`
 	}
 	.blink-bg-stopped {
 		animation-name: blinkingBackground;
-		animation-duration: 3s;
-		animation-timing-function: ease;
-		animation-iteration-count: 1;
-		animation-direction: alternate;
-		animation-fill-mode: both;
+		animation-fill-mode: forwards;
 		animation-play-state: paused;
 	}
 	@keyframes blinkingBackground {
 		0% {
-			background-color: #ff9b85;
+			background-color: ${constants.FIRST_ANIMATION_COLOR};
 			text-align: center;
 			transform: scale(.3);
 			opacity:0.5;
+			border-radius: 50%;
 		}
 		25% {
-			background-color: #e1b382;
+			background-color: ${constants.SECOND_ANIMATION_COLOR};
 			text-align: center;
 			transform: scale(.5);
 			opacity:0.8;
+			border-radius: 50%;
+
 		}
 		50% {
-			background-color: #ffa990;
+			background-color: ${constants.THIRD_ANIMATION_COLOR};
 			text-align: center;
 			transform: scale(1.2);
 		}
 		100% {
-			background-color: #ffd97d;
+			background-color: ${constants.FOURTH_ANIMATION_COLOR};
 		}
 	}
 
 	.wall {
-		border-color: #DDD;
-		background-image: url("wallIcon.svg");
+		border-color: ${constants.WALL_COLOR};
+		background-image: url(${constants.WALL_IMG});
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
 	}
 
 	.weight {
-		border-color: deepskyblue;
-		background-image: url("weightIcon1.svg");
+		border-color: ${constants.WEIGHT_COLOR};
+		background-image: url(${constants.WEIGHT_IMG});
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
 	}
 
 	.start {
-		background-image: url("startIcon.svg");
+		background-image: url(${constants.START_IMG});
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
 	}
 
 	.end {
-		background-image: url("endIcon.svg");
+		background-image: url(${constants.END_IMG});
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;

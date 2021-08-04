@@ -18,7 +18,7 @@ import {
 	CHANGE_WEIGHT_BUTTON,
 	CHANGE_TYPE,
 	CHANGE_DONE,
-	FIRST_USE,
+	RESET_WEIGHT_BUTTON,
 } from "../utils/actions";
 import {
 	GFS,
@@ -28,12 +28,15 @@ import {
 	DFS,
 	dfs,
 	bfs,
-	BFS,
 	DIJ,
 	dijkstra,
 } from "../utils/algorithms/algorithms";
 
-import createRandomMaze from "../utils/mazeAlgorithms/createRandomMaze";
+import {
+	createRandomMaze,
+	createRandomMazeWeighted,
+	RANDOM_MAZE_WEIGHTED,
+} from "../utils/mazeAlgorithms/mazeAlgorithms";
 
 const MatrixContext = React.createContext();
 
@@ -43,14 +46,14 @@ const initialState = {
 	start: { row: 5, col: 5 },
 	end: { row: 17, col: 25 },
 	matrix: [],
-	currentAlgorithm: BFS,
+	currentAlgorithm: "",
 	erase: false,
 	status: STOPPED,
 	mouseDown: false,
 	startMove: false,
 	endMove: false,
 	weight: false,
-	firstUse: true,
+	weightOnMatrix: false
 };
 
 export const MatrixProvider = ({ children }) => {
@@ -133,7 +136,6 @@ export const MatrixProvider = ({ children }) => {
 
 	const startRunningAlogrithm = () => {
 		dispatch({ type: START_RUNNING_ALGORITHM });
-		setFirstUse();
 	};
 
 	const stopRunningAlogrithm = () => {
@@ -155,6 +157,10 @@ export const MatrixProvider = ({ children }) => {
 	const handleWeightClick = () => {
 		dispatch({ type: CHANGE_WEIGHT_BUTTON });
 	};
+
+	const resetWeightButton = () => {
+		dispatch({ type: RESET_WEIGHT_BUTTON });
+	}
 
 	const changeValue = (row, col, val) => {
 		dispatch({ type: CHANGE_VALUE, payload: { row, col, val } });
@@ -185,7 +191,6 @@ export const MatrixProvider = ({ children }) => {
 
 	const changeAlgorithm = (newAlgo) => {
 		dispatch({ type: CHANGE_ALGORITHM, payload: newAlgo });
-		setFirstUse();
 	};
 
 	const handleStartMove = (bool) => {
@@ -229,26 +234,38 @@ export const MatrixProvider = ({ children }) => {
 		await new Promise((resolve) => setTimeout(resolve, 800));
 	};
 
-	const setFirstUse = () => {
-		dispatch({ type: FIRST_USE });
-	};
 
-	const createMaze = async () => {
+	const createMaze = async (algo) => {
 		if (state.status === STOPPED) {
 			startRunningAlogrithm();
 			resetMatrix();
-			await createRandomMaze(
-				state.matrix,
-				state.start,
-				state.end,
-				changeType
-			);
+			switch (algo) {
+				case RANDOM_MAZE_WEIGHTED:
+					createRandomMazeWeighted(
+						state.matrix,
+						state.start,
+						state.end,
+						changeType, 
+						changeWeight
+					);
+					break;
+
+				default:
+					createRandomMaze(
+						state.matrix,
+						state.start,
+						state.end,
+						changeType
+					);
+					break;
+			}
 			stopRunningAlogrithm();
 		}
 	};
 
 	const runAlgorithm = async () => {
 		if (state.status === STOPPED) {
+			resetWeightButton();
 			startRunningAlogrithm();
 			let path = [];
 			switch (state.currentAlgorithm) {
@@ -313,6 +330,7 @@ export const MatrixProvider = ({ children }) => {
 
 	const resetMatrix = () => {
 		if (state.status === STOPPED) {
+			resetWeightButton();
 			let newMatrix = createNewMatrix();
 			dispatch({ type: RESET_MATRIX, payload: newMatrix });
 		}
