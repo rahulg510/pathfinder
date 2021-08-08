@@ -128,32 +128,16 @@ const Box = ({ row, col }) => {
 		}
 	};
 
-	// const getClass = () => {
-	// 	let cellClass = "cell";
-	// 	if (cell.weight === 15) {
-	// 		cellClass += " weight";
-	// 	} else if (cell.type === WALL) {
-	// 		cellClass += " wall";
-	// 	} else if (cell.type === START) {
-	// 		cellClass += " start";
-	// 	} else if (cell.type === END) {
-	// 		cellClass += " end";
-	// 	} else
-	// 		cellClass +=
-	// 			cell.value > 0 && cell.type !== PATH
-	// 				? status === RUNNING
-	// 					? " blink-bg"
-	// 					: " blink-bg-stopped"
-	// 				: "";
-	// 	return cellClass;
-	// };
 
 	const getColor = () => {
-		let color = "";
+		let color = constants.DEFAULT_COLOR;
 		if (cell.weight > 0) {
 			if (cell.type === PATH) {
 				color = constants.WEIGHT_PATH;
-			} else color = cell.done ? constants.WEIGHT_DONE : constants.WEIGHT_COLOR;
+			} else
+				color = cell.done
+					? constants.WEIGHT_DONE
+					: constants.WEIGHT_COLOR;
 		} else
 			switch (cell.type) {
 				case START:
@@ -163,10 +147,15 @@ const Box = ({ row, col }) => {
 					color = constants.END_COLOR;
 					break;
 				case WALL:
-					color = constants.WALL_COLOR
+					color = constants.WALL_COLOR;
 					break;
 				case PATH:
 					color = constants.PATH_COLOR;
+					break;
+				case NORMAL:
+					if (cell.value > 0) {
+						color = constants.FOURTH_ANIMATION_COLOR;
+					}
 					break;
 				default:
 					color = constants.DEFAULT_COLOR;
@@ -178,7 +167,7 @@ const Box = ({ row, col }) => {
 		<Wrapper
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
-			className={getClass(cell,status)}
+			className={getClass(cell, status)}
 			style={{
 				backgroundColor: getColor(),
 			}}

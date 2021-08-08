@@ -3,8 +3,6 @@ import {
 	CHANGE_VALUE,
 	RESET_MATRIX,
 	SET_MATRIX,
-	STOP_RUNNING_ALGORITHM,
-	START_RUNNING_ALGORITHM,
 	MOUSE_UP_DOWN,
 	START_MOVE,
 	END_MOVE,
@@ -15,8 +13,9 @@ import {
 	CHANGE_TYPE,
 	CHANGE_DONE,
 	RESET_WEIGHT_BUTTON,
+	MODAL_CHANGE,
+	CHANGE_STATUS
 } from "../utils/actions";
-import { STOPPED, RUNNING } from "../utils/status";
 
 const MatrixReducer = (state, action) => {
 	if (action.type === RESET_MATRIX) {
@@ -33,17 +32,10 @@ const MatrixReducer = (state, action) => {
 		};
 	}
 
-	if (action.type === STOP_RUNNING_ALGORITHM) {
+	if (action.type === CHANGE_STATUS) {
 		return {
 			...state,
-			status: STOPPED,
-		};
-	}
-
-	if (action.type === START_RUNNING_ALGORITHM) {
-		return {
-			...state,
-			status: RUNNING,
+			status: action.payload,
 		};
 	}
 
@@ -72,6 +64,13 @@ const MatrixReducer = (state, action) => {
 		return {
 			...state,
 			end: action.payload,
+		};
+	}
+
+	if (action.type === MODAL_CHANGE) {
+		return {
+			...state,
+			tutorialOpen: action.payload,
 		};
 	}
 

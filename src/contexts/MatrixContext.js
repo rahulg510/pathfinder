@@ -1,14 +1,12 @@
 import React, { useContext, useReducer, useEffect } from "react";
 import MatrixReducer from "../reducers/MatrixReducer";
-import { STOPPED } from "../utils/status";
+import { BUSY, RUNNING, STOPPED } from "../utils/status";
 import { END, NORMAL, PATH, START } from "../utils/cellTypes";
 import {
 	RESET_MATRIX,
 	CHANGE_VALUE,
 	CHANGE_ALGORITHM,
 	SET_MATRIX,
-	STOP_RUNNING_ALGORITHM,
-	START_RUNNING_ALGORITHM,
 	MOUSE_UP_DOWN,
 	START_MOVE,
 	END_MOVE,
@@ -19,6 +17,8 @@ import {
 	CHANGE_TYPE,
 	CHANGE_DONE,
 	RESET_WEIGHT_BUTTON,
+	MODAL_CHANGE,
+	CHANGE_STATUS
 } from "../utils/actions";
 import {
 	GFS,
@@ -38,13 +38,15 @@ import {
 	RANDOM_MAZE_WEIGHTED,
 } from "../utils/mazeAlgorithms/mazeAlgorithms";
 
+import { useAlert } from "react-alert";
+
 const MatrixContext = React.createContext();
 
 const initialState = {
-	rows: 30,
+	rows: 20,
 	cols: 60,
 	start: { row: 5, col: 5 },
-	end: { row: 17, col: 25 },
+	end: { row: 17, col: 39 },
 	matrix: [],
 	currentAlgorithm: "",
 	erase: false,
@@ -53,12 +55,13 @@ const initialState = {
 	startMove: false,
 	endMove: false,
 	weight: false,
-	weightOnMatrix: false
+	weightOnMatrix: false,
+	tutorialOpen: true
 };
 
 export const MatrixProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(MatrixReducer, initialState);
-
+	const alert = useAlert();
 	useEffect(() => {
 		let initialMatrix = localStorage.getItem("matrix");
 		if (initialMatrix) {
@@ -134,13 +137,9 @@ export const MatrixProvider = ({ children }) => {
 		return newMatrix;
 	}
 
-	const startRunningAlogrithm = () => {
-		dispatch({ type: START_RUNNING_ALGORITHM });
-	};
-
-	const stopRunningAlogrithm = () => {
-		dispatch({ type: STOP_RUNNING_ALGORITHM });
-	};
+	const changeStatus = (status) => {
+		dispatch({ type: CHANGE_STATUS, payload: status});
+	}
 
 	const handleMouseUpDown = (bool) => {
 		dispatch({ type: MOUSE_UP_DOWN, payload: bool });
@@ -160,7 +159,7 @@ export const MatrixProvider = ({ children }) => {
 
 	const resetWeightButton = () => {
 		dispatch({ type: RESET_WEIGHT_BUTTON });
-	}
+	};
 
 	const changeValue = (row, col, val) => {
 		dispatch({ type: CHANGE_VALUE, payload: { row, col, val } });
@@ -179,14 +178,22 @@ export const MatrixProvider = ({ children }) => {
 	};
 
 	const drawPath = async (path) => {
-		// let last = state.start;
-		while (path.length > 0) {
-			// changeType(last.row, last.col, PATH);
-			let vertex = path.shift();
-			changeType(vertex.row, vertex.col, PATH);
-			// last = vertex;
+		let last = state.start;
+		if (path.length > 0) {
+			while (path.length > 0) {
+				changeType(last.row, last.col, PATH);
+				let vertex = path.shift();
+				changeType(vertex.row, vertex.col, START);
+				last = vertex;
+				await new Promise((resolve) => setTimeout(resolve, 0));
+			}
 			await new Promise((resolve) => setTimeout(resolve, 0));
+			changeType(last.row, last.col, PATH);
+			changeType(state.start.row, state.start.col, START);
+		} else {
+			alert.info("No Path Found");
 		}
+		changeStatus(STOPPED);
 	};
 
 	const changeAlgorithm = (newAlgo) => {
@@ -200,6 +207,10 @@ export const MatrixProvider = ({ children }) => {
 	const handleEndMove = (bool) => {
 		dispatch({ type: END_MOVE, payload: bool });
 	};
+
+	const handleTutorialModal = (bool) => {
+		dispatch({ type: MODAL_CHANGE, payload: bool });
+	}
 
 	const prepareMatrixForUnweighted = async () => {
 		if (state.status === STOPPED) {
@@ -234,10 +245,9 @@ export const MatrixProvider = ({ children }) => {
 		await new Promise((resolve) => setTimeout(resolve, 800));
 	};
 
-
 	const createMaze = async (algo) => {
 		if (state.status === STOPPED) {
-			startRunningAlogrithm();
+			changeStatus(RUNNING);
 			resetMatrix();
 			switch (algo) {
 				case RANDOM_MAZE_WEIGHTED:
@@ -245,7 +255,7 @@ export const MatrixProvider = ({ children }) => {
 						state.matrix,
 						state.start,
 						state.end,
-						changeType, 
+						changeType,
 						changeWeight
 					);
 					break;
@@ -259,14 +269,14 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 			}
-			stopRunningAlogrithm();
+			changeStatus(STOPPED);
 		}
 	};
 
 	const runAlgorithm = async () => {
 		if (state.status === STOPPED) {
 			resetWeightButton();
-			startRunningAlogrithm();
+			changeStatus(RUNNING);
 			let path = [];
 			switch (state.currentAlgorithm) {
 				case DFS:
@@ -323,8 +333,8 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 			}
+			changeStatus(BUSY);
 			await drawPath(path);
-			stopRunningAlogrithm();
 		}
 	};
 
@@ -373,8 +383,6 @@ export const MatrixProvider = ({ children }) => {
 				changeAlgorithm,
 				changeValue,
 				handleMouseLeavingMatrix,
-				startRunningAlogrithm,
-				stopRunningAlogrithm,
 				handleMouseUpDown,
 				handleStartMove,
 				handleEndMove,
@@ -384,7 +392,8 @@ export const MatrixProvider = ({ children }) => {
 				changeWeight,
 				changeType,
 				changeDone,
-				createMaze
+				createMaze,
+				handleTutorialModal
 			}}
 		>
 			{children}

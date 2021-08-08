@@ -35,10 +35,10 @@ const Wrapper = styled.div`
 	.table {
 		display: table;
 		table-layout: fixed;
-		width: fit-content;
-		margin-left: 25%;
+		/* width: fit-content; */
+		margin: auto;
 		margin-top: 1vh;
-		margin-right: 1vh;
+		margin-bottom: 1vh;
 		border-collapse: collapse;
 	}
 
@@ -48,19 +48,17 @@ const Wrapper = styled.div`
 
 	.cell {
 		display: table-cell;
-		height: 3vh;
-		max-height: 3vh;
-		max-width: 3vh;
+		height: 4vh;
 		border: solid 1px ${constants.CELL_BORDER};
 		white-space: nowrap;
 	}
 
 	.blink-bg {
 		animation-name: blinkingBackground;
-		animation-duration: 2s;
+		animation-duration: 1s;
 		animation-iteration-count: 1;
-		animation-direction: normal;
-		animation-fill-mode: forwards;
+		animation-direction: alternate;
+		animation-fill-mode: both;
 		animation-play-state: running;
 	}
 	.blink-bg-stopped {
@@ -72,7 +70,7 @@ const Wrapper = styled.div`
 		0% {
 			background-color: ${constants.FIRST_ANIMATION_COLOR};
 			text-align: center;
-			transform: scale(.3);
+			transform: scale(.2);
 			opacity:0.5;
 			border-radius: 50%;
 		}
@@ -92,12 +90,13 @@ const Wrapper = styled.div`
 		100% {
 			background-color: ${constants.FOURTH_ANIMATION_COLOR};
 		}
+
 	}
 
 	.wall {
 		border-color: ${constants.WALL_COLOR};
 		background-image: url(${constants.WALL_IMG});
-		background-size: contain;
+		background-size: cover;
 		background-repeat: no-repeat;
 		background-position: center;
 	}
@@ -122,6 +121,10 @@ const Wrapper = styled.div`
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
+	}
+
+	.path {
+		 border-color: ${constants.PATH_COLOR};
 	}
 `;
 

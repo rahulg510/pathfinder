@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import styled from "styled-components";
 import { useMatrixContext } from "../contexts/MatrixContext";
-import { RUNNING } from "../utils/status";
+import { RUNNING, BUSY } from "../utils/status";
 import "../utils/algorithms/algorithms";
 import { ASTAR, BFS, DFS, DIJ, GFS } from "../utils/algorithms/algorithms";
 import {
@@ -10,6 +10,7 @@ import {
 } from "../utils/mazeAlgorithms/mazeAlgorithms";
 import { WEIGHT_COLOR } from "../utils/cellConstants";
 import { useAlert } from "react-alert";
+import Modal from "./Modal";
 const OptionsBar = () => {
 	const {
 		resetMatrix,
@@ -24,12 +25,10 @@ const OptionsBar = () => {
 	} = useMatrixContext();
 	const alert = useAlert();
 
-	// const [alertAlgos, setAlertAlgos] = useState(false);
-
 	const handleStart = async () => {
 		if (currentAlgorithm) runAlgorithm();
 		else {
-			alert.error("Pick an Algorithm");
+			alert.error("Pick An Algorithm");
 		}
 	};
 
@@ -37,22 +36,24 @@ const OptionsBar = () => {
 		<Wrapper>
 			<nav
 				className={`${
-					status === RUNNING
-						? "navbar navbar-expand-lg navbar-light alerting"
-						: "navbar navbar-expand-lg navbar-light"
+					status === RUNNING || status === BUSY
+						? "navbar navbar-expand-lg alerting"
+						: "navbar navbar-expand-lg"
 				}`}
 			>
 				<div className="container-fluid">
-					<a className="navbar-brand" href="/">
-						<img src="weightIcon.svg" width="30" alt="site logo" />
-						Pathfinder
-					</a>
+					<div className="nav-item">
+						<a href="/">
+							<img src="logo.svg" width="40" alt="site logo" />
+							<h3>Pathfinder</h3>
+						</a>
+					</div>
 					<button
-						className="navbar-toggler"
+						className="navbar-toggler navbar-dark"
 						type="button"
 						data-bs-toggle="collapse"
-						data-bs-target="#navbarNavDarkDropdown"
-						aria-controls="navbarNavDarkDropdown"
+						data-bs-target="#navbarNavDropdown"
+						aria-controls="navbarNavDropdown"
 						aria-expanded="false"
 						aria-label="Toggle navigation"
 					>
@@ -61,12 +62,14 @@ const OptionsBar = () => {
 
 					<div
 						className="collapse navbar-collapse"
-						id="navbarNavDarkDropdown"
+						id="navbarNavDropdown"
 					>
 						<ul className="navbar-nav">
 							<li className="nav-item">
 								<button
-									disabled={status === RUNNING}
+									disabled={
+										status === RUNNING || status === BUSY
+									}
 									onClick={resetMatrix}
 									style={{ textAlign: "center" }}
 								>
@@ -75,7 +78,9 @@ const OptionsBar = () => {
 							</li>
 							<li className="nav-item">
 								<button
-									disabled={status === RUNNING}
+									disabled={
+										status === RUNNING || status === BUSY
+									}
 									onClick={clearMatrix}
 								>
 									Clear Path
@@ -83,8 +88,10 @@ const OptionsBar = () => {
 							</li>
 							<li className="nav-item dropdown">
 								<button
-									disabled={status === RUNNING}
-									className="nav-link dropdown-toggle"
+									disabled={
+										status === RUNNING || status === BUSY
+									}
+									className="dropdown-toggle"
 									data-bs-toggle="dropdown"
 									aria-expanded="false"
 									id="mazeDropdown"
@@ -92,7 +99,7 @@ const OptionsBar = () => {
 									Mazes
 								</button>
 								<ul
-									className="dropdown-menu bg-light"
+									className="dropdown-menu"
 									aria-labelledby="mazeDropdown"
 								>
 									<li>
@@ -119,8 +126,10 @@ const OptionsBar = () => {
 							</li>
 							<li className="nav-item dropdown" id="algoHolder">
 								<button
-									disabled={status === RUNNING}
-									className="nav-link dropdown-toggle"
+									disabled={
+										status === RUNNING || status === BUSY
+									}
+									className="dropdown-toggle"
 									data-bs-toggle="dropdown"
 									aria-expanded="false"
 									id="algoDropdown"
@@ -128,7 +137,7 @@ const OptionsBar = () => {
 									{currentAlgorithm || "Algorithms"}
 								</button>
 								<ul
-									className="dropdown-menu bg-light"
+									className="dropdown-menu"
 									aria-labelledby="algoDropdown"
 								>
 									<li>
@@ -183,24 +192,34 @@ const OptionsBar = () => {
 									</li>
 								</ul>
 							</li>
+
 							<li className="nav-item">
 								<button
-									disabled={status === RUNNING}
-									onClick={handleStart}
-								>
-									Run
-								</button>
-							</li>
-							<li className="nav-item">
-								<button
-									disabled={status === RUNNING}
+									disabled={
+										status === RUNNING || status === BUSY
+									}
 									className={`${weight ? "selected" : null}`}
 									onClick={handleWeightClick}
 								>
 									Add Weight
 								</button>
 							</li>
+							<li className="nav-item">
+								<button
+									disabled={
+										status === RUNNING || status === BUSY
+									}
+									onClick={handleStart}
+								>
+									{status === RUNNING || status === BUSY
+										? "Running"
+										: "Run"}
+								</button>
+							</li>
 						</ul>
+						<li className="nav" id="tutorialButton">
+							<Modal />
+						</li>
 					</div>
 				</div>
 			</nav>
@@ -210,37 +229,56 @@ const OptionsBar = () => {
 
 const Wrapper = styled.div`
 	.navbar {
-		background-color: #ddd;
-		padding-bottom: 1vh;
-		table-layout: fixed;
+		background-color: #65b3a1;
+		box-shadow: 0 0 15px #65b3a1;
 	}
 
-	.navbar-nav {
+	#tutorialButton {
+	}
+
+	#navbarNavDropdown {
+		margin-left: 2%;
 	}
 	.navbar-brand {
 		font-size: 30px;
-		color: white;
+		color: #ffffffa9;
 	}
 	button {
-		float: left;
-		text-align: center;
 		padding: 14px 16px;
 		font-size: 16px;
 		border: 0;
+		background-color: inherit;
+		color: #ffffffa9;
+	}
+
+	h3 {
+		display: inline;
+		color: #ffffffa9;
+		padding-left: 4px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	img {
+		padding-bottom: 4px;
+	}
+
+	.dropdown-menu {
+		background-color: #1d1d1f;
+	}
+
+	.dropdown-item {
+		text-indent: 2%;
 	}
 
 	.navbar button:hover {
-		background-color: #3bbc73;
-		color: black;
-	}
-
-	.hover {
-		background-color: #3bbc73;
-		color: black;
+		background-color: #303030da;
+		color: white;
 	}
 
 	.navbar button:disabled {
-		background-color: grey;
 		color: black;
 	}
 
