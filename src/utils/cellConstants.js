@@ -14,6 +14,7 @@ export const WEIGHT_IMG = "weight.svg";
 export const START_IMG = "startIcon.svg";
 export const END_IMG = "endIcon.svg";
 export const PATH_IMG = "pathIcon.svg";
+export const LOGO_IMG = "logo2.svg";
 
 //animations
 export const FIRST_ANIMATION_COLOR = "#ff9b85";

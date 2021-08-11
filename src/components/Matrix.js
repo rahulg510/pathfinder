@@ -55,7 +55,7 @@ const Wrapper = styled.div`
 
 	.blink-bg {
 		animation-name: blinkingBackground;
-		animation-duration: 1s;
+		animation-duration: 2s;
 		animation-iteration-count: 1;
 		animation-direction: alternate;
 		animation-fill-mode: both;
@@ -70,7 +70,7 @@ const Wrapper = styled.div`
 		0% {
 			background-color: ${constants.FIRST_ANIMATION_COLOR};
 			text-align: center;
-			transform: scale(.2);
+			transform: scale(.1);
 			opacity:0.5;
 			border-radius: 50%;
 		}
@@ -79,7 +79,7 @@ const Wrapper = styled.div`
 			text-align: center;
 			transform: scale(.5);
 			opacity:0.8;
-			border-radius: 50%;
+			border-radius: 30%;
 
 		}
 		50% {
@@ -121,10 +121,6 @@ const Wrapper = styled.div`
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
-	}
-
-	.path {
-		 border-color: ${constants.PATH_COLOR};
 	}
 `;
 

@@ -1,13 +1,13 @@
 import heap from "heap";
 import { isEquals, checkIndexes } from "../helpers";
 
-export const gfs = async (matrix, start, end, changeValue,changeDone) => {
+export const aStar = async (matrix, start, end, changeValue,changeDone) => {
 	const pQueue = new heap((a, b) => {
-		return a.val - b.val;
+		return a.cost - b.cost;
 	});
 
-	const push = (row, col, val) => {
-		pQueue.insert({ row, col, val });
+	const push = (row, col, cost) => {
+		pQueue.insert({ row, col, cost });
 	};
 
 	const getHeuristic = (row, col) => {
@@ -15,39 +15,45 @@ export const gfs = async (matrix, start, end, changeValue,changeDone) => {
 	};
 
 	const visitNeighbors = ({ row, col }) => {
+		let costSoFar = matrix[row][col].value;
+
 		if (checkIndexes(matrix, row - 1, col)) {
 			let cell = matrix[row - 1][col];
-			if (cell.value === 0) {
-				changeValue(row-1, col, 2);
+			let newCost = costSoFar + cell.weight + 1;
+			if (cell.value === 0 || newCost < cell.value) {
+				changeValue(row - 1, col, newCost);
 				cell.parent = { row, col };
-				let cost = cell.weight + getHeuristic(row - 1, col);
+				let cost = newCost + getHeuristic(row - 1, col);
 				push(row - 1, col, cost);
 			}
 		}
 		if (checkIndexes(matrix, row + 1, col)) {
 			let cell = matrix[row + 1][col];
-			if (cell.value === 0) {
-				changeValue(row+1, col, 2);
+			let newCost = costSoFar + cell.weight + 1;
+			if (cell.value === 0 || newCost < cell.value) {
+				changeValue(row + 1, col, newCost);
 				cell.parent = { row, col };
-				let cost = cell.weight + getHeuristic(row + 1, col);
+				let cost = newCost + getHeuristic(row + 1, col);
 				push(row + 1, col, cost);
 			}
 		}
 		if (checkIndexes(matrix, row, col + 1)) {
 			let cell = matrix[row][col + 1];
-			if (cell.value === 0) {
-				changeValue(row, col+1, 2);
+			let newCost = costSoFar + cell.weight + 1;
+			if (cell.value === 0 || newCost < cell.value) {
+				changeValue(row, col + 1, newCost);
 				cell.parent = { row, col };
-				let cost = cell.weight + getHeuristic(row, col + 1);
+				let cost = newCost + getHeuristic(row, col + 1);
 				push(row, col + 1, cost);
 			}
 		}
 		if (checkIndexes(matrix, row, col - 1)) {
 			let cell = matrix[row][col - 1];
-			if (cell.value === 0) {
-				changeValue(row, col-1, 2);
+			let newCost = costSoFar + cell.weight + 1;
+			if (cell.value === 0 || newCost < cell.value) {
+				changeValue(row, col - 1, newCost);
 				cell.parent = { row, col };
-				let cost = cell.weight + getHeuristic(row, col - 1);
+				let cost = newCost + getHeuristic(row, col - 1);
 				push(row, col - 1, cost);
 			}
 		}
@@ -56,7 +62,7 @@ export const gfs = async (matrix, start, end, changeValue,changeDone) => {
 	let begin = {
 		row: start.row,
 		col: start.col,
-		val: 0,
+		cost: 0,
 	};
 
 	pQueue.insert(begin);
@@ -68,8 +74,8 @@ export const gfs = async (matrix, start, end, changeValue,changeDone) => {
 			changeDone(cell.row,cell.col, true);
 		}
 		if (isEquals(cell, end)) {
-            let path = [];
-            let parent = matrix[cell.row][cell.col].parent;
+			let path = [];
+			let parent = matrix[cell.row][cell.col].parent;
 			while (!isEquals(parent, start)) {
 				path.unshift(parent);
 				parent = matrix[parent.row][parent.col].parent;
@@ -81,4 +87,3 @@ export const gfs = async (matrix, start, end, changeValue,changeDone) => {
 	}
 	return Promise.resolve([]);
 };
-

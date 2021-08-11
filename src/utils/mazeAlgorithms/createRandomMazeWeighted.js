@@ -17,7 +17,6 @@ const createRandomMazeWeighted = (
 				if (num < 15) {
 					changeType(i, j, WALL);
 				} else if (num >= 60 && num < 70) {
-					console.log("here");
 					changeWeight(i, j, 15);
 				}
 			}

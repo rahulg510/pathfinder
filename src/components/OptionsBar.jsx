@@ -10,7 +10,7 @@ import {
 } from "../utils/mazeAlgorithms/mazeAlgorithms";
 import { WEIGHT_COLOR } from "../utils/cellConstants";
 import { useAlert } from "react-alert";
-import Modal from "./Modal";
+import Modal from "./tutorialModals/Modal";
 const OptionsBar = () => {
 	const {
 		resetMatrix,
@@ -37,8 +37,8 @@ const OptionsBar = () => {
 			<nav
 				className={`${
 					status === RUNNING || status === BUSY
-						? "navbar navbar-expand-lg alerting"
-						: "navbar navbar-expand-lg"
+						? "navbar navbar-expand-custom alerting"
+						: "navbar navbar-expand-custom"
 				}`}
 			>
 				<div className="container-fluid">
@@ -64,7 +64,7 @@ const OptionsBar = () => {
 						className="collapse navbar-collapse"
 						id="navbarNavDropdown"
 					>
-						<ul className="navbar-nav">
+						<ul className="navbar-nav mx-auto">
 							<li className="nav-item">
 								<button
 									disabled={
@@ -217,9 +217,11 @@ const OptionsBar = () => {
 								</button>
 							</li>
 						</ul>
-						<li className="nav" id="tutorialButton">
-							<Modal />
-						</li>
+						<ul className="navbar-nav ms-auto">
+							<li className="nav-item" id="tutorialButton">
+								<Modal className="modal" />
+							</li>
+						</ul>
 					</div>
 				</div>
 			</nav>
@@ -228,12 +230,51 @@ const OptionsBar = () => {
 };
 
 const Wrapper = styled.div`
+	@media (min-width: 1010px){
+    .navbar-expand-custom {
+        flex-direction: row;
+        flex-wrap: nowrap;
+		justify-content: flex-start;
+		padding-bottom: 0;
+    }
+    .navbar-expand-custom .navbar-nav {
+        flex-direction: row;
+    }
+    .navbar-expand-custom .dropdown-menu {
+        position: absolute;
+    }
+    .navbar-expand-custom .nav-link {
+        padding-right: .5rem;
+        padding-left: .5rem;
+    }
+    .navbar-expand-custom > .container {
+        flex-wrap: nowrap;
+    }
+    .navbar-expand-custom .navbar-collapse {
+        display: flex!important;
+        flex-basis: auto;
+    }
+    .navbar-expand-custom .navbar-toggler {
+        display: none;
+	}
+	
+	.navbar-expand-custom .navbar {
+		padding-bottom: 0;
+	}
+}
+
+.modal {
+    height: auto;
+    top: auto;
+    left: auto;
+    bottom: auto;
+    right: auto;
+}
+
 	.navbar {
 		background-color: #65b3a1;
 		box-shadow: 0 0 15px #65b3a1;
-	}
-
-	#tutorialButton {
+		padding-bottom: 1vh;
 	}
 
 	#navbarNavDropdown {
@@ -266,7 +307,8 @@ const Wrapper = styled.div`
 	}
 
 	.dropdown-menu {
-		background-color: #1d1d1f;
+		box-shadow: 0 0 5px #505053;
+		background-color: #505053;
 	}
 
 	.dropdown-item {
@@ -274,8 +316,9 @@ const Wrapper = styled.div`
 	}
 
 	.navbar button:hover {
-		background-color: #303030da;
+		background-color: #71c5b27a;
 		color: white;
+		box-shadow: 0 0 5px #65b3a1;
 	}
 
 	.navbar button:disabled {

@@ -92,13 +92,13 @@ const Box = ({ row, col }) => {
 	const handleMouseOver = (row, col, e) => {
 		if (status === STOPPED) {
 			if (startMove) {
-				oldColor = e.target.style["background-color"];
+				oldColor = e.target.style["backgroundColor"];
 				if (!isEquals({ row, col }, end))
-					e.target.style["background-color"] = constants.START_COLOR;
+					e.target.style["backgroundColor"] = constants.START_COLOR;
 			} else if (endMove) {
-				oldColor = e.target.style["background-color"];
+				oldColor = e.target.style["backgroundColor"];
 				if (!isEquals({ row, col }, start))
-					e.target.style["background-color"] = constants.END_COLOR;
+					e.target.style["backgroundColor"] = constants.END_COLOR;
 			} else {
 				if (mouseDown) {
 					if (weight) {
@@ -124,7 +124,7 @@ const Box = ({ row, col }) => {
 
 	const handleMouseLeave = (e) => {
 		if (status === STOPPED) {
-			e.target.style["background-color"] = oldColor;
+			e.target.style["backgroundColor"] = oldColor;
 		}
 	};
 
@@ -153,7 +153,7 @@ const Box = ({ row, col }) => {
 					color = constants.PATH_COLOR;
 					break;
 				case NORMAL:
-					if (cell.value > 0) {
+					if (cell.value !== 0) {
 						color = constants.FOURTH_ANIMATION_COLOR;
 					}
 					break;

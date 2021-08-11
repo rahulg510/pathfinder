@@ -59,7 +59,7 @@ export const bfs = async (matrix, start, end, changeValue) => {
 			return Promise.resolve(path);
 		}
 		visitNeighbors(cell);
-		if (count % 3 === 0)
+		if (count % 5 === 0)
 			await new Promise((resolve) => setTimeout(resolve, 0));
 		count++;
 	}

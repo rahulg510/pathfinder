@@ -29,7 +29,7 @@ import {
 	dfs,
 	bfs,
 	DIJ,
-	dijkstra,
+	dijkstra
 } from "../utils/algorithms/algorithms";
 
 import {
@@ -126,6 +126,7 @@ export const MatrixProvider = ({ children }) => {
 					parent: null,
 					type: NORMAL,
 					done: false,
+					side: null
 				};
 				arr.push(obj);
 			}
@@ -333,6 +334,7 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 			}
+			await new Promise(r=>setTimeout(r, 1000));
 			changeStatus(BUSY);
 			await drawPath(path);
 		}
