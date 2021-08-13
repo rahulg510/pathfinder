@@ -1,4 +1,4 @@
-import { checkIndexes, isEquals } from "../helpers";
+import { checkIndexes, isEquals, NEIGHBORS } from "../helpers";
 import Heap from "heap";
 
 export const dijkstra = async (
@@ -19,43 +19,19 @@ export const dijkstra = async (
 
 	const visitNeighbors = ({ row, col }) => {
 		let costSoFar = matrix[row][col].value;
-		if (checkIndexes(matrix, row - 1, col)) {
-			let cell = matrix[row - 1][col];
-			let newCost = costSoFar + cell.weight + 1;
-			if (cell.value === 0 || newCost < cell.value) {
-				changeValue(row - 1, col, newCost);
-				cell.parent = { row, col };
-				push(row - 1, col, newCost);
+		NEIGHBORS.forEach((neighbor) => {
+			let r = row + neighbor[0];
+			let c = col + neighbor[1];
+			if (checkIndexes(matrix, r, c)) {
+				let cell = matrix[r][c];
+				let newCost = costSoFar + cell.weight + 1;
+				if (cell.value === 0 || newCost < cell.value) {
+					changeValue(r, c, newCost);
+					cell.parent = { row, col };
+					push(r, c, newCost);
+				}
 			}
-		}
-		if (checkIndexes(matrix, row, col + 1)) {
-			let cell = matrix[row][col + 1];
-			let newCost = costSoFar + cell.weight + 1;
-			if (cell.value === 0 || newCost < cell.value) {
-				changeValue(row, col + 1, newCost);
-				cell.parent = { row, col };
-				push(row, col + 1, newCost);
-			}
-		}
-
-		if (checkIndexes(matrix, row + 1, col)) {
-			let cell = matrix[row + 1][col];
-			let newCost = costSoFar + cell.weight + 1;
-			if (cell.value === 0 || newCost < cell.value) {
-				changeValue(row + 1, col, newCost);
-				cell.parent = { row, col };
-				push(row + 1, col, newCost);
-			}
-		}
-		if (checkIndexes(matrix, row, col - 1)) {
-			let cell = matrix[row][col - 1];
-			let newCost = costSoFar + cell.weight + 1;
-			if (cell.value === 0 || newCost < cell.value) {
-				changeValue(row, col - 1, newCost);
-				cell.parent = { row, col };
-				push(row, col - 1, newCost);
-			}
-		}
+		});
 	};
 
 	let begin = {

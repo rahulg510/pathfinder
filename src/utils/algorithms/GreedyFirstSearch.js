@@ -1,7 +1,7 @@
 import heap from "heap";
-import { isEquals, checkIndexes } from "../helpers";
+import { isEquals, checkIndexes, NEIGHBORS } from "../helpers";
 
-export const gfs = async (matrix, start, end, changeValue,changeDone) => {
+export const gfs = async (matrix, start, end, changeValue, changeDone) => {
 	const pQueue = new heap((a, b) => {
 		return a.val - b.val;
 	});
@@ -15,42 +15,19 @@ export const gfs = async (matrix, start, end, changeValue,changeDone) => {
 	};
 
 	const visitNeighbors = ({ row, col }) => {
-		if (checkIndexes(matrix, row - 1, col)) {
-			let cell = matrix[row - 1][col];
-			if (cell.value === 0) {
-				changeValue(row-1, col, 2);
-				cell.parent = { row, col };
-				let cost = cell.weight + getHeuristic(row - 1, col);
-				push(row - 1, col, cost);
+		NEIGHBORS.forEach((neighbor) => {
+			let r = row + neighbor[0];
+			let c = col + neighbor[1];
+			if (checkIndexes(matrix, r, c)) {
+				let cell = matrix[r][c];
+				if (cell.value === 0) {
+					changeValue(r, c, 2);
+					cell.parent = { row, col };
+					let cost = cell.weight + getHeuristic(r, c);
+					push(r, c, cost);
+				}
 			}
-		}
-		if (checkIndexes(matrix, row + 1, col)) {
-			let cell = matrix[row + 1][col];
-			if (cell.value === 0) {
-				changeValue(row+1, col, 2);
-				cell.parent = { row, col };
-				let cost = cell.weight + getHeuristic(row + 1, col);
-				push(row + 1, col, cost);
-			}
-		}
-		if (checkIndexes(matrix, row, col + 1)) {
-			let cell = matrix[row][col + 1];
-			if (cell.value === 0) {
-				changeValue(row, col+1, 2);
-				cell.parent = { row, col };
-				let cost = cell.weight + getHeuristic(row, col + 1);
-				push(row, col + 1, cost);
-			}
-		}
-		if (checkIndexes(matrix, row, col - 1)) {
-			let cell = matrix[row][col - 1];
-			if (cell.value === 0) {
-				changeValue(row, col-1, 2);
-				cell.parent = { row, col };
-				let cost = cell.weight + getHeuristic(row, col - 1);
-				push(row, col - 1, cost);
-			}
-		}
+		});
 	};
 
 	let begin = {
@@ -64,12 +41,12 @@ export const gfs = async (matrix, start, end, changeValue,changeDone) => {
 	while (pQueue.size() > 0) {
 		let cell = pQueue.pop();
 		let element = matrix[cell.row][cell.col];
-		if(element.weight > 0){
-			changeDone(cell.row,cell.col, true);
+		if (element.weight > 0) {
+			changeDone(cell.row, cell.col, true);
 		}
 		if (isEquals(cell, end)) {
-            let path = [];
-            let parent = matrix[cell.row][cell.col].parent;
+			let path = [];
+			let parent = matrix[cell.row][cell.col].parent;
 			while (!isEquals(parent, start)) {
 				path.unshift(parent);
 				parent = matrix[parent.row][parent.col].parent;
@@ -81,4 +58,3 @@ export const gfs = async (matrix, start, end, changeValue,changeDone) => {
 	}
 	return Promise.resolve([]);
 };
-

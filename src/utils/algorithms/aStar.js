@@ -1,7 +1,7 @@
+import { isEquals, checkIndexes, NEIGHBORS } from "../helpers";
 import heap from "heap";
-import { isEquals, checkIndexes } from "../helpers";
 
-export const aStar = async (matrix, start, end, changeValue,changeDone) => {
+export const aStar = async (matrix, start, end, changeValue, changeDone) => {
 	const pQueue = new heap((a, b) => {
 		return a.cost - b.cost;
 	});
@@ -16,47 +16,20 @@ export const aStar = async (matrix, start, end, changeValue,changeDone) => {
 
 	const visitNeighbors = ({ row, col }) => {
 		let costSoFar = matrix[row][col].value;
-
-		if (checkIndexes(matrix, row - 1, col)) {
-			let cell = matrix[row - 1][col];
-			let newCost = costSoFar + cell.weight + 1;
-			if (cell.value === 0 || newCost < cell.value) {
-				changeValue(row - 1, col, newCost);
-				cell.parent = { row, col };
-				let cost = newCost + getHeuristic(row - 1, col);
-				push(row - 1, col, cost);
+		NEIGHBORS.forEach((neighbor) => {
+			let r = row + neighbor[0];
+			let c = col + neighbor[1];
+			if (checkIndexes(matrix, r, c)) {
+				let cell = matrix[r][c];
+				let newCost = costSoFar + cell.weight + 1;
+				if (cell.value === 0 || newCost < cell.value) {
+					changeValue(r, c, newCost);
+					cell.parent = { row, col };
+					let cost = newCost + getHeuristic(r, c);
+					push(r, c, cost);
+				}
 			}
-		}
-		if (checkIndexes(matrix, row + 1, col)) {
-			let cell = matrix[row + 1][col];
-			let newCost = costSoFar + cell.weight + 1;
-			if (cell.value === 0 || newCost < cell.value) {
-				changeValue(row + 1, col, newCost);
-				cell.parent = { row, col };
-				let cost = newCost + getHeuristic(row + 1, col);
-				push(row + 1, col, cost);
-			}
-		}
-		if (checkIndexes(matrix, row, col + 1)) {
-			let cell = matrix[row][col + 1];
-			let newCost = costSoFar + cell.weight + 1;
-			if (cell.value === 0 || newCost < cell.value) {
-				changeValue(row, col + 1, newCost);
-				cell.parent = { row, col };
-				let cost = newCost + getHeuristic(row, col + 1);
-				push(row, col + 1, cost);
-			}
-		}
-		if (checkIndexes(matrix, row, col - 1)) {
-			let cell = matrix[row][col - 1];
-			let newCost = costSoFar + cell.weight + 1;
-			if (cell.value === 0 || newCost < cell.value) {
-				changeValue(row, col - 1, newCost);
-				cell.parent = { row, col };
-				let cost = newCost + getHeuristic(row, col - 1);
-				push(row, col - 1, cost);
-			}
-		}
+		});
 	};
 
 	let begin = {
@@ -70,8 +43,8 @@ export const aStar = async (matrix, start, end, changeValue,changeDone) => {
 	while (pQueue.size() > 0) {
 		let cell = pQueue.pop();
 		let element = matrix[cell.row][cell.col];
-		if(element.weight > 0){
-			changeDone(cell.row,cell.col, true);
+		if (element.weight > 0) {
+			changeDone(cell.row, cell.col, true);
 		}
 		if (isEquals(cell, end)) {
 			let path = [];

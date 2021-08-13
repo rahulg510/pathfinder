@@ -18,7 +18,7 @@ import {
 	CHANGE_DONE,
 	RESET_WEIGHT_BUTTON,
 	MODAL_CHANGE,
-	CHANGE_STATUS
+	CHANGE_STATUS,
 } from "../utils/actions";
 import {
 	GFS,
@@ -29,7 +29,9 @@ import {
 	dfs,
 	bfs,
 	DIJ,
-	dijkstra
+	BDIJ,
+	dijkstra,
+	biDijkstra,
 } from "../utils/algorithms/algorithms";
 
 import {
@@ -56,7 +58,7 @@ const initialState = {
 	endMove: false,
 	weight: false,
 	weightOnMatrix: false,
-	tutorialOpen: true
+	tutorialOpen: true,
 };
 
 export const MatrixProvider = ({ children }) => {
@@ -123,10 +125,9 @@ export const MatrixProvider = ({ children }) => {
 				let obj = {
 					value: 0,
 					weight: 0,
-					parent: null,
+					parent: {},
 					type: NORMAL,
 					done: false,
-					side: null
 				};
 				arr.push(obj);
 			}
@@ -139,8 +140,8 @@ export const MatrixProvider = ({ children }) => {
 	}
 
 	const changeStatus = (status) => {
-		dispatch({ type: CHANGE_STATUS, payload: status});
-	}
+		dispatch({ type: CHANGE_STATUS, payload: status });
+	};
 
 	const handleMouseUpDown = (bool) => {
 		dispatch({ type: MOUSE_UP_DOWN, payload: bool });
@@ -211,7 +212,7 @@ export const MatrixProvider = ({ children }) => {
 
 	const handleTutorialModal = (bool) => {
 		dispatch({ type: MODAL_CHANGE, payload: bool });
-	}
+	};
 
 	const prepareMatrixForUnweighted = async () => {
 		if (state.status === STOPPED) {
@@ -301,6 +302,17 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 
+				case BDIJ:
+					await prepareMatrixForWeighted();
+					path = await biDijkstra(
+						state.matrix,
+						state.start,
+						state.end,
+						changeValue,
+						changeDone
+					);
+					break;
+
 				case GFS:
 					await prepareMatrixForWeighted();
 					path = await gfs(
@@ -334,7 +346,7 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 			}
-			await new Promise(r=>setTimeout(r, 1000));
+			await new Promise((r) => setTimeout(r, 1000));
 			changeStatus(BUSY);
 			await drawPath(path);
 		}
@@ -395,7 +407,7 @@ export const MatrixProvider = ({ children }) => {
 				changeType,
 				changeDone,
 				createMaze,
-				handleTutorialModal
+				handleTutorialModal,
 			}}
 		>
 			{children}

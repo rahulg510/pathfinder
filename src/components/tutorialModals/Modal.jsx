@@ -28,10 +28,10 @@ const ModalScrollingContent = () => {
 					onMouseEnter={() => setHover(true)}
 					onMouseLeave={() => setHover(false)}
 					style={{
-						backgroundColor: hover ? "#303030da" : "#91fce379",
+						backgroundColor: hover ? "#303030b6" : "#3030304b",
 						color: "white",
 						boxShadow:
-							"0 0 3px " + (hover ? "#303030da" : "#91fce379"),
+							"0 0 3px " + (hover ? "#303030b6" : "#3030304b"),
 					}}
 				>
 					Tutorial

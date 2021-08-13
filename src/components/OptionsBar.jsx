@@ -3,7 +3,14 @@ import styled from "styled-components";
 import { useMatrixContext } from "../contexts/MatrixContext";
 import { RUNNING, BUSY } from "../utils/status";
 import "../utils/algorithms/algorithms";
-import { ASTAR, BFS, DFS, DIJ, GFS } from "../utils/algorithms/algorithms";
+import {
+	ASTAR,
+	BFS,
+	DFS,
+	DIJ,
+	GFS,
+	BDIJ,
+} from "../utils/algorithms/algorithms";
 import {
 	RANDOM_MAZE,
 	RANDOM_MAZE_WEIGHTED,
@@ -174,6 +181,16 @@ const OptionsBar = () => {
 										<button
 											className="dropdown-item"
 											onClick={(e) =>
+												changeAlgorithm(BDIJ)
+											}
+										>
+											Bi-Directional Dijkstra's Algorithm
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
 												changeAlgorithm(GFS)
 											}
 										>
@@ -206,6 +223,7 @@ const OptionsBar = () => {
 							</li>
 							<li className="nav-item">
 								<button
+									id="runButton"
 									disabled={
 										status === RUNNING || status === BUSY
 									}
@@ -230,46 +248,59 @@ const OptionsBar = () => {
 };
 
 const Wrapper = styled.div`
-	@media (min-width: 1010px){
-    .navbar-expand-custom {
-        flex-direction: row;
-        flex-wrap: nowrap;
-		justify-content: flex-start;
-		padding-bottom: 0;
-    }
-    .navbar-expand-custom .navbar-nav {
-        flex-direction: row;
-    }
-    .navbar-expand-custom .dropdown-menu {
-        position: absolute;
-    }
-    .navbar-expand-custom .nav-link {
-        padding-right: .5rem;
-        padding-left: .5rem;
-    }
-    .navbar-expand-custom > .container {
-        flex-wrap: nowrap;
-    }
-    .navbar-expand-custom .navbar-collapse {
-        display: flex!important;
-        flex-basis: auto;
-    }
-    .navbar-expand-custom .navbar-toggler {
-        display: none;
-	}
-	
-	.navbar-expand-custom .navbar {
-		padding-bottom: 0;
-	}
-}
+	@media (min-width: 1010px) {
+		.navbar-expand-custom {
+			flex-direction: row;
+			flex-wrap: nowrap;
+			justify-content: flex-start;
+			padding-bottom: 0;
+		}
+		.navbar-expand-custom .navbar-nav {
+			flex-direction: row;
+		}
+		.navbar-expand-custom .dropdown-menu {
+			position: absolute;
+		}
+		.navbar-expand-custom .nav-link {
+			padding-right: 0.5rem;
+			padding-left: 0.5rem;
+		}
+		.navbar-expand-custom > .container {
+			flex-wrap: nowrap;
+		}
+		.navbar-expand-custom .navbar-collapse {
+			display: flex !important;
+			flex-basis: auto;
+		}
+		.navbar-expand-custom .navbar-toggler {
+			display: none;
+		}
 
-.modal {
-    height: auto;
-    top: auto;
-    left: auto;
-    bottom: auto;
-    right: auto;
-}
+		.navbar-expand-custom .navbar {
+			padding-bottom: 0;
+		}
+	}
+
+	#runButton {
+		padding: 14px 28px;
+		background-color: #91fce379;
+		color: white;
+		box-shadow: 0 0 3px #91fce379;
+	}
+
+	#runButton:hover {
+		background-color: #3fd07989;
+		color: white;
+		box-shadow: 0 0 3px #3fd07989;
+	}
+
+	.modal {
+		height: auto;
+		top: auto;
+		left: auto;
+		bottom: auto;
+		right: auto;
+	}
 
 	.navbar {
 		background-color: #65b3a1;

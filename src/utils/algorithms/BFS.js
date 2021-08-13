@@ -1,44 +1,24 @@
-import { checkIndexes, isEquals } from "../helpers";
+import { checkIndexes, isEquals, NEIGHBORS } from "../helpers";
 
 export const bfs = async (matrix, start, end, changeValue) => {
 	let queue = [];
-	const push = (row, col, val) => {
-		queue.push({ row, col, val });
+	const push = (row, col) => {
+		queue.push({ row, col });
 	};
 
 	const visitNeighbors = ({ row, col }) => {
-		if (checkIndexes(matrix, row - 1, col)) {
-			let cell = matrix[row - 1][col];
-			if (cell.value === 0) {
-				changeValue(row - 1, col, 3);
-				cell.parent = { row, col };
-				push(row - 1, col);
+		NEIGHBORS.forEach((neighbor) => {
+			let r = row + neighbor[0];
+			let c = col + neighbor[1];
+			if (checkIndexes(matrix, r, c)) {
+				let cell = matrix[r][c];
+				if (cell.value === 0) {
+					changeValue(r, c, 3);
+					cell.parent = { row, col };
+					push(r, c);
+				}
 			}
-		}
-		if (checkIndexes(matrix, row, col + 1)) {
-			let cell = matrix[row][col + 1];
-			if (cell.value === 0) {
-				changeValue(row, col + 1, 3);
-				cell.parent = { row, col };
-				push(row, col + 1);
-			}
-		}
-		if (checkIndexes(matrix, row + 1, col)) {
-			let cell = matrix[row + 1][col];
-			if (cell.value === 0) {
-				changeValue(row + 1, col, 3);
-				cell.parent = { row, col };
-				push(row + 1, col);
-			}
-		}
-		if (checkIndexes(matrix, row, col - 1)) {
-			let cell = matrix[row][col - 1];
-			if (cell.value === 0) {
-				changeValue(row, col - 1, 3);
-				cell.parent = { row, col };
-				push(row, col - 1);
-			}
-		}
+		});
 	};
 
 	let begin = {

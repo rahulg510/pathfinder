@@ -1,4 +1,4 @@
-import { isEquals, checkIndexes } from "../helpers";
+import { isEquals, checkIndexes, NEIGHBORS } from "../helpers";
 
 export const dfs = async (matrix, start, end, changeValue) => {
 	let stack = [];
@@ -8,34 +8,17 @@ export const dfs = async (matrix, start, end, changeValue) => {
 
 	const visitNeighbors = (node) => {
 		let { row, col } = node;
-		if (checkIndexes(matrix, row, col - 1)) {
-			let cell = matrix[row][col - 1];
-			if (cell.value === 0) {
-				push(row, col - 1);
-				matrix[row][col - 1].parent = node;
+		NEIGHBORS.forEach((neighbor) => {
+			let r = row + neighbor[0];
+			let c = col + neighbor[1];
+			if (checkIndexes(matrix, r, c)) {
+				let cell = matrix[r][c];
+				if (cell.value === 0) {
+					push(r, c);
+					matrix[r][c].parent = node;
+				}
 			}
-		}
-		if (checkIndexes(matrix, row, col + 1)) {
-			let cell = matrix[row][col + 1];
-			if (cell.value === 0) {
-				push(row, col + 1);
-				matrix[row][col + 1].parent = node;
-			}
-		}
-		if (checkIndexes(matrix, row - 1, col)) {
-			let cell = matrix[row - 1][col];
-			if (cell.value === 0) {
-				push(row - 1, col);
-				matrix[row - 1][col].parent = node;
-			}
-		}
-		if (checkIndexes(matrix, row + 1, col)) {
-			let cell = matrix[row + 1][col];
-			if (cell.value === 0) {
-				push(row + 1, col);
-				matrix[row + 1][col].parent = node;
-			}
-		}
+		});
 	};
 
 	let begin = {
@@ -64,4 +47,3 @@ export const dfs = async (matrix, start, end, changeValue) => {
 	}
 	return Promise.resolve([]);
 };
-

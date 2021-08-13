@@ -18,6 +18,13 @@ export const validIndex = (matrix, r, c) => {
 	} else return false;
 };
 
+export const NEIGHBORS = [
+	[-1, 0],
+	[0, 1],
+	[1, 0],
+	[0, -1],
+];
+
 export const getClass = (cell, status) => {
 	let cellClass = "cell";
 	if (cell.weight === 15) {
