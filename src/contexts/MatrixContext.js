@@ -125,7 +125,7 @@ export const MatrixProvider = ({ children }) => {
 				let obj = {
 					value: 0,
 					weight: 0,
-					parent: {},
+					parent: null,
 					type: NORMAL,
 					done: false,
 				};
@@ -218,11 +218,12 @@ export const MatrixProvider = ({ children }) => {
 		if (state.status === STOPPED) {
 			for (let i = 0; i < state.rows; i++) {
 				for (let j = 0; j < state.cols; j++) {
-					let type = state.matrix[i][j].type;
+					let c = state.matrix[i][j];
+					c.parent = null;
 					changeValue(i, j, 0);
 					changeWeight(i, j, 0);
 					changeDone(i, j, false);
-					if (type === PATH) {
+					if (c.type === PATH) {
 						changeType(i, j, NORMAL);
 					}
 				}
@@ -235,10 +236,11 @@ export const MatrixProvider = ({ children }) => {
 		if (state.status === STOPPED) {
 			for (let i = 0; i < state.rows; i++) {
 				for (let j = 0; j < state.cols; j++) {
-					let type = state.matrix[i][j].type;
+					let c = state.matrix[i][j];
+					c.parent = null;
 					changeValue(i, j, 0);
 					changeDone(i, j, false);
-					if (type === PATH) {
+					if (c.type === PATH) {
 						changeType(i, j, NORMAL);
 					}
 				}

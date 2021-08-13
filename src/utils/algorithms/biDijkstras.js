@@ -25,7 +25,9 @@ export const biDijkstra = async (
 	let startSideValues = new Map();
 	let endSideValues = new Map();
 	let startSideDone = new Map();
-	let endSideDone = new Map();
+    let endSideDone = new Map();
+    let startSideParent = new Map();
+    let endSideParent = new Map();
 
 	const visitEndSideNeighbors = ({ row, col }) => {
 		let costSoFar = endSideValues.get(`r:${row},c:${col}`);
@@ -42,22 +44,22 @@ export const biDijkstra = async (
 				if (curCost === undefined || newCost < curCost) {
 					endSideValues.set(`r:${r},c:${c}`, newCost);
 					changeValue(r, c, newCost);
-					cell.parent.endSide = { row, col };
+					endSideParent.set(`r:${r},c:${c}`,{ row, col });
 					push(r, c, newCost, true);
 
-					if (cell.parent.startSide) {
-						let totalCost =
-							costSoFar +
-							startSideValues.get(`r:${r},c:${c}`) +
-							1;
-						if (
-							startSideDone.has(`r:${r},c:${c}`) &&
-							totalCost < minimumPath
-						) {
-							minimumPath = totalCost;
-							connectingCell = { row: r, col: c };
-						}
-					}
+					// if (cell.parent.startSide) {
+					// 	let totalCost =
+					// 		costSoFar +
+					// 		startSideValues.get(`r:${r},c:${c}`) +
+					// 		1;
+					// 	if (
+					// 		startSideDone.has(`r:${r},c:${c}`) &&
+					// 		totalCost < minimumPath
+					// 	) {
+					// 		minimumPath = totalCost;
+					// 		connectingCell = { row: r, col: c };
+					// 	}
+					// }
 				}
 			}
 		});
@@ -78,19 +80,8 @@ export const biDijkstra = async (
 				if (curCost === undefined || newCost < curCost) {
 					startSideValues.set(`r:${r},c:${c}`, newCost);
 					changeValue(r, c, newCost);
-					cell.parent.startSide = { row, col };
+					startSideParent.set(`r:${r},c:${c}`,{ row, col });
 					push(r, c, newCost);
-					if (cell.parent.endSide) {
-						let totalCost =
-							costSoFar + endSideValues.get(`r:${r},c:${c}`) + 1;
-						if (
-							endSideDone.has(`r:${r},c:${c}`) &&
-							totalCost < minimumPath
-						) {
-							minimumPath = totalCost;
-							connectingCell = { row: r, col: c };
-						}
-					}
 				}
 			}
 		});
@@ -110,36 +101,57 @@ export const biDijkstra = async (
 
 	push(begin.row, begin.col, begin.val);
 	push(destination.row, destination.col, destination.val, true);
-
 	startSideValues.set(`r:${begin.row},c:${begin.col}`, 0);
 	endSideValues.set(`r:${destination.row},c:${destination.col}`, 0);
+
 	let count = 0;
 	while (heap.size() > 0 && endHeap.size() > 0) {
-		let cell = heap.pop();
+		let cell = heap.peek();
 		startSideDone.set(`r:${cell.row},c:${cell.col}`, true);
-		let endSideCell = endHeap.pop();
-        endSideDone.set(`r:${endSideCell.row},c:${endSideCell.col}`, true);
-        let bool = endSideDone.has(`r:${cell.row},c:${cell.col}`) || startSideDone.has(`r:${endSideCell.row},c:${endSideCell.col}`);
+		let endSideCell = endHeap.peek();
+		endSideDone.set(`r:${endSideCell.row},c:${endSideCell.col}`, true);
+
+		let bool = 
+			endSideParent.has(`r:${cell.row},c:${cell.col}`) || 
+			startSideParent.has(`r:${endSideCell.row},c:${endSideCell.col}`);
 		if (bool) {
-            while(heap.size() > 0 || endHeap.size() > 0)
-			if(endSideDone.has(`r:${cell.row},c:${cell.col}`)){
+			while (heap.size() > 0 || endHeap.size() > 0) {
+				let c = heap.pop();
+				if (c) {
+					let cMat = matrix[c.row][c.col];
+					if (endSideParent.has(`r:${c.row},c:${c.col}`)) {
+                        let pathLength = startSideValues.get(`r:${c.row},c:${c.col}`) + endSideValues.get(`r:${c.row},c:${c.col}`) - cMat.weight;
+                        if(pathLength < minimumPath){
+                            minimumPath = pathLength;
+                            connectingCell = c;
+                        }
+					}
+				}
+				let eC = endHeap.pop();
+				if (eC) {
+					let eCMat = matrix[eC.row][eC.col];
+					if (startSideParent.has(`r:${eC.row},c:${eC.col}`)) {
+                        let pathLength = startSideValues.get(`r:${eC.row},c:${eC.col}`) + endSideValues.get(`r:${eC.row},c:${eC.col}`) - eCMat.weight;
+                        if(pathLength < minimumPath){
+                            minimumPath = pathLength;
+                            connectingCell = eC;
+                        }
+					}
+                }
+			}
+		} else {
+			heap.pop();
+			endHeap.pop();
+			if (matrix[cell.row][cell.col].weight > 0) {
+				changeDone(cell.row, cell.col, true);
+			}
+			visitNeighbors(cell);
 
-            }
-            if(startSideDone.has(`r:${endSideCell.row},c:${endSideCell.col}`){
-
-            }
+			if (matrix[endSideCell.row][endSideCell.col].weight > 0) {
+				changeDone(endSideCell.row, endSideCell.col, true);
+			}
+			visitEndSideNeighbors(endSideCell, true);
 		}
-        else{
-            if (matrix[cell.row][cell.col].weight > 0) {
-                changeDone(cell.row, cell.col, true);
-            }
-            visitNeighbors(cell);
-    
-            if (matrix[endSideCell.row][endSideCell.col].weight > 0) {
-                changeDone(endSideCell.row, endSideCell.col, true);
-            }
-            visitEndSideNeighbors(endSideCell, true);
-        }
 		if (count % 3 === 0)
 			await new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -149,16 +161,16 @@ export const biDijkstra = async (
 	let path = [];
 	if (connectingCell) {
 		let parent =
-			matrix[connectingCell.row][connectingCell.col].parent.startSide;
+			startSideParent.get(`r:${connectingCell.row},c:${connectingCell.col}`);
 		while (!isEquals(parent, start)) {
 			path.unshift(parent);
-			parent = matrix[parent.row][parent.col].parent.startSide;
+            parent = startSideParent.get(`r:${parent.row},c:${parent.col}`);
 		}
 		path.push(connectingCell);
-		parent = matrix[connectingCell.row][connectingCell.col].parent.endSide;
+		parent = endSideParent.get(`r:${connectingCell.row},c:${connectingCell.col}`);
 		while (!isEquals(parent, end)) {
 			path.push(parent);
-			parent = matrix[parent.row][parent.col].parent.endSide;
+			parent = endSideParent.get(`r:${parent.row},c:${parent.col}`);
 		}
 	}
 	return Promise.resolve(path);
