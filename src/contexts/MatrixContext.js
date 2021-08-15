@@ -204,10 +204,12 @@ export const MatrixProvider = ({ children }) => {
 			}
 		}
 		let last = state.start;
+		let pathCost = 0;
 		if (path.length > 0) {
 			while (path.length > 0) {
 				changeType(last.row, last.col, PATH);
 				let vertex = path.shift();
+				pathCost += state.matrix[vertex.row][vertex.col].weight + 1;
 				changeType(vertex.row, vertex.col, START);
 				last = vertex;
 				await new Promise((resolve) => setTimeout(resolve, 0));
@@ -218,6 +220,7 @@ export const MatrixProvider = ({ children }) => {
 		} else {
 			alert.info("No Path Found");
 		}
+		console.log(state.currentAlgorithm, pathCost+1);
 		changeStatus(STOPPED);
 	};
 

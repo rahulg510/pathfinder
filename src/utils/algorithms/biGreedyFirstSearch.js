@@ -108,12 +108,11 @@ export const biGreedyFirstSearch = async (
 			connected = true;
 			connectingCell = cell;
 		}
-		visitForwardNeighbors();
 		if(forwardParents.has(`r:${backwardCell.row},c:${backwardCell.col}`)){
 			connected = true;
 			connectingCell = cell;
 		}
-		if (connected) {
+		if (isEquals(cell, backwardCell) || connected) {
 			let path = [];
 			let parent = forwardParents.get(`r:${connectingCell.row},c:${connectingCell.col}`);
 			while (!isEquals(parent, start)) {
@@ -129,6 +128,8 @@ export const biGreedyFirstSearch = async (
 			}
 			return Promise.resolve(path);
 		}
+
+		visitForwardNeighbors();
 		visitBackwardNeighbors();
 		await new Promise((r) => setTimeout(r, 0));
 	}
