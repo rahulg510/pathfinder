@@ -46,20 +46,6 @@ export const biDijkstra = async (
 					changeValue(r, c, newCost);
 					endSideParent.set(`r:${r},c:${c}`,{ row, col });
 					push(r, c, newCost, true);
-
-					// if (cell.parent.startSide) {
-					// 	let totalCost =
-					// 		costSoFar +
-					// 		startSideValues.get(`r:${r},c:${c}`) +
-					// 		1;
-					// 	if (
-					// 		startSideDone.has(`r:${r},c:${c}`) &&
-					// 		totalCost < minimumPath
-					// 	) {
-					// 		minimumPath = totalCost;
-					// 		connectingCell = { row: r, col: c };
-					// 	}
-					// }
 				}
 			}
 		});
@@ -152,7 +138,7 @@ export const biDijkstra = async (
 			}
 			visitEndSideNeighbors(endSideCell, true);
 		}
-		if (count % 3 === 0)
+		if (count % 2 === 0)
 			await new Promise((resolve) => setTimeout(resolve, 0));
 
 		count++;

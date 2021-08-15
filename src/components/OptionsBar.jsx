@@ -10,6 +10,8 @@ import {
 	DIJ,
 	GFS,
 	BDIJ,
+	BASTAR,
+	BGFS,
 } from "../utils/algorithms/algorithms";
 import {
 	RANDOM_MAZE,
@@ -184,7 +186,7 @@ const OptionsBar = () => {
 												changeAlgorithm(BDIJ)
 											}
 										>
-											Bi-Directional Dijkstra's Algorithm
+											Bidirectional Dijkstra's Algorithm
 										</button>
 									</li>
 									<li>
@@ -205,6 +207,27 @@ const OptionsBar = () => {
 											}
 										>
 											A* Search
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												changeAlgorithm(BASTAR)
+											}
+										>
+											Front-to-Front Bidirectional A*
+											Search
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												changeAlgorithm(BGFS)
+											}
+										>
+											Bidirectional Greedy First Search
 										</button>
 									</li>
 								</ul>

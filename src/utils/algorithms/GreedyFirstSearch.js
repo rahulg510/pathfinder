@@ -23,7 +23,7 @@ export const gfs = async (matrix, start, end, changeValue, changeDone) => {
 				if (cell.value === 0) {
 					changeValue(r, c, 2);
 					cell.parent = { row, col };
-					let cost = cell.weight + getHeuristic(r, c);
+					let cost = cell.weight + getHeuristic(r, c) + 1;
 					push(r, c, cost);
 				}
 			}

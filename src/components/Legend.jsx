@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import * as constants from "../utils/cellConstants";
+import { algoInfo } from "../utils/algorithms/algorithms";
+import { useMatrixContext } from "../contexts/MatrixContext";
 export const Legend = () => {
+	const { currentAlgorithm } = useMatrixContext();
 	return (
 		<Wrapper>
 			<div className="legend-container">
@@ -59,8 +62,7 @@ export const Legend = () => {
 						className="legend-img"
 						style={{
 							backgroundColor: constants.DEFAULT_COLOR,
-		border: "#DDD 1px solid"
-
+							border: "#DDD 1px solid",
 						}}
 					/>
 					<p>Unvisited Cell</p>
@@ -75,14 +77,40 @@ export const Legend = () => {
 					<p>Path Cell</p>
 				</div>
 			</div>
+			<div className="mainDiv">
+				<div className={`${currentAlgorithm ? "algoInfo" : "hide"}`}>
+					<div className="algoStatus">
+						<h5>Shortest Path Guaranteed</h5>
+						<div
+							className={`${
+								algoInfo[currentAlgorithm] &&
+								algoInfo[currentAlgorithm].shortestGuaranteed
+									? "yes"
+									: "negativeImg"
+							}`}
+						></div>
+					</div>
+					<div className="algoStatus">
+						<h5>Weighted</h5>
+						<div
+							className={`${
+								algoInfo[currentAlgorithm] &&
+								algoInfo[currentAlgorithm].weighted
+									? "yes"
+									: "negativeImg"
+							}`}
+						></div>
+					</div>
+				</div>
+			</div>
 		</Wrapper>
 	);
 };
 
 const Wrapper = styled.div`
 	.legend-img {
-		width:4vh;
-		height:4vh;
+		width: 4vh;
+		height: 4vh;
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
@@ -97,12 +125,48 @@ const Wrapper = styled.div`
 		text-align: center;
 	}
 
-	.legend-item{
+	.legend-item {
 		width: fit-content;
 		padding: 1vh;
 		justify-content: space-between;
 	}
-	p{
+	p {
 		margin: 0;
+	}
+
+	.mainDiv{
+		height: 3vh;
+		display: block;
+	}
+
+	.algoInfo {
+		display: inline-block;
+		text-align: center;
+	}
+
+	.algoStatus h5,
+	div {
+		display: inline;
+		padding: 0 4px;
+		text-align: center;
+	}
+
+	.hide {
+		display: none;
+	}
+
+	.yes {
+		background-image: url(${constants.TRUE_IMG});
+		width: 2vh;
+		height: 2vh;
+		display: inline-block;
+		vertical-align: text-bottom;
+	}
+	.negativeImg {
+		background-image: url(${constants.FALSE_IMG}); 
+	    width: 2vh;
+		height: 2vh; 
+		display: inline-block;
+		vertical-align: text-bottom;
 	}
 `;

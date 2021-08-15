@@ -32,6 +32,10 @@ import {
 	BDIJ,
 	dijkstra,
 	biDijkstra,
+	BASTAR,
+	biAStar,
+	BGFS,
+	biGreedyFirstSearch,
 } from "../utils/algorithms/algorithms";
 
 import {
@@ -41,6 +45,7 @@ import {
 } from "../utils/mazeAlgorithms/mazeAlgorithms";
 
 import { useAlert } from "react-alert";
+import { isEquals, NEIGHBORS } from "../utils/helpers";
 
 const MatrixContext = React.createContext();
 
@@ -180,6 +185,24 @@ export const MatrixProvider = ({ children }) => {
 	};
 
 	const drawPath = async (path) => {
+		let nextToEachOther = false;
+		NEIGHBORS.forEach((neighbor) => {
+			let row = state.start.row + neighbor[0];
+			let col = state.start.col + neighbor[1];
+			if (isEquals({ row, col }, state.end)) {
+				nextToEachOther = true;
+			}
+		});
+
+		if (nextToEachOther) {
+			if (
+				state.currentAlgorithm !== DFS ||
+				(state.currentAlgorithm === DFS && path.length === 0)
+			) {
+				changeStatus(STOPPED);
+				return;
+			}
+		}
 		let last = state.start;
 		if (path.length > 0) {
 			while (path.length > 0) {
@@ -329,6 +352,27 @@ export const MatrixProvider = ({ children }) => {
 				case ASTAR:
 					await prepareMatrixForWeighted();
 					path = await aStar(
+						state.matrix,
+						state.start,
+						state.end,
+						changeValue,
+						changeDone
+					);
+					break;
+				case BASTAR:
+					await prepareMatrixForWeighted();
+					path = await biAStar(
+						state.matrix,
+						state.start,
+						state.end,
+						changeValue,
+						changeDone
+					);
+					break;
+
+				case BGFS:
+					await prepareMatrixForWeighted();
+					path = await biGreedyFirstSearch(
 						state.matrix,
 						state.start,
 						state.end,

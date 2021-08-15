@@ -37,7 +37,7 @@ const Wrapper = styled.div`
 		table-layout: fixed;
 		/* width: fit-content; */
 		margin: auto;
-		margin-top: 1vh;
+		margin-top: 2px;
 		margin-bottom: 1vh;
 		border-collapse: collapse;
 	}
