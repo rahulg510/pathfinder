@@ -14,6 +14,7 @@ export const gfs = async (matrix, start, end, changeValue, changeDone) => {
 		return Math.abs(end.row - row) + Math.abs(end.col - col);
 	};
 
+
 	const visitNeighbors = ({ row, col }) => {
 		NEIGHBORS.forEach((neighbor) => {
 			let r = row + neighbor[0];

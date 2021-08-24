@@ -14,6 +14,8 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 	let backwardParents = new Map();
 	let forwardCosts = new Map();
 	let backwardCosts = new Map();
+	let forwardDone = new Map();
+	let backwardDone = new Map();
 
 	const push = (row, col, cost, forward) => {
 		if (forward) forwardQueue.insert({ row, col, cost });
@@ -26,6 +28,7 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 
 	const visitForwardNeighbors = () => {
 		let curNode = forwardQueue.pop();
+		forwardDone.set(`r:${curNode.row},c:${curNode.col}`, true);
 		if (matrix[curNode.row][curNode.col].weight > 0) {
 			changeDone(curNode.row, curNode.col, true);
 		}
@@ -58,6 +61,7 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 
 	const visitBackwardNeighbors = () => {
 		let curNode = backwardQueue.pop();
+		backwardDone.set(`r:${curNode.row},c:${curNode.col}`, true);
 		if (matrix[curNode.row][curNode.col].weight > 0) {
 			changeDone(curNode.row, curNode.col, true);
 		}
@@ -110,50 +114,75 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 	while (forwardQueue.size() > 0 && backwardQueue.size() > 0) {
 		let cell = forwardQueue.peek();
 		let backwardCell = backwardQueue.peek();
-		if(backwardParents.has(`r:${cell.row},c:${cell.col}`)){
+		if (backwardDone.has(`r:${cell.row},c:${cell.col}`)) {
+			forwardDone.set(`r:${cell.row},c:${cell.col}`, true);
 			connected = true;
-			let pathLength = forwardCosts.get(`r:${cell.row},c:${cell.col}`) + backwardCosts.get(`r:${cell.row},c:${cell.col}`);
-			if(pathLength < shortestPathLength){
+			let pathLength =
+				forwardCosts.get(`r:${cell.row},c:${cell.col}`) +
+				backwardCosts.get(`r:${cell.row},c:${cell.col}`) -
+				matrix[cell.row][cell.col].weight;
+			if (pathLength < shortestPathLength) {
 				connectingCell = cell;
 				shortestPathLength = pathLength;
 			}
 		}
-		if(forwardParents.has(`r:${backwardCell.row},c:${backwardCell.col}`)){
+		if (forwardDone.has(`r:${backwardCell.row},c:${backwardCell.col}`)) {
 			connected = true;
-			let pathLength = forwardCosts.get(`r:${backwardCell.row},c:${backwardCell.col}`) + backwardCosts.get(`r:${backwardCell.row},c:${backwardCell.col}`);
-			if(pathLength < shortestPathLength){
+			let pathLength =
+				forwardCosts.get(
+					`r:${backwardCell.row},c:${backwardCell.col}`
+				) +
+				backwardCosts.get(
+					`r:${backwardCell.row},c:${backwardCell.col}`
+				) -
+				matrix[backwardCell.row][backwardCell.col].weight;
+			if (pathLength < shortestPathLength) {
 				shortestPathLength = pathLength;
 				connectingCell = backwardCell;
 			}
 		}
 		if (isEquals(cell, backwardCell) || connected) {
-			while(forwardQueue.size() > 0){
+			while (forwardQueue.size() > 0) {
 				let c = forwardQueue.pop();
-				let pathLength = forwardCosts.get(`r:${c.row},c:${c.col}`) + backwardCosts.get(`r:${c.row},c:${c.col}`);
-				if(pathLength < shortestPathLength){
-					shortestPathLength = pathLength;
-					connectingCell = c;
+				if (backwardParents.has(`r:${c.row},c:${c.col}`)) {
+					let pathLength =
+						forwardCosts.get(`r:${c.row},c:${c.col}`) +
+						backwardCosts.get(`r:${c.row},c:${c.col}`) -
+						matrix[c.row][c.col].weight;
+					if (pathLength < shortestPathLength) {
+						shortestPathLength = pathLength;
+						connectingCell = c;
+					}
 				}
 			}
 
-			while(backwardQueue.size() > 0){
+			while (backwardQueue.size() > 0) {
 				let c = backwardQueue.pop();
-				let pathLength = forwardCosts.get(`r:${c.row},c:${c.col}`) + backwardCosts.get(`r:${c.row},c:${c.col}`);
-				if(pathLength < shortestPathLength){
-					shortestPathLength = pathLength;
-					connectingCell = c;
+				if (forwardParents.has(`r:${c.row},c:${c.col}`)) {
+					let pathLength =
+						forwardCosts.get(`r:${c.row},c:${c.col}`) +
+						backwardCosts.get(`r:${c.row},c:${c.col}`) -
+						matrix[c.row][c.col].weight;
+					if (pathLength < shortestPathLength) {
+						shortestPathLength = pathLength;
+						connectingCell = c;
+					}
 				}
 			}
 
 			let path = [];
-			let parent = forwardParents.get(`r:${connectingCell.row},c:${connectingCell.col}`);
+			let parent = forwardParents.get(
+				`r:${connectingCell.row},c:${connectingCell.col}`
+			);
 			while (!isEquals(parent, start)) {
 				path.unshift(parent);
 				parent = forwardParents.get(`r:${parent.row},c:${parent.col}`);
 			}
 			path.push(connectingCell);
 
-			parent = backwardParents.get(`r:${connectingCell.row},c:${connectingCell.col}`);
+			parent = backwardParents.get(
+				`r:${connectingCell.row},c:${connectingCell.col}`
+			);
 			while (!isEquals(parent, end)) {
 				path.push(parent);
 				parent = backwardParents.get(`r:${parent.row},c:${parent.col}`);
@@ -167,3 +196,6 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 	}
 	return Promise.resolve([]);
 };
+
+
+
