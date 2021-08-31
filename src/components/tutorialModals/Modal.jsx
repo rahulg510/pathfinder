@@ -120,7 +120,10 @@ const ModalScrollingContent = () => {
 							</div>
 							<div style={{ textAlign: "center" }}>
 								<hr />
-								<img src="startEnd.gif" alt="giffy" />
+								<img
+									src="startEnd.gif"
+									alt="gif of demoing how to move start and end"
+								/>
 								<h5>
 									Drag and drop the start or end point to
 									change its location
@@ -197,11 +200,21 @@ const ModalScrollingContent = () => {
 							</div>
 							<div style={{ textAlign: "center" }}>
 								<hr />
-								<img src="wallWeight.gif" alt="giffy" />
+								<img
+									src="wallWeight.gif"
+									alt="giffy"
+									width="60%"
+								/>
 								<h5>
 									Click and drag on a cell to make them wall
 									cells. Click the 'Add Weight' button to
 									created a weighted cell.
+									<br />
+									Wall cells are impenetrable.
+									<br />
+									Weighted cells have a cost of 15.
+									<br />
+									All other cells have a cost of 1.
 								</h5>
 								<h6>
 									Note: Breadth-First Search and Depth-First
@@ -249,6 +262,27 @@ const ModalScrollingContent = () => {
 									also choose a maze to auto populate walls
 									and weight on the grid.
 								</h5>
+								<h2>Algorithms</h2>
+								<h4>Unweighted</h4>
+								<p>
+									Breadth-First Search: A fundamental path
+									finding algorithm. It guarantees shortest
+									path when the cost of all edge and vertices
+									is the same. Breadth First Search explores
+									equally in all directions until the goal is
+									reached. It starts from a chosen node and
+									examine all its neighbors, then it examines
+									all the neighbors of the neighbors, and so
+									on...
+								</p>
+								<p>Depth-First Search: </p>
+								<h4>Weighted</h4>
+								<p>Dijkstra's Algorithm: </p>
+								<p> A* (A Star) Search: </p>
+								<p>Greedy Best First Search:</p>
+								<p>Bidirectional Greedy Best First Search:</p>
+								<p>Bidirectional Dijkstra's Algorithm:</p>
+								<p>Bidirectional A* Search:</p>
 							</div>
 						</div>
 					</Modal.Description>
@@ -284,7 +318,18 @@ const ModalScrollingContent = () => {
 				<Modal.Content>
 					<Modal.Description>
 						<div style={{ textAlign: "center" }}>
-							<h5>Press run to start the visualization.</h5>
+							<img
+								src="tutorial.png"
+								alt="tutorial and run button"
+								width="60%"
+							/>
+							<h5>
+								Press run to start the visualization.
+								<br />
+								This tutorial is accessible at all times by
+								clicking on the tutorial button in top right
+								corner.
+							</h5>
 						</div>
 					</Modal.Description>
 				</Modal.Content>
