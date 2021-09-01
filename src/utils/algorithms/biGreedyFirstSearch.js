@@ -111,7 +111,7 @@ export const biGreedyFirstSearch = async (
 			connected = true;
 			connectingCell = cell;
 		}
-		if (forwardParents.has(`r:${backwardCell.row},c:${backwardCell.col}`)) {
+		else if (forwardParents.has(`r:${backwardCell.row},c:${backwardCell.col}`)) {
 			connected = true;
 			connectingCell = cell;
 		}
@@ -132,6 +132,7 @@ export const biGreedyFirstSearch = async (
 			while (!isEquals(parent, end)) {
 				path.push(parent);
 				parent = backwardParents.get(`r:${parent.row},c:${parent.col}`);
+				console.log(parent);
 			}
 			return Promise.resolve(path);
 		}

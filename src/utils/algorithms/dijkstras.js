@@ -57,7 +57,7 @@ export const dijkstra = async (
 			return Promise.resolve(path);
 		}
 		visitNeighbors(cell);
-		if (count % 4 === 0)
+		if (count % 5 === 0)
 			await new Promise((resolve) => setTimeout(resolve, 0));
 		count++;
 	}
