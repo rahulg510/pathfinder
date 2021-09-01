@@ -20,10 +20,10 @@ export const ASTAR = "A* Search";
 export const BFS = "Breadth-First Search";
 export const DFS = "Depth-First Search";
 export const DIJ = "Dijkstra's Algorithm";
-export const GFS = "Greedy Best-First Search";
-export const BGFS = "Bidirectional Greedy Best-First Search";
+export const GFS = "Best-First Search";
+export const BGFS = "Bidirectional F2F Best-First Search";
 export const BDIJ = "Bidirectional Dijkstra's Algorithm";
-export const BASTAR = "Front-to-Front Bidirectional A* Search";
+export const BASTAR = "Bidirectional F2F A* Search";
 
 export const algoInfo = {
 	"A* Search": {
@@ -34,7 +34,7 @@ export const algoInfo = {
 		weighted: false,
 		shortestGuaranteed: true,
 	},
-	"Bidirectional Greedy Best-First Search": {
+	"Bidirectional F2F Best-First Search": {
 		weighted: true,
 		shortestGuaranteed: false,
 	},
@@ -50,11 +50,11 @@ export const algoInfo = {
 		weighted: true,
 		shortestGuaranteed: true,
 	},
-	"Front-to-Front Bidirectional A* Search": {
+	"Bidirectional F2F A* Search": {
 		weighted: true,
 		shortestGuaranteed: true,
 	},
-	"Greedy Best-First Search": {
+	"Best-First Search": {
 		weighted: true,
 		shortestGuaranteed: false,
 	},

@@ -3,7 +3,6 @@ import { END, NORMAL, PATH, START, WALL } from "../utils/cellTypes";
 import { STOPPED } from "../utils/status";
 import { useState, useEffect } from "react";
 import { isEquals, getClass } from "../utils/helpers";
-import styled from "styled-components";
 import * as constants from "../utils/cellConstants";
 
 const Box = ({ row, col }) => {
@@ -164,7 +163,7 @@ const Box = ({ row, col }) => {
 		return color;
 	};
 	return (
-		<Wrapper
+		<div
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
 			className={getClass(cell, status)}
@@ -173,9 +172,7 @@ const Box = ({ row, col }) => {
 			}}
 			onMouseOver={(e) => handleMouseOver(row, col, e)}
 			onMouseLeave={(e) => handleMouseLeave(e)}
-		></Wrapper>
+		></div>
 	);
 };
-
-const Wrapper = styled.div``;
 export default Box;

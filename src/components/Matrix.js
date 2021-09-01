@@ -35,7 +35,6 @@ const Wrapper = styled.div`
 	.table {
 		display: table;
 		table-layout: fixed;
-		/* width: fit-content; */
 		margin: auto;
 		margin-top: 2px;
 		margin-bottom: 1vh;
@@ -55,7 +54,7 @@ const Wrapper = styled.div`
 
 	.blink-bg {
 		animation-name: blinkingBackground;
-		animation-duration: 3s;
+		animation-duration: 2s;
 		animation-iteration-count: 1;
 		animation-direction: normal;
 		animation-fill-mode: forwards;
@@ -68,20 +67,20 @@ const Wrapper = styled.div`
 	}
 	@keyframes blinkingBackground {
 		0% {
-			background-color: ${constants.FIRST_ANIMATION_COLOR};
+			background-color: red;
 			text-align: center;
-			transform: scale(.1);
+			transform: scale(.2);
 			opacity:0.5;
 			border-radius: 50%;
 		}
-		25% {
+		 /* 25% {
 			background-color: ${constants.SECOND_ANIMATION_COLOR};
 			text-align: center;
 			transform: scale(.5);
 			opacity:0.8;
 			border-radius: 30%;
 
-		}
+		} 
 		50% {
 			background-color: ${constants.THIRD_ANIMATION_COLOR};
 			text-align: center;
@@ -89,7 +88,7 @@ const Wrapper = styled.div`
 		}
 		100% {
 			background-color: ${constants.FOURTH_ANIMATION_COLOR};
-		}
+		} */
 
 	}
 

@@ -39,9 +39,13 @@ import {
 } from "../utils/algorithms/algorithms";
 
 import {
+	BINARY_TREE_MAZE,
 	createRandomMaze,
 	createRandomMazeWeighted,
+	createBinaryTreeMaze,
 	RANDOM_MAZE_WEIGHTED,
+	RECURSIVE_DIVISION,
+	createRecursiveDivisionMaze,
 } from "../utils/mazeAlgorithms/mazeAlgorithms";
 
 import { useAlert } from "react-alert";
@@ -220,7 +224,7 @@ export const MatrixProvider = ({ children }) => {
 		} else {
 			alert.info("No Path Found");
 		}
-		console.log(state.currentAlgorithm, pathCost+1);
+		console.log(state.currentAlgorithm, pathCost + 1);
 		changeStatus(STOPPED);
 	};
 
@@ -281,7 +285,7 @@ export const MatrixProvider = ({ children }) => {
 			resetMatrix();
 			switch (algo) {
 				case RANDOM_MAZE_WEIGHTED:
-					createRandomMazeWeighted(
+					await createRandomMazeWeighted(
 						state.matrix,
 						state.start,
 						state.end,
@@ -290,8 +294,27 @@ export const MatrixProvider = ({ children }) => {
 					);
 					break;
 
+				case BINARY_TREE_MAZE:
+					await createBinaryTreeMaze(
+						state.matrix,
+						state.start,
+						state.end,
+						changeType,
+						changeWeight
+					);
+					break;
+
+				case RECURSIVE_DIVISION:
+					await createRecursiveDivisionMaze(
+						state.matrix,
+						state.start,
+						state.end,
+						changeType
+					);
+					break;
+
 				default:
-					createRandomMaze(
+					await createRandomMaze(
 						state.matrix,
 						state.start,
 						state.end,

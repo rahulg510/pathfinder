@@ -14,8 +14,10 @@ import {
 	BGFS,
 } from "../utils/algorithms/algorithms";
 import {
+	BINARY_TREE_MAZE,
 	RANDOM_MAZE,
 	RANDOM_MAZE_WEIGHTED,
+	RECURSIVE_DIVISION,
 } from "../utils/mazeAlgorithms/mazeAlgorithms";
 import { WEIGHT_COLOR } from "../utils/cellConstants";
 import { useAlert } from "react-alert";
@@ -118,7 +120,7 @@ const OptionsBar = () => {
 												createMaze(RANDOM_MAZE)
 											}
 										>
-											Basic Maze
+											Random Maze
 										</button>
 									</li>
 									<li>
@@ -128,7 +130,27 @@ const OptionsBar = () => {
 												createMaze(RANDOM_MAZE_WEIGHTED)
 											}
 										>
-											Basic Maze Weighted
+											Random Weighted Maze
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												createMaze(BINARY_TREE_MAZE)
+											}
+										>
+											Binary Tree Maze
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												createMaze(RECURSIVE_DIVISION)
+											}
+										>
+											Recursive Division
 										</button>
 									</li>
 								</ul>
@@ -179,16 +201,7 @@ const OptionsBar = () => {
 											Dijkstra's Algorithm
 										</button>
 									</li>
-									<li>
-										<button
-											className="dropdown-item"
-											onClick={(e) =>
-												changeAlgorithm(BDIJ)
-											}
-										>
-											Bidirectional Dijkstra's Algorithm
-										</button>
-									</li>
+									
 									<li>
 										<button
 											className="dropdown-item"
@@ -196,7 +209,7 @@ const OptionsBar = () => {
 												changeAlgorithm(GFS)
 											}
 										>
-											Greedy-First Search
+											Best-First Search
 										</button>
 									</li>
 									<li>
@@ -213,11 +226,10 @@ const OptionsBar = () => {
 										<button
 											className="dropdown-item"
 											onClick={(e) =>
-												changeAlgorithm(BASTAR)
+												changeAlgorithm(BDIJ)
 											}
 										>
-											Front-to-Front Bidirectional A*
-											Search
+											Bidirectional Dijkstra's Algorithm
 										</button>
 									</li>
 									<li>
@@ -227,7 +239,19 @@ const OptionsBar = () => {
 												changeAlgorithm(BGFS)
 											}
 										>
-											Bidirectional Greedy First Search
+											Bidirectional F2F Best-First Search
+										</button>
+									</li>
+									
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												changeAlgorithm(BASTAR)
+											}
+										>
+											Bidirectional F2F A*
+											Search
 										</button>
 									</li>
 								</ul>
@@ -271,7 +295,7 @@ const OptionsBar = () => {
 };
 
 const Wrapper = styled.div`
-	@media (min-width: 1010px) {
+	@media (min-width: 1110px) {
 		.navbar-expand-custom {
 			flex-direction: row;
 			flex-wrap: nowrap;
@@ -305,7 +329,6 @@ const Wrapper = styled.div`
 	}
 
 	#runButton {
-		padding: 14px 28px;
 		background-color: #91fce379;
 		color: white;
 		box-shadow: 0 0 3px #91fce379;

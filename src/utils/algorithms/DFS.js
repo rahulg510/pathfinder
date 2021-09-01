@@ -26,7 +26,7 @@ export const dfs = async (matrix, start, end, changeValue) => {
 		col: start.col,
 	};
 	stack.push(begin);
-
+	let count = 0;
 	while (stack.length > 0) {
 		let cell = stack.pop();
 		if (isEquals(cell, end)) {
@@ -41,8 +41,10 @@ export const dfs = async (matrix, start, end, changeValue) => {
 		let val = matrix[cell.row][cell.col].value;
 		if (val === 0) {
 			changeValue(cell.row, cell.col, 2);
-			await new Promise((resolve) => setTimeout(resolve, 0));
 		}
+		if (count % 2 === 0)
+			await new Promise((resolve) => setTimeout(resolve, 0));
+		count++;
 		visitNeighbors(cell);
 	}
 	return Promise.resolve([]);
