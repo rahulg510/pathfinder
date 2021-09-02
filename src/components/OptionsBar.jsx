@@ -18,6 +18,7 @@ import {
 	RANDOM_MAZE,
 	RANDOM_MAZE_WEIGHTED,
 	RECURSIVE_DIVISION,
+	RECURSIVE_DIVISION_WEIGHTED,
 } from "../utils/mazeAlgorithms/mazeAlgorithms";
 import { WEIGHT_COLOR } from "../utils/cellConstants";
 import { useAlert } from "react-alert";
@@ -150,7 +151,17 @@ const OptionsBar = () => {
 												createMaze(RECURSIVE_DIVISION)
 											}
 										>
-											Recursive Division
+											Recursive Division Maze
+										</button>
+									</li>
+									<li>
+										<button
+											className="dropdown-item"
+											onClick={(e) =>
+												createMaze(RECURSIVE_DIVISION_WEIGHTED)
+											}
+										>
+											Recursive Division Weighted Maze
 										</button>
 									</li>
 								</ul>
@@ -251,7 +262,7 @@ const OptionsBar = () => {
 											}
 										>
 											Bidirectional F2F A*
-											Search
+											Search (Beta)
 										</button>
 									</li>
 								</ul>

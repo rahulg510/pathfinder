@@ -380,7 +380,7 @@ const ModalScrollingContent = () => {
 								<br />
 								<br />
 								<h5 style={{ display: "inline" }}>
-									Bidirectional Front-To-Front A* Search:
+									Bidirectional Front-To-Front A* Search (BETA):
 								</h5>
 								<p style={{ display: "inline" }}>
 									{" "}

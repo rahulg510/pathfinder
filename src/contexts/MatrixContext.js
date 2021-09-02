@@ -46,6 +46,8 @@ import {
 	RANDOM_MAZE_WEIGHTED,
 	RECURSIVE_DIVISION,
 	createRecursiveDivisionMaze,
+	createRecursiveDivisionWeightedMaze,
+	RECURSIVE_DIVISION_WEIGHTED,
 } from "../utils/mazeAlgorithms/mazeAlgorithms";
 
 import { useAlert } from "react-alert";
@@ -310,6 +312,16 @@ export const MatrixProvider = ({ children }) => {
 						state.start,
 						state.end,
 						changeType
+					);
+					break;
+
+				case RECURSIVE_DIVISION_WEIGHTED:
+					await createRecursiveDivisionWeightedMaze(
+						state.matrix,
+						state.start,
+						state.end,
+						changeType,
+						changeWeight
 					);
 					break;
 

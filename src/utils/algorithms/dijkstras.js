@@ -9,12 +9,19 @@ export const dijkstra = async (
 	changeDone,
 	immediate = false
 ) => {
+
 	let heap = new Heap((a, b) => {
-		return a.val - b.val;
+		let dif =  a.val - b.val;
+		if(dif === 0){
+			return a.count - b.count;
+		}
+		return dif;
 	});
 
+	let insertCount = 0;
+
 	const push = (row, col, val) => {
-		heap.push({ row, col, val });
+		heap.push({ row, col, val, count: insertCount++ });
 	};
 
 	const visitNeighbors = ({ row, col }) => {

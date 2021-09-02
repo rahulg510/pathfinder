@@ -8,16 +8,27 @@ export const biDijkstra = async (
 	changeValue,
 	changeDone
 ) => {
+	
 	let heap = new Heap((a, b) => {
-		return a.val - b.val;
-	});
-	let endHeap = new Heap((a, b) => {
-		return a.val - b.val;
+		let dif = a.val - b.val;
+		if (dif === 0) {
+			return a.count - b.count;
+		}
+		return dif;
 	});
 
+	let endHeap = new Heap((a, b) => {
+		let dif = a.val - b.val;
+		if (dif === 0) {
+			return a.count - b.count;
+		}
+		return dif;
+	});
+
+	let insertCount = 0;
 	const push = (row, col, val, endSide) => {
-		if (!endSide) heap.push({ row, col, val });
-		else endHeap.push({ row, col, val });
+		if (!endSide) heap.push({ row, col, val, count: insertCount++ });
+		else endHeap.push({ row, col, val, count: insertCount++ });
 	};
 
 	let minimumPath = Infinity;
@@ -25,9 +36,9 @@ export const biDijkstra = async (
 	let startSideValues = new Map();
 	let endSideValues = new Map();
 	let startSideDone = new Map();
-    let endSideDone = new Map();
-    let startSideParent = new Map();
-    let endSideParent = new Map();
+	let endSideDone = new Map();
+	let startSideParent = new Map();
+	let endSideParent = new Map();
 
 	const visitEndSideNeighbors = ({ row, col }) => {
 		let costSoFar = endSideValues.get(`r:${row},c:${col}`);
@@ -44,7 +55,7 @@ export const biDijkstra = async (
 				if (curCost === undefined || newCost < curCost) {
 					endSideValues.set(`r:${r},c:${c}`, newCost);
 					changeValue(r, c, newCost);
-					endSideParent.set(`r:${r},c:${c}`,{ row, col });
+					endSideParent.set(`r:${r},c:${c}`, { row, col });
 					push(r, c, newCost, true);
 				}
 			}
@@ -66,7 +77,7 @@ export const biDijkstra = async (
 				if (curCost === undefined || newCost < curCost) {
 					startSideValues.set(`r:${r},c:${c}`, newCost);
 					changeValue(r, c, newCost);
-					startSideParent.set(`r:${r},c:${c}`,{ row, col });
+					startSideParent.set(`r:${r},c:${c}`, { row, col });
 					push(r, c, newCost);
 				}
 			}
@@ -97,8 +108,8 @@ export const biDijkstra = async (
 		let endSideCell = endHeap.peek();
 		endSideDone.set(`r:${endSideCell.row},c:${endSideCell.col}`, true);
 
-		let bool = 
-			endSideParent.has(`r:${cell.row},c:${cell.col}`) || 
+		let bool =
+			endSideParent.has(`r:${cell.row},c:${cell.col}`) ||
 			startSideParent.has(`r:${endSideCell.row},c:${endSideCell.col}`);
 		if (bool) {
 			while (heap.size() > 0 || endHeap.size() > 0) {
@@ -106,24 +117,30 @@ export const biDijkstra = async (
 				if (c) {
 					let cMat = matrix[c.row][c.col];
 					if (endSideParent.has(`r:${c.row},c:${c.col}`)) {
-                        let pathLength = startSideValues.get(`r:${c.row},c:${c.col}`) + endSideValues.get(`r:${c.row},c:${c.col}`) - cMat.weight;
-                        if(pathLength < minimumPath){
-                            minimumPath = pathLength;
-                            connectingCell = c;
-                        }
+						let pathLength =
+							startSideValues.get(`r:${c.row},c:${c.col}`) +
+							endSideValues.get(`r:${c.row},c:${c.col}`) -
+							cMat.weight;
+						if (pathLength < minimumPath) {
+							minimumPath = pathLength;
+							connectingCell = c;
+						}
 					}
 				}
 				let eC = endHeap.pop();
 				if (eC) {
 					let eCMat = matrix[eC.row][eC.col];
 					if (startSideParent.has(`r:${eC.row},c:${eC.col}`)) {
-                        let pathLength = startSideValues.get(`r:${eC.row},c:${eC.col}`) + endSideValues.get(`r:${eC.row},c:${eC.col}`) - eCMat.weight;
-                        if(pathLength < minimumPath){
-                            minimumPath = pathLength;
-                            connectingCell = eC;
-                        }
+						let pathLength =
+							startSideValues.get(`r:${eC.row},c:${eC.col}`) +
+							endSideValues.get(`r:${eC.row},c:${eC.col}`) -
+							eCMat.weight;
+						if (pathLength < minimumPath) {
+							minimumPath = pathLength;
+							connectingCell = eC;
+						}
 					}
-                }
+				}
 			}
 		} else {
 			heap.pop();
@@ -146,14 +163,17 @@ export const biDijkstra = async (
 
 	let path = [];
 	if (connectingCell) {
-		let parent =
-			startSideParent.get(`r:${connectingCell.row},c:${connectingCell.col}`);
+		let parent = startSideParent.get(
+			`r:${connectingCell.row},c:${connectingCell.col}`
+		);
 		while (!isEquals(parent, start)) {
 			path.unshift(parent);
-            parent = startSideParent.get(`r:${parent.row},c:${parent.col}`);
+			parent = startSideParent.get(`r:${parent.row},c:${parent.col}`);
 		}
 		path.push(connectingCell);
-		parent = endSideParent.get(`r:${connectingCell.row},c:${connectingCell.col}`);
+		parent = endSideParent.get(
+			`r:${connectingCell.row},c:${connectingCell.col}`
+		);
 		while (!isEquals(parent, end)) {
 			path.push(parent);
 			parent = endSideParent.get(`r:${parent.row},c:${parent.col}`);

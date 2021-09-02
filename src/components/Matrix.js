@@ -54,7 +54,7 @@ const Wrapper = styled.div`
 
 	.blink-bg {
 		animation-name: blinkingBackground;
-		animation-duration: 3s;
+		animation-duration: 4s;
 		animation-iteration-count: 1;
 		/* animation-direction: normal;
 		animation-fill-mode: forwards;
