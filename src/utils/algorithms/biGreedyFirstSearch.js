@@ -107,15 +107,20 @@ export const biGreedyFirstSearch = async (
 	while (forwardQueue.size() > 0 && backwardQueue.size() > 0) {
 		let cell = forwardQueue.peek();
 		let backwardCell = backwardQueue.peek();
+
 		if (backwardParents.has(`r:${cell.row},c:${cell.col}`)) {
 			connected = true;
 			connectingCell = cell;
-		}
-		else if (forwardParents.has(`r:${backwardCell.row},c:${backwardCell.col}`)) {
+		} else if (
+			forwardParents.has(`r:${backwardCell.row},c:${backwardCell.col}`)
+		) {
+			connected = true;
+			connectingCell = backwardCell;
+		} else if (isEquals(cell, backwardCell)) {
 			connected = true;
 			connectingCell = cell;
 		}
-		if (isEquals(cell, backwardCell) || connected) {
+		if (connected) {
 			let path = [];
 			let parent = forwardParents.get(
 				`r:${connectingCell.row},c:${connectingCell.col}`
@@ -124,7 +129,7 @@ export const biGreedyFirstSearch = async (
 				path.unshift(parent);
 				parent = forwardParents.get(`r:${parent.row},c:${parent.col}`);
 			}
-			path.push(cell);
+			path.push(connectingCell);
 
 			parent = backwardParents.get(
 				`r:${connectingCell.row},c:${connectingCell.col}`
@@ -132,7 +137,6 @@ export const biGreedyFirstSearch = async (
 			while (!isEquals(parent, end)) {
 				path.push(parent);
 				parent = backwardParents.get(`r:${parent.row},c:${parent.col}`);
-				console.log(parent);
 			}
 			return Promise.resolve(path);
 		}

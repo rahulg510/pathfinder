@@ -206,7 +206,7 @@ const ModalScrollingContent = () => {
 									width="60%"
 								/>
 								<h5>
-									Click and drag on a cell to make them wall
+									Click and drag on cells to make them wall
 									cells. Click the 'Add Weight' button to
 									create a weighted cell.
 									<br />
@@ -392,6 +392,11 @@ const ModalScrollingContent = () => {
 									front-to-front. The algorithm guarantees the
 									shortest path.
 								</p>
+								<br/>
+								<br/>
+								<h6>
+									Note: Different algorithms may results in different shortest path that are the same length.
+								</h6>
 							</div>
 						</div>
 					</Modal.Description>

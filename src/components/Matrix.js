@@ -54,16 +54,11 @@ const Wrapper = styled.div`
 
 	.blink-bg {
 		animation-name: blinkingBackground;
-		animation-duration: 4s;
+		animation-duration: 2s;
 		animation-iteration-count: 1;
 		/* animation-direction: normal;
 		animation-fill-mode: forwards;
 		animation-play-state: running; */
-	}
-	.blink-bg-stopped {
-		animation-name: blinkingBackground;
-		animation-fill-mode: forwards;
-		animation-play-state: paused;
 	}
 	@keyframes blinkingBackground {
 		0% {

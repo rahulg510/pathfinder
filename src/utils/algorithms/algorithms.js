@@ -23,7 +23,7 @@ export const DIJ = "Dijkstra's Algorithm";
 export const GFS = "Best-First Search";
 export const BGFS = "Bidirectional F2F Best-First Search";
 export const BDIJ = "Bidirectional Dijkstra's Algorithm";
-export const BASTAR = "Bidirectional F2F A* Search";
+export const BASTAR = "Bidirectional F2F A* Search (Beta)";
 
 export const algoInfo = {
 	"A* Search": {
@@ -50,7 +50,7 @@ export const algoInfo = {
 		weighted: true,
 		shortestGuaranteed: true,
 	},
-	"Bidirectional F2F A* Search": {
+	"Bidirectional F2F A* Search (Beta)": {
 		weighted: true,
 		shortestGuaranteed: true,
 	},

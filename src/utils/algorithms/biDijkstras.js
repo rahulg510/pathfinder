@@ -155,7 +155,7 @@ export const biDijkstra = async (
 			}
 			visitEndSideNeighbors(endSideCell, true);
 		}
-		if (count % 2 === 0)
+		if (count % 5 === 0)
 			await new Promise((resolve) => setTimeout(resolve, 0));
 
 		count++;
