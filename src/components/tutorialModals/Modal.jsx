@@ -76,7 +76,7 @@ const ModalScrollingContent = () => {
 				}}
 				open={secondModal}
 				style={{
-					height: "70%",
+					height: "auto",
 					top: "auto",
 					left: "auto",
 					bottom: "auto",
@@ -152,7 +152,7 @@ const ModalScrollingContent = () => {
 				}}
 				open={thirdModal}
 				style={{
-					height: "70%",
+					height: "auto",
 					top: "auto",
 					left: "auto",
 					bottom: "auto",
@@ -380,7 +380,7 @@ const ModalScrollingContent = () => {
 								<br />
 								<br />
 								<h5 style={{ display: "inline" }}>
-									Bidirectional Front-To-Front A* Search (BETA):
+									Bidirectional Front-To-Front A* Search (Beta):
 								</h5>
 								<p style={{ display: "inline" }}>
 									{" "}
