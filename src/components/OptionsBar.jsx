@@ -22,7 +22,7 @@ import {
 } from "../utils/mazeAlgorithms/mazeAlgorithms";
 import { WEIGHT_COLOR } from "../utils/cellConstants";
 import { useAlert } from "react-alert";
-import Modal from "./tutorialModals/Modal";
+import Tutorial from "./tutorialModals/Tutorial";
 const OptionsBar = () => {
 	const {
 		resetMatrix,
@@ -295,7 +295,7 @@ const OptionsBar = () => {
 						</ul>
 						<ul className="navbar-nav ms-auto">
 							<li className="nav-item" id="tutorialButton">
-								<Modal className="modal" />
+								<Tutorial className="modal" />
 							</li>
 						</ul>
 					</div>

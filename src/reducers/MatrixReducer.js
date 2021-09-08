@@ -13,8 +13,8 @@ import {
 	CHANGE_TYPE,
 	CHANGE_DONE,
 	RESET_WEIGHT_BUTTON,
-	MODAL_CHANGE,
-	CHANGE_STATUS
+	CHANGE_STATUS,
+	TUTORIAL_DONE
 } from "../utils/actions";
 
 const MatrixReducer = (state, action) => {
@@ -46,6 +46,13 @@ const MatrixReducer = (state, action) => {
 		};
 	}
 
+	if (action.type === TUTORIAL_DONE) {
+		return {
+			...state,
+			tutorialDone: action.payload,
+		};
+	}
+
 	if (action.type === END_MOVE) {
 		return {
 			...state,
@@ -64,13 +71,6 @@ const MatrixReducer = (state, action) => {
 		return {
 			...state,
 			end: action.payload,
-		};
-	}
-
-	if (action.type === MODAL_CHANGE) {
-		return {
-			...state,
-			tutorialOpen: action.payload,
 		};
 	}
 

@@ -15,3 +15,4 @@ export const CHANGE_TYPE = "CHANGE_TYPE";
 export const CHANGE_DONE = "CHANGE_DONE";
 export const MODAL_CHANGE = "MODAL_CHANGE";
 export const CHANGE_STATUS = "CHANGE_STATUS";
+export const TUTORIAL_DONE = "TUTORIAL_DONE";

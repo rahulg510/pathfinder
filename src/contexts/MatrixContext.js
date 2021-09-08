@@ -17,8 +17,8 @@ import {
 	CHANGE_TYPE,
 	CHANGE_DONE,
 	RESET_WEIGHT_BUTTON,
-	MODAL_CHANGE,
 	CHANGE_STATUS,
+	TUTORIAL_DONE,
 } from "../utils/actions";
 import {
 	GFS,
@@ -62,20 +62,22 @@ const initialState = {
 	end: { row: 17, col: 39 },
 	matrix: [],
 	currentAlgorithm: "",
-	erase: false,
 	status: STOPPED,
 	mouseDown: false,
 	startMove: false,
 	endMove: false,
 	weight: false,
-	weightOnMatrix: false,
-	tutorialOpen: true,
+	tutorialDone: false,
 };
 
 export const MatrixProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(MatrixReducer, initialState);
 	const alert = useAlert();
 	useEffect(() => {
+		let tutorialDone = localStorage.getItem("tutorialDone");
+		if (tutorialDone && JSON.parse(tutorialDone)) {
+			handleTutorialDone(true);
+		}
 		let initialMatrix = localStorage.getItem("matrix");
 		if (initialMatrix) {
 			initialMatrix = JSON.parse(initialMatrix);
@@ -238,12 +240,13 @@ export const MatrixProvider = ({ children }) => {
 		dispatch({ type: START_MOVE, payload: bool });
 	};
 
-	const handleEndMove = (bool) => {
-		dispatch({ type: END_MOVE, payload: bool });
+	const handleTutorialDone = (bool) => {
+		localStorage.setItem("tutorialDone", JSON.stringify(bool));
+		dispatch({ type: TUTORIAL_DONE, payload: bool });
 	};
 
-	const handleTutorialModal = (bool) => {
-		dispatch({ type: MODAL_CHANGE, payload: bool });
+	const handleEndMove = (bool) => {
+		dispatch({ type: END_MOVE, payload: bool });
 	};
 
 	const prepareMatrixForUnweighted = async () => {
@@ -491,7 +494,7 @@ export const MatrixProvider = ({ children }) => {
 				changeType,
 				changeDone,
 				createMaze,
-				handleTutorialModal,
+				handleTutorialDone,
 			}}
 		>
 			{children}
