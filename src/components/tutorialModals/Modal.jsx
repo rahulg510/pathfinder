@@ -435,7 +435,7 @@ const ModalScrollingContent = () => {
 							<img
 								src="tutorial.png"
 								alt="tutorial and run button"
-								width="60%"
+								width="100%"
 							/>
 							<h5>
 								Press run to start the visualization.
