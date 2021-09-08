@@ -140,12 +140,12 @@ const createRecursiveDivisionWeightedMaze = async (
 		for (let j = 0; j < matrix[0].length; j++) {
 			if (
 				matrix[i][j].type !== WALL &&
-				randomNumber(1, 99) % 23 === 0 &&
+				randomNumber(1, 99) % 33 === 0 &&
 				!isEquals({ row: i, col: j }, start) &&
 				!isEquals({ row: i, col: j }, end)
 			) {
 				changeWeight(i, j, 15);
-				changeType(i,j, NORMAL);
+				changeType(i,j,NORMAL);
 				await new Promise((res) => setTimeout(res, 0));
 			}
 		}

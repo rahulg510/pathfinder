@@ -147,7 +147,6 @@ export const MatrixProvider = ({ children }) => {
 			newMatrix.push(arr);
 		}
 		newMatrix[state.start.row][state.start.col].type = START;
-		newMatrix[state.start.row][state.start.col].weight = 0;
 		newMatrix[state.end.row][state.end.col].type = END;
 		return newMatrix;
 	}
@@ -451,10 +450,11 @@ export const MatrixProvider = ({ children }) => {
 		if (state.status === STOPPED) {
 			for (let i = 0; i < state.rows; i++) {
 				for (let j = 0; j < state.cols; j++) {
-					let type = state.matrix[i][j].type;
+					let cell = state.matrix[i][j];
+					cell.parent = null;
 					changeValue(i, j, 0);
 					changeDone(i, j, false);
-					if (type === PATH) {
+					if (cell.type === PATH) {
 						changeType(i, j, NORMAL);
 					}
 				}
