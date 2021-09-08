@@ -24,7 +24,7 @@ const division = async (
 				!isEquals({ row: i, col: verticleLine }, START) &&
 				!isEquals({ row: i, col: verticleLine }, END)
 			) {
-				if (randomNumber() % 5 === 0) {
+				if (randomNumber() % 7 === 0) {
 					changeWeight(i, verticleLine, 15);
 					changeType(i, verticleLine, NORMAL);
 				} else {
@@ -72,7 +72,7 @@ const division = async (
 				!isEquals({ row: horizontalLine, col: i }, START) &&
 				!isEquals({ row: horizontalLine, col: i }, END)
 			) {
-				if (randomNumber() % 5 === 0) {
+				if (randomNumber() % 7 === 0) {
 					changeWeight(horizontalLine, i, 15);
 					changeType(horizontalLine, i, NORMAL);
 				} else {
@@ -140,11 +140,12 @@ const createRecursiveDivisionWeightedMaze = async (
 		for (let j = 0; j < matrix[0].length; j++) {
 			if (
 				matrix[i][j].type !== WALL &&
-				randomNumber(1, 99) % 13 === 0 &&
+				randomNumber(1, 99) % 23 === 0 &&
 				!isEquals({ row: i, col: j }, start) &&
 				!isEquals({ row: i, col: j }, end)
 			) {
 				changeWeight(i, j, 15);
+				changeType(i,j, NORMAL);
 				await new Promise((res) => setTimeout(res, 0));
 			}
 		}
