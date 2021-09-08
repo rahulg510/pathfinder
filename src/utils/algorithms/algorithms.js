@@ -4,7 +4,7 @@ import { dijkstra } from "./dijkstras";
 import { gfs } from "./GreedyFirstSearch";
 import { aStar } from "./aStar";
 import { biDijkstra } from "./biDijkstras";
-import { biAStar } from "./biAStar";
+import { biAStar } from "./biAStar2";
 import { biGreedyFirstSearch } from "./biGreedyFirstSearch";
 export {
 	dfs,

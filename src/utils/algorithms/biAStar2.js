@@ -2,6 +2,7 @@ import heap from "heap";
 import { isEquals, checkIndexes, NEIGHBORS } from "../helpers";
 
 export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
+	console.log("2 boyzz");
 	const forwardQueue = new heap((a, b) => {
 		return a.cost - b.cost;
 	});
@@ -32,31 +33,33 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 		if (matrix[curNode.row][curNode.col].weight > 0) {
 			changeDone(curNode.row, curNode.col, true);
 		}
-		let otherNode = backwardQueue.peek();
 		let { row, col } = curNode;
 		let costSoFar = forwardCosts.get(`r:${row},c:${col}`);
 
-		NEIGHBORS.forEach((neighbor) => {
-			let r = row + neighbor[0];
-			let c = col + neighbor[1];
-			if (checkIndexes(matrix, r, c)) {
-				let cell = matrix[r][c];
-				let newCost = costSoFar + cell.weight + 1;
-				let cellValue = forwardCosts.get(`r:${r},c:${c}`);
-				if (cellValue === undefined || newCost < cellValue) {
-					changeValue(r, c, newCost);
-					forwardCosts.set(`r:${r},c:${c}`, newCost);
-					forwardParents.set(`r:${r},c:${c}`, { row, col });
-					let cost =
-						newCost +
-						getHeuristic({ row: r, col: c }, otherNode) +
-						backwardCosts.get(
-							`r:${otherNode.row},c:${otherNode.col}`
-						);
-					push(r, c, cost, true);
+		let otherNode = backwardQueue.peek();
+		if (otherNode) {
+			NEIGHBORS.forEach((neighbor) => {
+				let r = row + neighbor[0];
+				let c = col + neighbor[1];
+				if (checkIndexes(matrix, r, c)) {
+					let cell = matrix[r][c];
+					let newCost = costSoFar + cell.weight + 1;
+					let cellValue = forwardCosts.get(`r:${r},c:${c}`);
+					if (cellValue === undefined || newCost < cellValue) {
+						changeValue(r, c, newCost);
+						forwardCosts.set(`r:${r},c:${c}`, newCost);
+						forwardParents.set(`r:${r},c:${c}`, { row, col });
+						let cost =
+							newCost +
+							getHeuristic({ row: r, col: c }, otherNode) +
+							backwardCosts.get(
+								`r:${otherNode.row},c:${otherNode.col}`
+							);
+						push(r, c, cost, true);
+					}
 				}
-			}
-		});
+			});
+		}
 	};
 
 	const visitBackwardNeighbors = () => {
@@ -65,30 +68,32 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 		if (matrix[curNode.row][curNode.col].weight > 0) {
 			changeDone(curNode.row, curNode.col, true);
 		}
-		let otherNode = forwardQueue.peek();
 		let { row, col } = curNode;
 		let costSoFar = backwardCosts.get(`r:${row},c:${col}`);
-		NEIGHBORS.forEach((neighbor) => {
-			let r = row + neighbor[0];
-			let c = col + neighbor[1];
-			if (checkIndexes(matrix, r, c)) {
-				let cell = matrix[r][c];
-				let newCost = costSoFar + cell.weight + 1;
-				let cellValue = backwardCosts.get(`r:${r},c:${c}`);
-				if (cellValue === undefined || newCost < cellValue) {
-					changeValue(r, c, newCost);
-					backwardCosts.set(`r:${r},c:${c}`, newCost);
-					backwardParents.set(`r:${r},c:${c}`, { row, col });
-					let cost =
-						newCost +
-						getHeuristic({ row: r, col: c }, otherNode) +
-						forwardCosts.get(
-							`r:${otherNode.row},c:${otherNode.col}`
-						);
-					push(r, c, cost, false);
+		let otherNode = forwardQueue.peek();
+		if (otherNode) {
+			NEIGHBORS.forEach((neighbor) => {
+				let r = row + neighbor[0];
+				let c = col + neighbor[1];
+				if (checkIndexes(matrix, r, c)) {
+					let cell = matrix[r][c];
+					let newCost = costSoFar + cell.weight + 1;
+					let cellValue = backwardCosts.get(`r:${r},c:${c}`);
+					if (cellValue === undefined || newCost < cellValue) {
+						changeValue(r, c, newCost);
+						backwardCosts.set(`r:${r},c:${c}`, newCost);
+						backwardParents.set(`r:${r},c:${c}`, { row, col });
+						let cost =
+							newCost +
+							getHeuristic({ row: r, col: c }, otherNode) +
+							forwardCosts.get(
+								`r:${otherNode.row},c:${otherNode.col}`
+							);
+						push(r, c, cost, false);
+					}
 				}
-			}
-		});
+			});
+		}
 	};
 
 	let begin = {
@@ -141,7 +146,18 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 				connectingCell = backwardCell;
 			}
 		}
-		if (isEquals(cell, backwardCell) || connected) {
+		if (isEquals(cell, backwardCell)) {
+			connected = true;
+			let pathLength =
+				forwardCosts.get(`r:${cell.row},c:${cell.col}`) +
+				backwardCosts.get(`r:${cell.row},c:${cell.col}`) -
+				matrix[cell.row][cell.col].weight;
+			if (pathLength < shortestPathLength) {
+				connectingCell = cell;
+				shortestPathLength = pathLength;
+			}
+		}
+		if (connected) {
 			while (forwardQueue.size() > 0) {
 				let c = forwardQueue.pop();
 				if (backwardParents.has(`r:${c.row},c:${c.col}`)) {
@@ -196,6 +212,3 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 	}
 	return Promise.resolve([]);
 };
-
-
-

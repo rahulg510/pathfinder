@@ -118,7 +118,8 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 			connected = true;
 			let pathLength =
 				forwardCosts.get(`r:${cell.row},c:${cell.col}`) +
-				backwardCosts.get(`r:${cell.row},c:${cell.col}`);
+				backwardCosts.get(`r:${cell.row},c:${cell.col}`) -
+				matrix[cell.row][cell.col].weight;
 			if (pathLength < shortestPathLength) {
 				connectingCell = cell;
 				shortestPathLength = pathLength;
@@ -132,7 +133,8 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 				) +
 				backwardCosts.get(
 					`r:${backwardCell.row},c:${backwardCell.col}`
-				);
+				) -
+				matrix[backwardCell.row][backwardCell.col].weight;
 			if (pathLength < shortestPathLength) {
 				shortestPathLength = pathLength;
 				connectingCell = backwardCell;
@@ -143,7 +145,8 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 				let c = forwardQueue.pop();
 				let pathLength =
 					forwardCosts.get(`r:${c.row},c:${c.col}`) +
-					backwardCosts.get(`r:${c.row},c:${c.col}`);
+					backwardCosts.get(`r:${c.row},c:${c.col}`) -
+					matrix[c.row][c.col].weight;
 				if (pathLength < shortestPathLength) {
 					shortestPathLength = pathLength;
 					connectingCell = c;
@@ -154,7 +157,8 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 				let c = backwardQueue.pop();
 				let pathLength =
 					forwardCosts.get(`r:${c.row},c:${c.col}`) +
-					backwardCosts.get(`r:${c.row},c:${c.col}`);
+					backwardCosts.get(`r:${c.row},c:${c.col}`) -
+					matrix[c.row][c.col].weight;
 				if (pathLength < shortestPathLength) {
 					shortestPathLength = pathLength;
 					connectingCell = c;
