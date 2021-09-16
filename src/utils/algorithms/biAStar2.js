@@ -2,7 +2,6 @@ import heap from "heap";
 import { isEquals, checkIndexes, NEIGHBORS } from "../helpers";
 
 export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
-	console.log("2 boyzz");
 	const forwardQueue = new heap((a, b) => {
 		return a.cost - b.cost;
 	});
@@ -120,7 +119,7 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 		let cell = forwardQueue.peek();
 		let backwardCell = backwardQueue.peek();
 		if (backwardDone.has(`r:${cell.row},c:${cell.col}`)) {
-			forwardDone.set(`r:${cell.row},c:${cell.col}`, true);
+			visitForwardNeighbors();
 			connected = true;
 			let pathLength =
 				forwardCosts.get(`r:${cell.row},c:${cell.col}`) +
@@ -132,6 +131,7 @@ export const biAStar = async (matrix, start, end, changeValue, changeDone) => {
 			}
 		}
 		if (forwardDone.has(`r:${backwardCell.row},c:${backwardCell.col}`)) {
+			visitBackwardNeighbors();
 			connected = true;
 			let pathLength =
 				forwardCosts.get(
